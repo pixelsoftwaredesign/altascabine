@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atlas Cabine - Catalogue &amp; Spécifications</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css">
+    <script src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F4F6F0; color: #2D3748; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+    </style>
+</head>
+<body class="h-screen w-screen flex flex-col justify-between p-6 select-none overflow-hidden bg-[#F4F6F0]">
+
+    <!-- En-tête du Catalogue -->
+    <header class="flex flex-wrap justify-between items-center bg-white px-6 py-4 rounded-2xl shadow-sm border border-[#2D5A27]/10">
+        <div class="flex items-center space-x-3">
+            <a href="home.html" class="text-2xl hover:scale-110 transition inline-block" title="Accueil">🏠</a>
+            <div class="w-4 h-4 rounded-full bg-[#9ACD32] animate-pulse"></div>
+            <div>
+                <h1 class="text-xl font-bold tracking-tight text-[#2D5A27]">ATLAS WORKING <span class="text-xs text-[#9ACD32] mono font-normal">Catalogue Cabines</span></h1>
+                <p class="text-xs text-slate-500">Gamme professionnelle d'espaces acoustiques intelligents</p>
+            </div>
+        </div>
+
+        <nav class="flex items-center space-x-2 bg-[#F4F6F0] p-1.5 rounded-xl border border-[#2D5A27]/10">
+            <button onclick="selectCabin(1)" id="btn-c1" class="px-4 py-2 rounded-lg text-xs font-bold transition bg-[#2D5A27] text-white shadow-sm">1. Small (90×120)</button>
+            <button onclick="selectCabin(2)" id="btn-c2" class="px-4 py-2 rounded-lg text-xs font-bold transition text-[#2D3748] hover:text-[#2D5A27]">2. Medium (240×120)</button>
+            <button onclick="selectCabin(3)" id="btn-c3" class="px-4 py-2 rounded-lg text-xs font-bold transition text-[#2D3748] hover:text-[#2D5A27]">3. Large (350×250)</button>
+            <button onclick="selectCabin(4)" id="btn-c4" class="px-4 py-2 rounded-lg text-xs font-bold transition text-[#9ACD32] hover:text-[#2D5A27]">🔄 Visite 360°</button>
+        </nav>
+
+        <div class="flex items-center space-x-3">
+            <a href="accessoires.html" class="text-xs bg-white text-[#2D5A27] border border-[#2D5A27]/20 px-3 py-1.5 rounded-xl font-bold hover:bg-[#F4F6F0] transition">🧰 Accessoires</a>
+            <button onclick="selectCabin(4)" class="text-xs bg-[#9ACD32] text-[#2D3748] px-3 py-1.5 rounded-xl font-bold hover:bg-[#8bb82d] transition">🔄 Visite 360°</button>
+            <span class="text-xs bg-[#9ACD32]/20 text-[#2D5A27] px-3 py-1.5 rounded-xl font-bold mono">Gabès / Carthage</span>
+        </div>
+    </header>
+
+    <main class="my-6 pt-4 flex-1 flex flex-col gap-6 items-center justify-center">
+
+        <!-- PRESTATIONS ACOUSTIQUES (tous modèles) -->
+        <div class="w-full max-w-6xl grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-white border border-[#2D5A27]/15 rounded-2xl p-4 flex items-center gap-4 shadow-sm">
+                <div class="w-12 h-12 rounded-2xl bg-[#9ACD32]/20 text-[#2D5A27] flex items-center justify-center text-xl shrink-0">🎛️</div>
+                <div>
+                    <p class="mono text-xl font-extrabold text-[#2D5A27]">100%</p>
+                    <p class="text-[11px] font-bold text-[#2D3748]">Réglable 100 % acoustique</p>
+                </div>
+            </div>
+            <div class="bg-white border border-[#2D5A27]/15 rounded-2xl p-4 flex items-center gap-4 shadow-sm">
+                <div class="w-12 h-12 rounded-2xl bg-[#9ACD32]/20 text-[#2D5A27] flex items-center justify-center text-xl shrink-0">🔇</div>
+                <div>
+                    <p class="mono text-xl font-extrabold text-[#2D5A27]">80%</p>
+                    <p class="text-[11px] font-bold text-[#2D3748]">Débruit jusqu'à 80 % par rapport au milieu ambiant</p>
+                </div>
+            </div>
+            <div class="bg-white border border-[#2D5A27]/15 rounded-2xl p-4 flex items-center gap-4 shadow-sm">
+                <div class="w-12 h-12 rounded-2xl bg-[#9ACD32]/20 text-[#2D5A27] flex items-center justify-center text-xl shrink-0">🧱</div>
+                <div>
+                    <p class="mono text-xl font-extrabold text-[#2D5A27]">100%</p>
+                    <p class="text-[11px] font-bold text-[#2D3748]">Isolation acoustique fine, totale sur la surface</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- CABINE 1 : SMALL -->
+        <div id="cabin-1" class="w-full max-w-6xl bg-white border border-[#2D5A27]/15 rounded-3xl p-8 shadow-sm flex flex-col justify-between h-[520px]">
+            <div class="flex justify-between items-start">
+                <div>
+                    <span class="text-xs font-bold text-[#9ACD32] uppercase tracking-wider">Focus &amp; Solo Phone Booth</span>
+                    <h2 class="text-2xl font-bold text-[#2D5A27]">Atlas Cabine Small (90 × 120 × 240 cm)</h2>
+                </div>
+                <div class="text-right">
+                    <span class="text-lg font-extrabold text-[#2D5A27] mono">Réf: AT-S90</span>
+                    <span class="block text-xs text-slate-500">Capacité : 1 personne</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-12 gap-6 my-auto items-center">
+                <div class="col-span-5 bg-gradient-to-br from-[#2D5A27]/10 to-[#9ACD32]/25 border border-[#2D5A27]/15 rounded-2xl p-2 flex flex-col items-center justify-center">
+                    <img src="assets/cabine-small.svg" alt="Rendu 3D Atlas Cabine Small 90x120x240" class="w-full max-h-[300px]">
+                    <span class="mt-1 text-xs font-bold text-[#2D5A27] bg-white/85 px-3 py-1 rounded-full shadow-sm">Rendu 3D — Modèle Small</span>
+                </div>
+
+                <div class="col-span-7 grid grid-cols-2 gap-4">
+                    <div class="bg-[#F4F6F0] p-3.5 rounded-2xl border border-[#2D5A27]/10 flex flex-col justify-between">
+                        <span class="text-xl">🧠</span>
+                        <div>
+                            <p class="text-xs font-bold text-[#2D5A27]">Système IoT Intelligent</p>
+                            <p class="text-[11px] text-slate-600 mt-0.5">Écran tactile embarqué, contrôle LED, réservation QR Code.</p>
+                        </div>
+                    </div>
+                    <div class="bg-[#F4F6F0] p-3.5 rounded-2xl border border-[#2D5A27]/10 flex flex-col justify-between">
+                        <span class="text-xl">🔇</span>
+                        <div>
+                            <p class="text-xs font-bold text-[#2D5A27]">Structure Acoustique</p>
+                            <p class="text-[11px] text-slate-600 mt-0.5">Isolation multicouche haute performance (-38 dB).</p>
+                        </div>
+                    </div>
+                    <div class="bg-[#F4F6F0] p-3.5 rounded-2xl border border-[#2D5A27]/10 flex flex-col justify-between">
+                        <span class="text-xl">🍃</span>
+                        <div>
+                            <p class="text-xs font-bold text-[#2D5A27]">Système de Ventilation</p>
+                            <p class="text-[11px] text-slate-600 mt-0.5">Renouvellement d'air automatisé (&lt; 28 dB, filtre HEPA).</p>
+                        </div>
+                    </div>
+                    <div class="bg-[#F4F6F0] p-3.5 rounded-2xl border border-[#2D5A27]/10 flex flex-col justify-between">
+                        <span class="text-xl">🚨</span>
+                        <div>
+                            <p class="text-xs font-bold text-[#2D5A27]">Réseau Capteurs &amp; Urgences</p>
+                            <p class="text-[11px] text-slate-600 mt-0.5">Capteur CO2 temps réel, bouton d'urgence &amp; hôte de sécurité.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center bg-[#F4F6F0] p-3.5 rounded-2xl">
+                <span class="text-xs text-slate-600 mono">Idéal pour : Bureaux ouverts, aéroports, centres d'appels.</span>
+                <button onclick="alert('Demande de devis enregistrée pour le modèle Small 90x120.')" class="px-6 py-2 rounded-xl bg-[#9ACD32] hover:bg-[#8bb82d] text-[#2D3748] font-bold text-xs transition shadow-sm">Demander un devis (DEV-ATLAS)</button>
+            </div>
+        </div>
+
+        <!-- CABINE 2 : MEDIUM -->
+        <div id="cabin-2" class="w-full max-w-6xl bg-white border border-[#2D5A27]/15 rounded-3xl p-8 shadow-sm flex flex-col justify-between h-[520px] hidden">
+            <div class="flex justify-between items-start">
+                <div>
+                    <span class="text-xs font-bold text-[#9ACD32] uppercase tracking-wider">Meeting &amp; Duo Booth</span>
+                    <h2 class="text-2xl font-bold text-[#2D5A27]">Atlas Cabine Medium (240 × 120 × 240 cm)</h2>
+                </div>
+                <div class="text-right">
+                    <span class="text-lg font-extrabold text-[#2D5A27] mono">Réf: AT-M240</span>
+                    <span class="block text-xs text-slate-500">Capacité : 2 à 4 personnes</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-12 gap-6 my-auto items-center">
+                <div class="col-span-5 bg-gradient-to-br from-[#2D5A27]/10 to-[#9ACD32]/25 border border-[#2D5A27]/15 rounded-2xl p-3 flex flex-col items-center justify-center">
+                    <img src="assets/cabine-carrefour-gabes.jpg" alt="Atlas Cabine Medium — Carrefour Gabès" class="w-full rounded-xl border border-[#2D5A27]/15 shadow-sm">
+                    <img src="assets/interieur.jpg" alt="Intérieur Atlas Cabine Medium" class="w-full rounded-xl border border-[#2D5A27]/15 shadow-sm mt-2">
+                    <span class="mt-2 text-xs font-bold text-[#2D5A27] bg-white/85 px-3 py-1 rounded-full shadow-sm">Photos — Espace Carrefour Gabès</span>
+                </div>
+
+                <div class="col-span-7 grid grid-cols-2 gap-4">
+                    <div class="bg-[#F4F6F0] p-3.5 rounded-2xl border border-[#2D5A27]/10 flex flex-col justify-between">
+                        <span class="text-xl">🧠</span>
+                        <div>
+                            <p class="text-xs font-bold text-[#2D5A27]">Système IoT Intelligent</p>
+                            <p class="text-[11px] text-slate-600 mt-0.5">Tablette centrale de gestion, contrôle multimédia &amp; prises USB/HDMI.</p>
+                        </div>
+                    </div>
+                    <div class="bg-[#F4F6F0] p-3.5 rounded-2xl border border-[#2D5A27]/10 flex flex-col justify-between">
+                        <span class="text-xl">🔇</span>
+                        <div>
+                            <p class="text-xs font-bold text-[#2D5A27]">Structure Acoustique</p>
+                            <p class="text-[11px] text-slate-600 mt-0.5">Parois acoustiques renforcées pour visioconférences et réunions.</p>
+                        </div>
+                    </div>
+                    <div class="bg-[#F4F6F0] p-3.5 rounded-2xl border border-[#2D5A27]/10 flex flex-col justify-between">
+                        <span class="text-xl">🍃</span>
+                        <div>
+                            <p class="text-xs font-bold text-[#2D5A27]">Système de Ventilation</p>
+                            <p class="text-[11px] text-slate-600 mt-0.5">Double extracteur intelligent pour grand volume d'air.</p>
+                        </div>
+                    </div>
+                    <div class="bg-[#F4F6F0] p-3.5 rounded-2xl border border-[#2D5A27]/10 flex flex-col justify-between">
+                        <span class="text-xl">🚨</span>
+                        <div>
+                            <p class="text-xs font-bold text-[#2D5A27]">Réseau Capteurs &amp; Urgences</p>
+                            <p class="text-[11px] text-slate-600 mt-0.5">Analyse CO2 continue, alerte incendie &amp; connexion hôte de sécurité.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center bg-[#F4F6F0] p-3.5 rounded-2xl">
+                <span class="text-xs text-slate-600 mono">Idéal pour : Salles de réunion agiles, espaces co-working, centres commerciaux.</span>
+                <button onclick="alert('Demande de devis enregistrée pour le modèle Medium 240x120.')" class="px-6 py-2 rounded-xl bg-[#9ACD32] hover:bg-[#8bb82d] text-[#2D3748] font-bold text-xs transition shadow-sm">Demander un devis (DEV-ATLAS)</button>
+            </div>
+        </div>
+
+        <!-- CABINE 3 : LARGE -->
+        <div id="cabin-3" class="w-full max-w-6xl bg-white border border-[#2D5A27]/15 rounded-3xl p-8 shadow-sm flex flex-col justify-between h-[520px] hidden">
+            <div class="flex justify-between items-start">
+                <div>
+                    <span class="text-xs font-bold text-[#9ACD32] uppercase tracking-wider">Executive &amp; Team Room</span>
+                    <h2 class="text-2xl font-bold text-[#2D5A27]">Atlas Cabine Large (350 × 250 × 240 cm)</h2>
+                </div>
+                <div class="text-right">
+                    <span class="text-lg font-extrabold text-[#2D5A27] mono">Réf: AT-L350</span>
+                    <span class="block text-xs text-slate-500">Capacité : 6 à 8 personnes</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-12 gap-6 my-auto items-center">
+                <div class="col-span-5 bg-gradient-to-br from-[#2D5A27]/10 to-[#9ACD32]/25 border border-[#2D5A27]/15 rounded-2xl p-2 flex flex-col items-center justify-center">
+                    <img src="assets/cabine-large.svg" alt="Rendu 3D Atlas Cabine Large 350x250x240" class="w-full max-h-[300px]">
+                    <span class="mt-1 text-xs font-bold text-[#2D5A27] bg-white/85 px-3 py-1 rounded-full shadow-sm">Rendu 3D — Modèle Large</span>
+                </div>
+
+                <div class="col-span-7 grid grid-cols-2 gap-4">
+                    <div class="bg-[#F4F6F0] p-3.5 rounded-2xl border border-[#2D5A27]/10 flex flex-col justify-between">
+                        <span class="text-xl">🧠</span>
+                        <div>
+                            <p class="text-xs font-bold text-[#2D5A27]">Système IoT Intelligent</p>
+                            <p class="text-[11px] text-slate-600 mt-0.5">Automatisation complète, écrans tactiles multiples &amp; contrôle d'accès.</p>
+                        </div>
+                    </div>
+                    <div class="bg-[#F4F6F0] p-3.5 rounded-2xl border border-[#2D5A27]/10 flex flex-col justify-between">
+                        <span class="text-xl">🔇</span>
+                        <div>
+                            <p class="text-xs font-bold text-[#2D5A27]">Structure Acoustique</p>
+                            <p class="text-[11px] text-slate-600 mt-0.5">Isolation studio professionnelle, double vitrage phonique spécial.</p>
+                        </div>
+                    </div>
+                    <div class="bg-[#F4F6F0] p-3.5 rounded-2xl border border-[#2D5A27]/10 flex flex-col justify-between">
+                        <span class="text-xl">🍃</span>
+                        <div>
+                            <p class="text-xs font-bold text-[#2D5A27]">Système de Ventilation</p>
+                            <p class="text-[11px] text-slate-600 mt-0.5">Climatisation intégrée et renouvellement d'air haute capacité.</p>
+                        </div>
+                    </div>
+                    <div class="bg-[#F4F6F0] p-3.5 rounded-2xl border border-[#2D5A27]/10 flex flex-col justify-between">
+                        <span class="text-xl">🚨</span>
+                        <div>
+                            <p class="text-xs font-bold text-[#2D5A27]">Réseau Capteurs &amp; Urgences</p>
+                            <p class="text-[11px] text-slate-600 mt-0.5">Capteurs CO2 multicônes, protocole d'urgence et liaison hôte de sécurité.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center bg-[#F4F6F0] p-3.5 rounded-2xl">
+                <span class="text-xs text-slate-600 mono">Idéal pour : Salles de conseil, bureaux exécutifs, aéroports internationaux.</span>
+                <button onclick="alert('Demande de devis enregistrée pour le modèle Large 350x250.')" class="px-6 py-2 rounded-xl bg-[#9ACD32] hover:bg-[#8bb82d] text-[#2D3748] font-bold text-xs transition shadow-sm">Demander un devis (DEV-ATLAS)</button>
+            </div>
+        </div>
+    <!-- VISITE 360° -->
+        <div id="cabin-4" class="w-full max-w-6xl bg-white border border-[#2D5A27]/15 rounded-3xl p-8 shadow-sm flex flex-col justify-between h-[520px] hidden">
+            <div class="flex justify-between items-start">
+                <div>
+                    <span class="text-xs font-bold text-[#9ACD32] uppercase tracking-wider">Visite immersive</span>
+                    <h2 class="text-2xl font-bold text-[#2D5A27]">Panorama 360° — Intérieur de cabine</h2>
+                </div>
+                <a href="visite360.html" class="px-5 py-2 rounded-xl bg-[#2D5A27] text-white font-bold text-xs transition hover:bg-[#23451e]">⌃ Plein écran</a>
+            </div>
+
+            <div class="my-auto grid grid-cols-2 gap-6 items-center">
+                <div class="bg-[#2D3748] rounded-2xl overflow-hidden border border-[#2D5A27]/20 h-[360px]">
+                    <div id="panoramaCat" class="w-full h-full"></div>
+                </div>
+                <div class="space-y-4">
+                    <div class="bg-[#F4F6F0] p-4 rounded-2xl border border-[#2D5A27]/10 flex items-center gap-3">
+                        <span class="text-2xl">🖐️</span>
+                        <p class="text-xs text-slate-600">Faites glisser pour vous orienter, molette de la souris pour zoomer.</p>
+                    </div>
+                    <div class="bg-[#F4F6F0] p-4 rounded-2xl border border-[#2D5A27]/10">
+                        <p class="text-xs font-bold text-[#2D5A27] mb-2 flex items-center gap-2">📸 Photos d'installation</p>
+                        <img src="assets/cabine-carrefour-gabes.jpg" alt="Cabine Medium — Carrefour Gabès" class="w-full rounded-xl border border-[#2D5A27]/15">
+                    </div>
+                    <p class="text-xs text-slate-500 mono">Cabine Medium — Espace Carrefour Gabès</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="flex justify-between items-center px-2 text-xs text-slate-500 py-4">
+        <span class="mono">© 2026 Atlas Working — Idée & cabines · PixelSoftware Design</span>
+        <span>Contact : +216 52 675 027 | pixelsoftwaredesign@gmail.com</span>
+        <button onclick="alert('Génération du catalogue PDF complet avec rendus 3D en cours...')" class="text-[#2D5A27] font-bold hover:underline">📥 Télécharger le catalogue complet (PDF)</button>
+    </footer>
+
+    <script>
+        function selectCabin(n) {
+            for (let i = 1; i <= 4; i++) {
+                const card = document.getElementById('cabin-' + i);
+                const btn = document.getElementById('btn-c' + i);
+                if (i === n) {
+                    card.classList.remove('hidden');
+                    if (i === 4) { btn.className = "px-4 py-2 rounded-lg text-xs font-bold transition bg-[#9ACD32] text-[#2D3748] shadow-sm"; }
+                    else { btn.className = "px-4 py-2 rounded-lg text-xs font-bold transition bg-[#2D5A27] text-white shadow-sm"; }
+                } else {
+                    card.classList.add('hidden');
+                    btn.className = "px-4 py-2 rounded-lg text-xs font-bold transition text-[#2D3748] hover:text-[#2D5A27]";
+                }
+            }
+            if (n === 4) initPanorama();
+            else destroyPanorama();
+        }
+
+        let panInstance = null;
+        function initPanorama() {
+            if (!window.pannellum || panInstance) return;
+            panInstance = pannellum.viewer('panoramaCat', {
+                type: 'equirectangular',
+                panorama: 'assets/panorama-360.jpg',
+                autoLoad: true,
+                autoRotate: -2,
+                showZoomCtrl: false,
+                compass: false,
+                title: 'Atlas Cabine — Vue 360°',
+                hfov: 100,
+                minHfov: 60,
+                maxHfov: 130
+            });
+        }
+        function destroyPanorama() {
+            if (panInstance) { try { panInstance.destroy(); } catch (e) {} panInstance = null; }
+        }
+    </script>
+</body>
+</html>

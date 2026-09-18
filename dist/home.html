@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATLAS CABINE — Plateforme</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .card { transition: all .25s ease; }
+        .card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(45, 90, 39, .18); }
+    </style>
+</head>
+<body class="bg-[#F4F6F0] text-[#2D3748] min-h-screen flex flex-col">
+
+    <!-- ============ HERO ============ -->
+    <header class="bg-[#2D5A27] text-white">
+        <div class="max-w-7xl mx-auto px-6 py-10">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 bg-[#9ACD32] rounded-2xl flex items-center justify-center font-extrabold text-[#2D3748] text-xl shadow-lg">AC</div>
+                <div>
+                    <h1 class="font-extrabold text-2xl tracking-tight">ATLAS <span class="text-[#9ACD32]">CABINE</span></h1>
+                    <p class="text-xs text-[#9ACD32]/80 mono">Cabines acoustiques intelligentes · Gabès — Carthage</p>
+                </div>
+            </div>
+            <p class="mt-6 max-w-2xl text-sm text-emerald-50/90">Plateforme de pilotage de l'écosystème Atlas Cabine — de la vente en usine jusqu'à l'expérience utilisateur dans la cabine, en passant par l'analyse en temps réel.</p>
+            <div class="mt-5 flex flex-wrap gap-2 text-[11px] mono">
+                <span class="bg-white/10 border border-white/20 px-3 py-1.5 rounded-xl">🟢 Vert Zeste #9ACD32</span>
+                <span class="bg-white/10 border border-white/20 px-3 py-1.5 rounded-xl">🌲 Vert Forêt #2D5A27</span>
+                <span class="bg-white/10 border border-white/20 px-3 py-1.5 rounded-xl">🤍 Gris Lin #F4F6F0</span>
+                <span class="bg-white/10 border border-white/20 px-3 py-1.5 rounded-xl">⚫ Graphite #2D3748</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- ============ MOBULES ============ -->
+    <main class="flex-1 max-w-7xl mx-auto w-full px-6 py-10">
+        <p class="text-xs mono font-bold text-[#2D5A27] uppercase tracking-[0.2em] mb-5">Modules</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <a href="index.html" class="card bg-white rounded-3xl border border-[#2D5A27]/15 p-6">
+                <div class="w-12 h-12 rounded-2xl bg-[#9ACD32] flex items-center justify-center text-xl mb-4 shadow-sm">🖥️</div>
+                <h3 class="font-extrabold text-[#2D5A27]">App Cabine</h3>
+                <p class="text-xs text-slate-500 mt-1 leading-relaxed">Kiosque externe + interface client : ouverture de porte par QR / scan caméra, éclairage, climatisation, audio, commande vocale et compteurs de session.</p>
+                <span class="mono text-[10px] text-slate-400 mt-4 block">index.html · /</span>
+            </a>
+
+            <a href="exterieur.html" class="card bg-white rounded-3xl border border-[#2D5A27]/15 p-6">
+                <div class="w-12 h-12 rounded-2xl bg-[#9ACD32] flex items-center justify-center text-xl mb-4 shadow-sm">📟</div>
+                <h3 class="font-extrabold text-[#2D5A27]">Écran externe</h3>
+                <p class="text-xs text-slate-500 mt-1 leading-relaxed">Affichage mural : QR code de réservation, horloge et statut de la cabine en temps réel (libre / occupée).</p>
+                <span class="mono text-[10px] text-slate-400 mt-4 block">exterieur.html · /exterieur</span>
+            </a>
+
+            <a href="catalogue.html" class="card bg-white rounded-3xl border border-[#2D5A27]/15 p-6">
+                <div class="w-12 h-12 rounded-2xl bg-[#9ACD32] flex items-center justify-center text-xl mb-4 shadow-sm">📚</div>
+                <h3 class="font-extrabold text-[#2D5A27]">Catalogue</h3>
+                <p class="text-xs text-slate-500 mt-1 leading-relaxed">Les 3 modèles (Small, Medium, Large) avec rendus 3D, photos réelles, visite 360° intégrée et fiches détaillées.</p>
+                <span class="mono text-[10px] text-slate-400 mt-4 block">catalogue.html · /catalogue</span>
+            </a>
+
+            <a href="presentation.html" class="card bg-white rounded-3xl border border-[#2D5A27]/15 p-6">
+                <div class="w-12 h-12 rounded-2xl bg-[#9ACD32] flex items-center justify-center text-xl mb-4 shadow-sm">🎬</div>
+                <h3 class="font-extrabold text-[#2D5A27]">Présentation</h3>
+                <p class="text-xs text-slate-500 mt-1 leading-relaxed">Étude commerciale : concept, gamme, technologies, applications et conditions réelles — avec viewer 360° en direct.</p>
+                <span class="mono text-[10px] text-slate-400 mt-4 block">presentation.html · /presentation</span>
+            </a>
+
+            <a href="visite360.html" class="card bg-white rounded-3xl border border-[#2D5A27]/15 p-6">
+                <div class="w-12 h-12 rounded-2xl bg-[#9ACD32] flex items-center justify-center text-xl mb-4 shadow-sm">🔄</div>
+                <h3 class="font-extrabold text-[#2D5A27]">Visite 360°</h3>
+                <p class="text-xs text-slate-500 mt-1 leading-relaxed">Visite immersive plein écran de la cabine : panorama navigateur + galerie de photos d'installation.</p>
+                <span class="mono text-[10px] text-slate-400 mt-4 block">visite360.html · /visite360</span>
+            </a>
+
+            <a href="portail-usine.html" class="card bg-white rounded-3xl border border-[#2D5A27]/15 p-6">
+                <div class="w-12 h-12 rounded-2xl bg-[#2D3748] flex items-center justify-center text-xl mb-4 shadow-sm">🏭</div>
+                <h3 class="font-extrabold text-[#2D5A27]">Portail Usine</h3>
+                <p class="text-xs text-slate-500 mt-1 leading-relaxed">Achat de cabines (prix + fiche technique), gestion des clients et génération des accès + QR codes selon les coordonnées du site.</p>
+                <span class="mono text-[10px] text-slate-400 mt-4 block">portail-usine.html</span>
+            </a>
+
+            <a href="dashboard-usine.html" class="card bg-white rounded-3xl border border-[#2D5A27]/15 p-6 md:col-span-2 lg:col-span-1">
+                <div class="w-12 h-12 rounded-2xl bg-[#2D3748] flex items-center justify-center text-xl mb-4 shadow-sm">📊</div>
+                <h3 class="font-extrabold text-[#2D5A27]">Dashboard Usine</h3>
+                <p class="text-xs text-slate-500 mt-1 leading-relaxed">Analyse et ventes en temps réel : sessions utilisateurs, compteurs de temps, occupation des cabines et chiffre d'affaires.</p>
+                <span class="mono text-[10px] text-slate-400 mt-4 block">dashboard-usine.html</span>
+            </a>
+
+            <a href="accessoires.html" class="card bg-white rounded-3xl border border-[#2D5A27]/15 p-6">
+                <div class="w-12 h-12 rounded-2xl bg-[#9ACD32] flex items-center justify-center text-xl mb-4 shadow-sm">🧰</div>
+                <h3 class="font-extrabold text-[#2D5A27]">Liste des accessoires</h3>
+                <p class="text-xs text-slate-500 mt-1 leading-relaxed">Mobilier, affichage, climatisation, IoT &amp; sécurité : 30 accessoires avec prix, réglables avant commande.</p>
+                <span class="mono text-[10px] text-slate-400 mt-4 block">accessoires.html</span>
+            </a>
+
+            <div class="card bg-[#2D5A27] text-white rounded-3xl p-6 flex flex-col justify-between min-h-[190px]">
+                <div>
+                    <div class="w-12 h-12 rounded-2xl bg-[#9ACD32] flex items-center justify-center text-xl mb-4 text-[#2D3748]">🔐</div>
+                    <h3 class="font-extrabold">Accès démo client</h3>
+                    <p class="text-xs mt-1 opacity-80 leading-relaxed">Compte de test dans l'app cabine :</p>
+                    <p class="mono text-[11px] bg-white/10 border border-white/20 rounded-xl px-3 py-2 mt-2">client@atlas.tn · atlas2026</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="border-t border-[#2D5A27]/10 py-6 text-center text-xs text-slate-400 mono">© 2026 Atlas Working — Idée & cabines · Logiciel (recherche & développement) : PixelSoftware Design</footer>
+</body>
+</html>

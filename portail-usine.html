@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATLAS USINE — Achat Cabine & Accès</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        * { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-thumb { background: #2D5A27; border-radius: 8px; }
+        ::-webkit-scrollbar-track { background: #F4F6F0; }
+        @media print { .no-print { display: none !important; } }
+        input[type=number]::-webkit-inner-spin-button { opacity: 1; }
+    </style>
+</head>
+<body class="bg-[#F4F6F0] text-[#2D3748]">
+
+    <header class="bg-[#2D3748] px-6 py-4 flex flex-wrap items-center justify-between gap-3 sticky top-0 z-40 shadow-lg no-print">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-[#9ACD32] rounded-2xl flex items-center justify-center font-extrabold text-[#2D3748]">AC</div>
+            <div>
+                <h1 class="font-extrabold text-white text-lg leading-tight">ATLAS <span class="text-[#9ACD32]">USINE</span></h1>
+                <p class="text-[10px] text-slate-300 mono">Portail de production · commandes & accès cabines</p>
+            </div>
+        </div>
+        <nav class="flex items-center gap-2 text-xs font-bold">
+            <a href="home.html" class="px-3 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition">🏠 Accueil</a>
+            <span class="bg-[#9ACD32]/15 text-[#9ACD32] px-3 py-1.5 rounded-xl border border-[#9ACD32]/30">🏭 Portail Usine</span>
+            <a href="dashboard-usine.html" class="px-3 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition">📊 Dashboard</a>
+            <a href="catalogue.html" class="px-3 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition">Catalogue</a>
+            <a href="presentation.html" class="px-3 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition">Présentation</a>
+            <a href="index.html" class="px-3 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition">App Cabine</a>
+        </nav>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 py-8 space-y-10">
+
+        <!-- ============ NOUVELLE COMMANDE ============ -->
+        <section class="bg-white border border-[#2D5A27]/15 rounded-3xl p-8 shadow-sm">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <span class="text-xs font-bold text-[#9ACD32] uppercase tracking-wider">Nouvelle vente</span>
+                    <h2 class="text-2xl font-bold text-[#2D5A27]">1. Acheter une cabine — prix & fiche technique</h2>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-6" id="modelCards"></div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-[#2D5A27] mb-1">Raison sociale du client</label>
+                        <input id="fClient" class="w-full px-4 py-3 rounded-xl bg-[#F4F6F0] border border-[#2D5A27]/20 focus:outline-none focus:border-[#2D5A27] text-sm" placeholder="Ex : Air Carthage Consulting">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-[#2D5A27] mb-1">Contact</label>
+                            <input id="fContact" class="w-full px-4 py-3 rounded-xl bg-[#F4F6F0] border border-[#2D5A27]/20 focus:outline-none focus:border-[#2D5A27] text-sm" placeholder="Nom du contact">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-[#2D5A27] mb-1">Téléphone</label>
+                            <input id="fPhone" class="w-full px-4 py-3 rounded-xl bg-[#F4F6F0] border border-[#2D5A27]/20 focus:outline-none focus:border-[#2D5A27] text-sm" placeholder="+216 ...">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-[#2D5A27] mb-1">Email (identifiant d'accès)</label>
+                        <input id="fEmail" type="email" class="w-full px-4 py-3 rounded-xl bg-[#F4F6F0] border border-[#2D5A27]/20 focus:outline-none focus:border-[#2D5A27] text-sm" placeholder="client@entreprise.tn">
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-[#2D5A27] mb-1">Site d'installation</label>
+                        <select id="fSite" class="w-full px-4 py-3 rounded-xl bg-[#F4F6F0] border border-[#2D5A27]/20 focus:outline-none focus:border-[#2D5A27] text-sm">
+                            <option>Aéroport Tunis–Carthage</option>
+                            <option>Carrefour Gabès</option>
+                            <option>Open space / bureau privé</option>
+                            <option>Hall d'hôtel</option>
+                            <option>Autre</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-[#2D5A27] mb-1">Coordonnées précises du site</label>
+                        <input id="fCoords" class="w-full px-4 py-3 rounded-xl bg-[#F4F6F0] border border-[#2D5A27]/20 focus:outline-none focus:border-[#2D5A27] text-sm" placeholder="Ex : Terminal 2, niveau 0, hall d'attente / A1">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-[#2D5A27] mb-1">Quantité</label>
+                            <input id="fQty" type="number" min="1" value="1" class="w-full px-4 py-3 rounded-xl bg-[#F4F6F0] border border-[#2D5A27]/20 focus:outline-none focus:border-[#2D5A27] text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-[#2D5A27] mb-1">Session max (min)</label>
+                            <select id="fSession" class="w-full px-4 py-3 rounded-xl bg-[#F4F6F0] border border-[#2D5A27]/20 focus:outline-none focus:border-[#2D5A27] text-sm">
+                                <option value="30">30 min</option>
+                                <option value="60">60 min</option>
+                                <option value="120">120 min</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6 bg-[#F4F6F0] border border-[#2D5A27]/10 rounded-2xl p-5">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="font-bold text-[#2D5A27] text-sm">🧰 Accessoires (option) <span class="font-normal text-slate-400">— sélectionnés dans la liste Accessoires</span></h3>
+                    <span class="mono text-xs font-bold text-[#2D5A27]" id="accTotal">+0 DT</span>
+                </div>
+                <div id="accGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2"></div>
+            </div>
+
+            <div class="mt-6 flex flex-wrap items-center justify-between gap-3 bg-[#F4F6F0] border border-[#2D5A27]/10 rounded-2xl p-4">
+                <div class="text-sm">
+                    <span class="font-bold text-[#2D5A27]">Total :</span>
+                    <span id="totalPrix" class="mono text-lg font-extrabold text-[#2D5A27]">— TND HT</span>
+                    <span class="text-xs text-slate-500"> · unitaire <span id="unitPrix" class="mono">—</span></span>
+                </div>
+                <button onclick="generateAccess()" class="px-6 py-3 rounded-xl bg-[#9ACD32] hover:bg-[#8bb82d] text-[#2D3748] font-bold transition shadow-sm">🎫 Générer l'accès client & le QR code</button>
+            </div>
+        </section>
+
+        <!-- ============ ACCÈS GÉNÉRÉ ============ -->
+        <section id="resultCard" class="hidden bg-gradient-to-br from-[#2D5A27] to-[#23451e] text-white rounded-3xl p-8 shadow-xl border border-[#2D5A27]/20">
+            <div class="flex flex-wrap items-start justify-between gap-6">
+                <div class="space-y-3">
+                    <span class="text-xs font-bold text-[#9ACD32] uppercase tracking-[0.2em]">Accès généré · Client provisionné ✅</span>
+                    <h2 id="resClient" class="text-2xl font-extrabold"></h2>
+                    <p id="resOrder" class="text-sm text-slate-200"></p>
+                    <div class="flex flex-wrap gap-3 pt-2">
+                        <div class="bg-white/10 border border-white/20 rounded-2xl px-5 py-3">
+                            <p class="text-[10px] uppercase text-slate-300">Code d'accès (cabin QR)</p>
+                            <p id="resAccess" class="mono text-2xl font-extrabold text-[#9ACD32]"></p>
+                        </div>
+                        <div class="bg-white/10 border border-white/20 rounded-2xl px-5 py-3">
+                            <p class="text-[10px] uppercase text-slate-300">Mot de passe</p>
+                            <p id="resPass" class="mono text-2xl font-extrabold"></p>
+                        </div>
+                    </div>
+                    <div class="flex gap-3 pt-2">
+                        <button onclick="printResult()" class="px-5 py-2.5 rounded-xl bg-[#9ACD32] text-[#2D3748] font-bold text-sm hover:bg-[#8bb82d] transition no-print">🖨️ Imprimer la fiche d'accès</button>
+                        <button onclick="resetForm()" class="px-5 py-2.5 rounded-xl bg-white/10 text-white font-bold text-sm hover:bg-white/20 transition no-print">Nouvelle commande</button>
+                    </div>
+                </div>
+                <div id="resQR" class="bg-white p-4 rounded-2xl shadow-lg"></div>
+            </div>
+            <div id="resCabins" class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6"></div>
+            <p class="text-[11px] text-slate-300 mt-5 mono">Chaque cabine livrée possède son ID, son token d'accès et son QR propre. Utilisez « Affecter au kiosque » pour la cabine installée sur le site.</p>
+        </section>
+
+        <!-- ============ COMMANDES ============ -->
+        <section class="bg-white border border-[#2D5A27]/15 rounded-3xl p-8 shadow-sm">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-[#2D5A27]">2. Clients & cabines livrées</h2>
+                <span id="ordersCount" class="text-xs mono bg-[#9ACD32]/15 text-[#2D5A27] px-3 py-1.5 rounded-xl font-bold">0 commande</span>
+            </div>
+            <div id="ordersList" class="space-y-4"></div>
+            <p id="ordersEmpty" class="text-sm text-slate-400 text-center py-8">Aucune commande enregistrée pour l'instant.</p>
+        </section>
+    </main>
+
+    <!-- ============ FICHE TECHNIQUE (MODAL) ============ -->
+    <div id="ficheModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-[#2D5A27]/40 backdrop-blur-sm p-6 no-print">
+        <div class="w-full max-w-2xl bg-white rounded-3xl shadow-2xl border border-[#2D5A27]/20 p-8 max-h-[85vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-5">
+                <h3 id="ficheTitle" class="text-lg font-extrabold text-[#2D5A27]"></h3>
+                <button onclick="closeFiche()" class="w-9 h-9 rounded-xl bg-[#F4F6F0] hover:bg-[#e4e9dc] font-bold">✕</button>
+            </div>
+            <div id="ficheBody" class="space-y-3 text-sm"></div>
+        </div>
+    </div>
+
+    <footer class="text-center text-xs text-slate-400 mono pb-6 no-print">© 2026 Atlas Working — Idée & cabines · Logiciel (recherche & développement) : PixelSoftware Design</footer>
+
+    <script>
+        const MODELS = [
+            {
+                id: 'AT-S90', name: 'Small', dim: '90 × 120 × 240 cm', surface: '1,08 m²', cap: '1–2 pers.',
+                att: '35 dB', prix: 18500, img: 'assets/cabine-small.svg',
+                fiche: [
+                    ['Structure', 'Panneaux sandwich aluminium 30 mm, profilés anodisés graphite, vitre trempée 6 mm'],
+                    ['Acoustique', 'Atténuation panoramique ~35 dB · base mass-flow 60 % · RGBA 90 dB'],
+                    ['Ventilation', 'Super-silencieuse 0,02 sone · lampe anti-suie à arc long, 406 → 465 nm'],
+                    ['Éclairage', 'Linéaire dépoli RGBW · 3 500 lm · 12,5 W/m · anti-éblouissement'],
+                    ['IoT & capteurs', 'Capteur CO₂ · présence THz (PIR) · contact porte · détecteur fumée'],
+                    ['Sécurité', "Bouton d'urgence · hôte sécurité (DOAS) · déverrouillage automatique"],
+                    ['Électrique', '220 V / 50 Hz · consommation moyenne 120 W · prises USB-C'],
+                    ['Garantie', 'Structure 5 ans · électronique/IoT 2 ans · télémaintenance 1 an offerte']
+                ]
+            },
+            {
+                id: 'AT-M240', name: 'Medium', dim: '240 × 120 × 240 cm', surface: '2,88 m²', cap: '2–4 pers.',
+                att: '42 dB', prix: 32900, img: 'assets/cabine-medium.svg',
+                fiche: [
+                    ['Structure', 'Panneaux sandwich aluminium 30 mm, profilés anodisés, double vitrage océan/horizon 8 mm'],
+                    ['Acoustique', 'Atténuation panoramique ~42 dB · base mass-flow 60 % · RGBA 92 dB'],
+                    ['Ventilation', 'Super-silencieuse 0,02 sone · flux pulsé 2 voies · filtration PM2,5'],
+                    ['Éclairage', 'Linéaire dépoli RGBW · 3 500 lm · 12,5 W/m · scénarios Focus/Relax'],
+                    ['IoT & capteurs', 'Réseau capteurs CO₂ (N) · présence THz (PIR) · contact porte · fumée · luminosité'],
+                    ['Sécurité', "Bouton d'urgence · hôte sécurité (DOAS) · relock auto 15 s + détection présence"],
+                    ['Électrique', '220 V / 50 Hz · consommation moyenne 150 W · USB-C ×4'],
+                    ['Garantie', 'Structure 5 ans · électronique/IoT 2 ans · télémaintenance 1 an offerte']
+                ]
+            },
+            {
+                id: 'AT-L350', name: 'Large', dim: '350 × 250 × 240 cm', surface: '8,75 m²', cap: '6–8 pers.',
+                att: '48 dB', prix: 58500, img: 'assets/cabine-large.svg',
+                fiche: [
+                    ['Structure', 'Panneaux sandwich aluminium 40 mm renforcés, double vitrage océan/horizon 8 mm'],
+                    ['Acoustique', 'Atténuation panoramique ~48 dB · base mass-flow 60 % · RGBA 95 dB'],
+                    ['Ventilation', 'Super-silencieuse 0,02 sone · unité gainable 4 voies · filtration PM2,5 + désinfection UV'],
+                    ['Éclairage', 'Linéaire dépoli RGBW · 3 500 lm · 12,5 W/m · zones indépendantes'],
+                    ['IoT & capteurs', 'Réseau capteurs CO₂ (N) ×4 · présence THz (PIR) ×2 · contact porte ×2 · fumée ×2'],
+                    ['Sécurité', "Boutons d'urgence ×2 · hôte sécurité (DOAS) · issue de secours secondaire"],
+                    ['Électrique', '220 V / 50 Hz · consommation moyenne 240 W · USB-C ×8 · RJ45'],
+                    ['Garantie', 'Structure 5 ans · électronique/IoT 2 ans · télémaintenance 1 an offerte']
+                ]
+            }
+        ];
+
+        let selectedModel = MODELS[1];
+
+        function renderModelCards() {
+            const wrap = document.getElementById('modelCards');
+            wrap.innerHTML = MODELS.map(m => `
+                <div onclick="selectModel('${m.id}')" id="card-${m.id}" class="rounded-2xl border-2 border-[#2D5A27]/15 bg-white overflow-hidden cursor-pointer hover:border-[#2D5A27] transition">
+                    <div class="p-3 bg-[#F4F6F0] flex items-center">
+                        <img src="${m.img}" alt="${m.name}" class="h-24 mx-auto object-contain">
+                    </div>
+                    <div class="p-4">
+                        <div class="flex items-center justify-between">
+                            <span class="mono text-[10px] font-bold text-[#2D5A27] bg-[#9ACD32]/15 px-2 py-0.5 rounded-lg">${m.id}</span>
+                            <small class="mono text-slate-400">${m.att} dB</small>
+                        </div>
+                        <h3 class="font-extrabold text-[#2D5A27] mt-1">Atlas ${m.name}</h3>
+                        <p class="text-[11px] text-slate-500 mono">${m.dim} · ${m.surface} · ${m.cap}</p>
+                        <p class="mono text-xl font-extrabold text-[#2D3748] mt-2">${m.prix.toLocaleString('fr-FR')} DT <span class="text-[10px] text-slate-400 font-sans font-semibold">HT</span></p>
+                        <div class="flex gap-2 mt-3">
+                            <button onclick="event.stopPropagation(); openFiche('${m.id}')" class="flex-1 py-2 rounded-xl bg-[#F4F6F0] border border-[#2D5A27]/15 text-[#2D5A27] font-bold text-xs hover:bg-[#e4e9dc] transition">📘 Fiche technique</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            selectModel(MODELS[1].id);
+        }
+
+        function selectModel(id) {
+            const m = MODELS.find(x => x.id === id);
+            if (!m) return;
+            selectedModel = m;
+            document.querySelectorAll('#modelCards > div').forEach(c => c.className = c.className.replace('border-[#9ACD32]', 'border-[#2D5A27]/15'));
+            const card = document.getElementById('card-' + id);
+            card.className = card.className.replace('border-[#2D5A27]/15', 'border-[#9ACD32]');
+            card.classList.remove('hover:border-[#2D5A27]');
+            updateTotal();
+        }
+
+        function openFiche(id) {
+            const m = MODELS.find(x => x.id === id);
+            document.getElementById('ficheTitle').innerHTML = `${m.id} — Atlas ${m.name} <small class="text-slate-400 font-normal">${m.dim}</small>`;
+            document.getElementById('ficheBody').innerHTML = `
+                <div class="grid grid-cols-3 gap-3 mb-4">
+                    <div class="bg-[#9ACD32]/15 border border-[#9ACD32]/40 rounded-xl p-3 text-center">
+                        <p class="mono text-lg font-extrabold text-[#2D5A27]">100%</p>
+                        <p class="text-[10px] font-bold">Réglable acoustique</p>
+                    </div>
+                    <div class="bg-[#9ACD32]/15 border border-[#9ACD32]/40 rounded-xl p-3 text-center">
+                        <p class="mono text-lg font-extrabold text-[#2D5A27]">80%</p>
+                        <p class="text-[10px] font-bold">Débruit milieu ambiant</p>
+                    </div>
+                    <div class="bg-[#9ACD32]/15 border border-[#9ACD32]/40 rounded-xl p-3 text-center">
+                        <p class="mono text-lg font-extrabold text-[#2D5A27]">100%</p>
+                        <p class="text-[10px] font-bold">Isolation acoustique fine</p>
+                    </div>
+                </div>` + m.fiche.map(([k, v]) => `
+                <div class="flex gap-3 bg-[#F4F6F0] border border-[#2D5A27]/10 rounded-xl p-3">
+                    <span class="mono w-36 shrink-0 font-bold text-[#2D5A27] text-xs pt-0.5">${k}</span>
+                    <span class="text-xs text-slate-600">${v}</span>
+                </div>`).join('') + `
+                <div class="mt-4 flex items-center justify-between bg-[#2D5A27]/5 border border-[#2D5A27]/20 rounded-xl p-4">
+                    <span class="font-bold text-[#2D5A27]">Prix de vente conseillé</span>
+                    <span class="mono text-xl font-extrabold text-[#2D5A27]">${m.prix.toLocaleString('fr-FR')} DT HT</span>
+                </div>`;
+            const modal = document.getElementById('ficheModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+        function closeFiche() {
+            const modal = document.getElementById('ficheModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function updateTotal() {
+            const qty = Math.max(1, parseInt(document.getElementById('fQty').value) || 1);
+            const acc = selectedAccessories();
+            const accSum = acc.reduce((a, x) => a + x.prix, 0);
+            document.getElementById('unitPrix').innerText = selectedModel.prix.toLocaleString('fr-FR') + ' DT';
+            document.getElementById('totalPrix').innerHTML = (selectedModel.prix * qty + accSum).toLocaleString('fr-FR') + ' <span class="text-xs">DT HT</span>';
+            document.getElementById('accTotal').innerText = '+ ' + accSum.toLocaleString('fr-FR') + ' DT';
+        }
+
+        // ============ ACCESSOIRES ============
+        const CATS = [
+            ['FAUTE-01', 'Fauteuil ergonomique mousse acoustique', 890],
+            ['FAUTE-02', 'Fauteuil inclinable "Focus"', 1250],
+            ['CANAP-01', 'Canapé 2 places (Medium)', 2350],
+            ['CANAP-02', 'Canapé 3 places (Large)', 3400],
+            ['BANQ-01', 'Banquette sous fenêtre', 1480],
+            ['TABLE-01', 'Table pliante murale', 620],
+            ['TABLE-02', 'Table ronde Ø80 (Large)', 950],
+            ['COAT-01', 'Porte-manteau / patère', 210],
+            ['ECRAN-01', 'Écran 27" QHD tactile + bras', 1890],
+            ['ECRAN-02', 'Écran 43" 4K (Large)', 2450],
+            ['VIDPR-01', 'Vidéoprojecteur pico + écran rétractable', 1650],
+            ['SAMB-01', 'Soundbar acoustique intérieure', 740],
+            ['MIC-01', 'Kit micro-casque conférence', 460],
+            ['HTEL-01', 'Support TV mural articulé', 380],
+            ['CLIM-01', 'Climatisation 2,7 kW intégrée', 1980],
+            ['CLIM-02', 'Gainable 4 voies (Large)', 3250],
+            ['FILT-01', 'Jeu de filtres HEPA 13 (x4)', 120],
+            ['NEB-01', 'Nébuliseur hydratant', 260],
+            ['ION-01', 'Purificateur ioniseur d\'air', 540],
+            ['TABL-01', 'Tablette 10" contrôle + socle', 980],
+            ['CAPT-01', 'Kit capteur CO₂ mural', 340],
+            ['CAPT-02', 'Pack présence THz', 420],
+            ['URG-01', 'Bouton d\'urgence sans fil', 150],
+            ['CAM-01', 'Splitting camera hôte sécurité', 890],
+            ['CAM-02', 'Grille occultante + ventelles + RGBA', 1300],
+            ['LED-01', 'Bande LED RGBW supplémentaire', 290],
+            ['PRISE-01', 'Hub USB-C + RJ45 triple', 210],
+            ['MIROIR-01', 'Miroir de mise à jour', 180],
+            ['TAPIS-01', 'Tapis acoustique au sol', 560],
+            ['LOR-01', 'Stores / rideaux acoustiques', 640]
+        ];
+        function getAccSel() { try { return JSON.parse(sessionStorage.getItem('atlasAccessCom') || '[]'); } catch (e) { return []; } }
+        function accChecked() {
+            const sel = getAccSel();
+            return CATS.filter(c => sel.includes(c[0])).map(([ref, label, prix]) => ({ ref, label, prix }));
+        }
+        function selectedAccessories() {
+            return accChecked();
+        }
+        function renderAccGrid() {
+            const sel = getAccSel();
+            document.getElementById('accGrid').innerHTML = CATS.map(([ref, label, prix]) => {
+                const checked = sel.includes(ref);
+                return `<label class="flex items-center gap-2 bg-white border ${checked ? 'border-[#9ACD32]' : 'border-[#2D5A27]/15'} rounded-xl px-3 py-2 cursor-pointer text-xs">
+                    <input type="checkbox" ${checked ? 'checked' : ''} onchange="toggleAcc('${ref}')" class="accent-[#2D5A27]">
+                    <span class="mono text-[10px] font-bold text-[#2D5A27]">${ref}</span>
+                    <span class="flex-1 truncate font-semibold" title="${label}">${label}</span>
+                    <span class="mono text-[#2D5A27] font-bold">${prix.toLocaleString('fr-FR')}</span>
+                </label>`;
+            }).join('');
+        }
+        function toggleAcc(ref) {
+            let sel = getAccSel();
+            sel = sel.includes(ref) ? sel.filter(r => r !== ref) : sel.concat(ref);
+            sessionStorage.setItem('atlasAccessCom', JSON.stringify(sel));
+            renderAccGrid();
+            updateTotal();
+        }
+
+        function makeCode() {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+            let s = '';
+            for (let i = 0; i < 6; i++) s += chars[Math.floor(Math.random() * chars.length)];
+            return s;
+        }
+
+        const SITE_CODES = { 'Aéroport Tunis–Carthage': 'TUN', 'Carrefour Gabès': 'GAB', 'Open space / bureau privé': 'OSP', "Hall d'hôtel": 'HTL', 'Autre': 'SIT' };
+        function siteSeq(code) {
+            try {
+                const cabins = JSON.parse(localStorage.getItem('atlasCabins') || '[]');
+                return cabins.filter(c => c.id.startsWith('CAB-' + code)).length;
+            } catch (e) { return 0; }
+        }
+        function assignKiosk(cabinId, token) {
+            try {
+                localStorage.setItem('atlasCabinId', cabinId);
+                localStorage.setItem('atlasCabinConfig', JSON.stringify({ id: cabinId, token: token, ts: Date.now() }));
+            } catch (e) {}
+            alert('Cabine ' + cabinId + ' affectée au kiosque de l\'app cabine (synchronisé en direct).');
+        }
+
+        function generateAccess() {
+            const client = document.getElementById('fClient').value.trim();
+            const contact = document.getElementById('fContact').value.trim();
+            const email = document.getElementById('fEmail').value.trim().toLowerCase();
+            const phone = document.getElementById('fPhone').value.trim();
+            const site = document.getElementById('fSite').value;
+            const coords = document.getElementById('fCoords').value.trim() || '—';
+            const qty = Math.max(1, parseInt(document.getElementById('fQty').value) || 1);
+            const session = document.getElementById('fSession').value;
+            if (!client || !email) { alert('Renseignez au moins la raison sociale et l\'email du client.'); return; }
+
+            const siteCode = SITE_CODES[site] || 'SIT';
+            let seq = siteSeq(siteCode);
+            const cabins = [];
+            for (let i = 0; i < qty; i++) {
+                cabins.push({
+                    id: 'CAB-' + siteCode + '-' + String(seq + i + 1).padStart(2, '0'),
+                    token: 'ATLAS-' + makeCode(),
+                    password: makeCode().toLowerCase() + Math.floor(10 + Math.random() * 89)
+                });
+            }
+
+            const access = 'ATLAS-' + makeCode();
+            const password = makeCode().toLowerCase() + Math.floor(10 + Math.random() * 89);
+
+            const acc = accChecked();
+            const accSum = acc.reduce((a, x) => a + x.prix, 0);
+            const total = selectedModel.prix * qty + accSum;
+
+            const order = {
+                id: Date.now(), access, password,
+                client, contact, email, phone, site, coords,
+                model: selectedModel.id, modelName: selectedModel.name,
+                dim: selectedModel.dim, att: selectedModel.att,
+                qty, sessionMin: session, prixUnit: selectedModel.prix,
+                accessories: acc, total, cabins, date: new Date().toLocaleString('fr-FR')
+            };
+
+            const users = JSON.parse(localStorage.getItem('atlasUsers') || '[]');
+            users.push({ email, password, name: client + (contact ? ' · ' + contact : ''), role: 'client', model: selectedModel.name, site, coords, access, date: order.date });
+            localStorage.setItem('atlasUsers', JSON.stringify(users));
+
+            const regCabins = JSON.parse(localStorage.getItem('atlasCabins') || '[]');
+            cabins.forEach(c => regCabins.push({ id: c.id, token: c.token, password: c.password, client, site, coords, model: selectedModel.id, orderId: order.id, date: order.date }));
+            localStorage.setItem('atlasCabins', JSON.stringify(regCabins));
+
+            const orders = JSON.parse(localStorage.getItem('atlasOrders') || '[]');
+            orders.unshift(order);
+            localStorage.setItem('atlasOrders', JSON.stringify(orders));
+
+            const base = location.origin + location.pathname.replace(/portail-usine\.html$/, 'index.html');
+            const appUrl = base + '?cab=' + cabins[0].id + '&access=' + cabins[0].token;
+            document.getElementById('resClient').innerText = client + (contact ? ' — ' + contact : '');
+            document.getElementById('resOrder').innerHTML = `<b>${selectedModel.id}</b> Atlas ${selectedModel.name} (${selectedModel.dim}) × <b>${qty}</b> · ${site} — ${escapeHtml(coords)} · total <b class="mono">${order.total.toLocaleString('fr-FR')} DT HT</b>` + (acc.length ? ` <span class="block text-xs text-slate-200 mt-1">🧰 Accessoires : ${acc.map(a => a.ref).join(', ')} (+${accSum.toLocaleString('fr-FR')} DT)</span>` : '');
+            document.getElementById('resAccess').innerText = cabins[0].token;
+            document.getElementById('resPass').innerText = cabins[0].password;
+            document.getElementById('resQR').innerHTML = '';
+            new QRCode(document.getElementById('resQR'), { text: appUrl, width: 180, height: 180, colorDark: '#2D3748', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M });
+
+            document.getElementById('resCabins').innerHTML = cabins.map(c => `
+                <div class="bg-white/10 border border-white/20 rounded-2xl p-4">
+                    <div class="flex justify-between items-center">
+                        <span class="mono font-extrabold text-[#9ACD32]">${c.id}</span>
+                        <button onclick="assignKiosk('${c.id}','${c.token}')" class="text-[10px] bg-[#9ACD32] text-[#2D3748] px-2 py-1 rounded-lg font-bold hover:bg-[#8bb82d] transition no-print">📟 Affecter au kiosque</button>
+                    </div>
+                    <p class="mono text-xs text-slate-200 mt-2">Token : <b class="text-white">${c.token}</b></p>
+                    <p class="mono text-xs text-slate-300">Mot de passe : ${c.password}</p>
+                    <div class="bg-white p-2 rounded-xl mt-3 inline-block" id="qr-${c.id}"></div>
+                </div>`).join('');
+
+            document.getElementById('resultCard').classList.remove('hidden');
+            document.getElementById('resultCard').scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            cabins.forEach(c => {
+                new QRCode(document.getElementById('qr-' + c.id), { text: base + '?cab=' + c.id + '&access=' + c.token, width: 110, height: 110, colorDark: '#2D3748', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M });
+            });
+
+            renderOrders();
+        }
+
+        function escapeHtml(t) {
+            const d = document.createElement('div');
+            d.textContent = t == null ? '' : String(t);
+            return d.innerHTML;
+        }
+
+        function renderOrders() {
+            const orders = JSON.parse(localStorage.getItem('atlasOrders') || '[]');
+            const list = document.getElementById('ordersList');
+            document.getElementById('ordersEmpty').style.display = orders.length ? 'none' : 'block';
+            document.getElementById('ordersCount').innerText = orders.length + (orders.length > 1 ? ' commandes' : ' commande');
+            list.innerHTML = orders.map((o, i) => `
+                <div class="border border-[#2D5A27]/10 rounded-2xl p-4 flex flex-wrap items-center gap-4 bg-[#F4F6F0]/60">
+                    <div class="flex-1 min-w-[220px]">
+                        <p class="font-bold text-[#2D5A27]">${escapeHtml(o.client)} <span class="text-slate-400 font-normal">· ${escapeHtml(o.contact || '')}</span></p>
+                        <p class="text-[11px] mono text-slate-500 mt-0.5">${o.modelId === undefined ? o.model : o.model} · ${o.dim} ×${o.qty} · ${escapeHtml(o.site)} — ${escapeHtml(o.coords)}</p>
+                        <p class="text-[11px] text-slate-400 mt-1">${o.date} · ${o.total.toLocaleString('fr-FR')} DT HT${o.accessories && o.accessories.length ? ` · 🧰 ${o.accessories.length} accessoire(s)` : ''}</p>
+                        <div class="flex gap-2 mt-2 flex-wrap">
+                            <span class="mono text-xs bg-[#2D5A27] text-white px-2.5 py-1 rounded-lg font-bold">${o.access}</span>
+                            <span class="mono text-xs bg-white border border-[#2D5A27]/20 px-2.5 py-1 rounded-lg">${o.password}</span>
+                            <span class="mono text-xs bg-[#9ACD32] text-[#2D3748] px-2.5 py-1 rounded-lg font-bold">${escapeHtml(o.email)}</span>
+                        </div>
+                        ${o.cabins ? `<div class="flex gap-2 mt-2 flex-wrap items-center">
+                            ${o.cabins.map(c => `<span class="mono text-[10px] bg-white border border-[#2D5A27]/20 px-2 py-1 rounded-lg font-bold text-[#2D5A27]">${c.id}</span><span class="mono text-[10px] text-slate-400">${c.token}</span><button onclick="assignKiosk('${c.id}','${c.token}')" title="Affecter cette cabine au kiosque" class="text-[10px] bg-[#2D3748] text-white px-2 py-1 rounded-lg hover:bg-[#2D5A27] transition">📟</button>`).join('')}
+                        </div>` : ''}
+                    </div>
+                    <div class="bg-white rounded-xl border border-[#2D5A27]/10 p-2" id="qr-${o.id}"></div>
+                    <button onclick="deleteOrder(${o.id})" class="px-3 py-2 rounded-xl bg-rose-50 border border-rose-200 text-rose-600 font-bold text-xs hover:bg-rose-100 transition">🗑 Supprimer</button>
+                </div>`).join('');
+            orders.forEach(o => {
+                const appUrl = location.origin + location.pathname.replace(/portail-usine\.html$/, 'index.html') + '?access=' + o.access;
+                new QRCode(document.getElementById('qr-' + o.id), { text: appUrl, width: 84, height: 84, colorDark: '#2D3748', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M });
+            });
+        }
+
+        function deleteOrder(id) {
+            if (!confirm('Supprimer cette commande et son accès client ?')) return;
+            const orders = JSON.parse(localStorage.getItem('atlasOrders') || '[]');
+            const order = orders.find(o => o.id === id);
+            const rest = orders.filter(o => o.id !== id);
+            localStorage.setItem('atlasOrders', JSON.stringify(rest));
+            if (order) {
+                const users = JSON.parse(localStorage.getItem('atlasUsers') || '[]');
+                localStorage.setItem('atlasUsers', JSON.stringify(users.filter(u => u.access !== order.access)));
+            }
+            renderOrders();
+        }
+
+        function resetForm() {
+            document.getElementById('fClient').value = ''; document.getElementById('fContact').value = '';
+            document.getElementById('fPhone').value = ''; document.getElementById('fEmail').value = '';
+            document.getElementById('fCoords').value = ''; document.getElementById('fQty').value = '1';
+            updateTotal();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        function printResult() { window.print(); }
+
+        document.getElementById('fQty').addEventListener('input', updateTotal);
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeFiche(); });
+        renderModelCards();
+        renderAccGrid();
+        renderOrders();
+        updateTotal();
+    </script>
+</body>
+</html>

@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATLAS USINE — Dashboard Temps Réel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-thumb { background: #2D5A27; border-radius: 8px; }
+        ::-webkit-scrollbar-track { background: #F4F6F0; }
+    </style>
+</head>
+<body class="bg-[#F4F6F0] text-[#2D3748]">
+
+    <header class="bg-[#2D3748] px-6 py-4 flex flex-wrap items-center justify-between gap-3 sticky top-0 z-40 shadow-lg">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-[#9ACD32] rounded-2xl flex items-center justify-center font-extrabold text-[#2D3748]">AC</div>
+            <div>
+                <h1 class="font-extrabold text-white text-lg leading-tight">ATLAS <span class="text-[#9ACD32]">USINE</span> <span class="text-slate-300 font-semibold">· Dashboard</span></h1>
+                <p class="text-[10px] text-slate-300 mono">Analyse & ventes en temps réel</p>
+            </div>
+        </div>
+        <nav class="flex items-center gap-2 text-xs font-bold">
+            <a href="home.html" class="px-3 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition">🏠 Accueil</a>
+            <a href="portail-usine.html" class="px-3 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition">Portail Usine</a>
+            <span class="bg-[#9ACD32]/15 text-[#9ACD32] px-3 py-1.5 rounded-xl border border-[#9ACD32]/30">📊 Dashboard</span>
+            <a href="catalogue.html" class="px-3 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition">Catalogue</a>
+        </nav>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 py-8 space-y-8">
+
+        <!-- ============ KPI ============ -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-5">
+            <div class="bg-white rounded-3xl border border-[#2D5A27]/15 p-6 shadow-sm">
+                <p class="text-[10px] mono font-bold text-slate-400 uppercase">Chiffre d'affaires</p>
+                <p id="kpiCa" class="mono text-2xl font-extrabold text-[#2D5A27] mt-1">0 DT</p>
+                <p class="text-[10px] text-slate-400 mono" id="kpiCaNb">0 cabine vendue</p>
+            </div>
+            <div class="bg-white rounded-3xl border border-[#2D5A27]/15 p-6 shadow-sm">
+                <p class="text-[10px] mono font-bold text-slate-400 uppercase">Cabines vendues</p>
+                <p id="kpiCabines" class="mono text-2xl font-extrabold text-[#2D5A27] mt-1">0</p>
+                <p class="text-[10px] text-slate-400 mono" id="kpiCabinesSplit">Small 0 · Medium 0 · Large 0</p>
+            </div>
+            <div class="bg-white rounded-3xl border border-[#2D5A27]/15 p-6 shadow-sm">
+                <p class="text-[10px] mono font-bold text-slate-400 uppercase">Sessions actives</p>
+                <p id="kpiActive" class="mono text-2xl font-extrabold text-[#9ACD32] mt-1">0</p>
+                <p class="text-[10px] text-slate-400 mono" id="kpiActiveDetail">Cabine Libre</p>
+            </div>
+            <div class="bg-white rounded-3xl border border-[#2D5A27]/15 p-6 shadow-sm">
+                <p class="text-[10px] mono font-bold text-slate-400 uppercase">Temps d'utilisation</p>
+                <p id="kpiTime" class="mono text-2xl font-extrabold text-[#2D5A27] mt-1">0 h 00</p>
+                <p class="text-[10px] text-slate-400 mono" id="kpiTimeNb">0 session terminée</p>
+            </div>
+        </div>
+
+        <!-- ============ OCCUPATION LIVE + FLUX ============ -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+            <section class="bg-white border border-[#2D5A27]/15 rounded-3xl p-6 shadow-sm">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 id="occHeader" class="font-bold text-[#2D5A27]">🟢 <span class="mono" id="occHeaderId">Cabine N°01</span> — en direct</h2>
+                    <span id="occBadge" class="mono text-[10px] px-3 py-1 rounded-xl bg-[#9ACD32]/15 text-[#2D5A27] font-bold">LIBRE</span>
+                </div>
+                <div id="occCard" class="rounded-2xl border-2 border-dashed border-[#2D5A27]/20 p-6 text-center text-slate-400 text-sm">
+                    <p>Personne dans la cabine actuellement.</p>
+                    <p class="text-xs mt-1">Les sessions s'affichent ici dès l'ouverture depuis le kiosque ou l'app.</p>
+                </div>
+            </section>
+
+            <section class="bg-white border border-[#2D5A27]/15 rounded-3xl p-6 shadow-sm">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="font-bold text-[#2D5A27]">⚡ Flux temps réel</h2>
+                    <span class="mono text-[10px] px-3 py-1 rounded-xl bg-[#9ACD32]/15 text-[#2D5A27] font-bold" id="liveDot">● LIVE</span>
+                </div>
+                <div id="liveFeed" class="space-y-2 max-h-[240px] overflow-y-auto">
+                    <p class="text-xs text-slate-400 text-center py-6">En attente d'événements… Ouvrez une cabine depuis l'app pour voir les sessions apparaître en direct.</p>
+                </div>
+            </section>
+        </div>
+
+        <!-- ============ CHARTES ============ -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+            <section class="bg-white border border-[#2D5A27]/15 rounded-3xl p-6 shadow-sm">
+                <h2 class="font-bold text-[#2D5A27] mb-4">📈 Ventes par modèle</h2>
+                <div id="chartModeles" class="space-y-3"></div>
+            </section>
+            <section class="bg-white border border-[#2D5A27]/15 rounded-3xl p-6 shadow-sm">
+                <h2 class="font-bold text-[#2D5A27] mb-4">🌍 Ventes par site d'installation</h2>
+                <div id="chartSites" class="space-y-3"></div>
+                <p class="text-[10px] text-slate-400 mono mt-4" id="sitesEmpty">Aucune vente pour l'instant.</p>
+            </section>
+        </div>
+
+        <!-- ============ DERNIÈRES VENTES ============ -->
+        <section class="bg-white border border-[#2D5A27]/15 rounded-3xl p-6 shadow-sm">
+            <h2 class="font-bold text-[#2D5A27] mb-4">🛒 Dernières ventes</h2>
+            <div id="salesList" class="overflow-x-auto">
+                <p class="text-xs text-slate-400 text-center py-6">Aucune vente dans le portail.</p>
+                <div class="min-w-[640px]"><table class="w-full text-sm">
+                    <thead><tr class="text-left text-[10px] mono uppercase text-slate-400 border-b border-[#2D5A27]/10">
+                        <th class="py-2 px-3">Client</th><th class="py-2 px-3">Modèle</th><th class="py-2 px-3">Qté</th><th class="py-2 px-3">Site</th><th class="py-2 px-3">Code d'accès</th><th class="py-2 px-3">Total</th><th class="py-2 px-3">Date</th>
+                    </tr></thead><tbody id="salesBody"></tbody>
+                </table></div>
+            </div>
+        </section>
+
+        <!-- ============ HISTORIQUE SESSIONS ============ -->
+        <section class="bg-white border border-[#2D5A27]/15 rounded-3xl p-6 shadow-sm">
+            <h2 class="font-bold text-[#2D5A27] mb-4">🕐 Sessions utilisateurs</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm min-w-[640px]">
+                    <thead><tr class="text-left text-[10px] mono uppercase text-slate-400 border-b border-[#2D5A27]/10">
+                        <th class="py-2 px-3">Utilisateur</th><th class="py-2 px-3">Cabine</th><th class="py-2 px-3">Début</th><th class="py-2 px-3">Fin</th><th class="py-2 px-3">Durée</th><th class="py-2 px-3">Statut</th>
+                    </tr></thead><tbody id="sessionsBody"></tbody>
+                </table>
+                <p id="sessionsEmpty" class="text-xs text-slate-400 text-center py-6">Aucune session enregistrée.</p>
+            </div>
+        </section>
+
+        <!-- ============ REGISTRE CABINES ============ -->
+        <section class="bg-white border border-[#2D5A27]/15 rounded-3xl p-6 shadow-sm">
+            <h2 class="font-bold text-[#2D5A27] mb-4">🏭 Registre des cabines livrées (ID & tokens usine)</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm min-w-[720px]">
+                    <thead><tr class="text-left text-[10px] mono uppercase text-slate-400 border-b border-[#2D5A27]/10">
+                        <th class="py-2 px-3">ID cabine</th><th class="py-2 px-3">Token d'accès</th><th class="py-2 px-3">Mot de passe</th><th class="py-2 px-3">Client</th><th class="py-2 px-3">Modèle</th><th class="py-2 px-3">Site</th><th class="py-2 px-3">Kiosque</th>
+                    </tr></thead><tbody id="cabinsBody"></tbody>
+                </table>
+                <p id="cabinsEmpty" class="text-xs text-slate-400 text-center py-6">Aucune cabine livrée (générez une commande dans le Portail Usine).</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="text-center text-xs text-slate-400 mono pb-6">© 2026 Atlas Working — Idée & cabines · Logiciel (recherche & développement) : PixelSoftware Design</footer>
+
+    <script>
+        const MODELS = { 'AT-S90': 'Small', 'AT-M240': 'Medium', 'AT-L350': 'Large' };
+        const atlasChannel = (typeof BroadcastChannel !== 'undefined') ? new BroadcastChannel('atlas') : null;
+        const fmtSec = s => {
+            const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), r = s % 60;
+            return (h > 0 ? h + 'h ' : '') + String(m).padStart(2, '0') + ':' + String(r).padStart(2, '0');
+        };
+        const esc = t => { const d = document.createElement('div'); d.textContent = t == null ? '' : String(t); return d.innerHTML; };
+
+        function getOrders() { try { return JSON.parse(localStorage.getItem('atlasOrders') || '[]'); } catch (e) { return []; } }
+        function getSessions() { try { return JSON.parse(localStorage.getItem('atlasSessions') || '[]'); } catch (e) { return []; } }
+
+        function pushFeed(type, label) {
+            const feed = document.getElementById('liveFeed');
+            const tim = new Date().toLocaleTimeString('fr-FR');
+            feed.insertAdjacentHTML('afterbegin', `
+                <div class="flex items-start gap-2 text-xs bg-[#F4F6F0] border border-[#2D5A27]/10 rounded-xl px-3 py-2">
+                    <span class="mono text-slate-400 pt-0.5">${tim}</span>
+                    <span class="flex-1">${label}</span>
+                    <span class="mono px-2 py-0.5 rounded-lg font-bold ${type === 'sale' ? 'bg-[#9ACD32] text-[#2D3748]' : type === 'start' ? 'bg-[#2D5A27] text-white' : 'bg-[#2D3748]/10 text-[#2D3748]'}">${type === 'sale' ? 'VENTE' : type === 'start' ? 'OUVERTURE' : 'FIN'}</span>
+                </div>`);
+            while (feed.children.length > 30) feed.lastElementChild.remove();
+        }
+
+        function renderKPIs() {
+            const orders = getOrders();
+            const sessions = getSessions();
+            const ca = orders.reduce((a, o) => a + o.total, 0);
+            const nb = orders.reduce((a, o) => a + o.qty, 0);
+            const split = orders.reduce((acc, o) => {
+                const k = MODELS[o.model] || o.modelName || 'Medium';
+                acc[k] = (acc[k] || 0) + o.qty;
+                return acc;
+            }, {});
+            const active = sessions.filter(s => !s.end);
+            const ended = sessions.filter(s => s.end);
+            const totalSec = ended.reduce((a, s) => a + (s.end - s.start) / 1000, 0);
+
+            document.getElementById('kpiCa').innerText = ca.toLocaleString('fr-FR') + ' DT';
+            document.getElementById('kpiCaNb').innerText = nb + (nb > 1 ? ' cabines vendues' : ' cabine vendue');
+            document.getElementById('kpiCabines').innerText = nb;
+            document.getElementById('kpiCabinesSplit').innerText = `Small ${split.Small || 0} · Medium ${split.Medium || 0} · Large ${split.Large || 0}`;
+            document.getElementById('kpiActive').innerText = active.length;
+            document.getElementById('kpiActiveDetail').innerText = active.length ? active[0].user : 'Cabine Libre';
+            document.getElementById('kpiTime').innerText = fmtSec(totalSec);
+            document.getElementById('kpiTimeNb').innerText = ended.length + (ended.length > 1 ? ' sessions terminées' : ' session terminée');
+
+            renderOccupancy(active);
+            renderSales(orders);
+            renderCharts(orders);
+            renderSessions(sessions);
+        }
+
+        function renderOccupancy(active) {
+            const card = document.getElementById('occCard');
+            const badge = document.getElementById('occBadge');
+            if (!active.length) {
+                card.classList.remove('border-solid', 'border-[#9ACD32]', 'bg-[#9ACD32]/5');
+                card.classList.add('border-dashed', 'border-[#2D5A27]/20');
+                card.innerHTML = '<p>Personne dans la cabine actuellement.</p><p class="text-xs mt-1">Les sessions s\'affichent ici dès l\'ouverture depuis le kiosque ou l\'app.</p>';
+                badge.className = 'mono text-[10px] px-3 py-1 rounded-xl bg-[#9ACD32]/15 text-[#2D5A27] font-bold';
+                badge.innerText = 'LIBRE';
+                return;
+            }
+            const s = active[0];
+            const end = (s.start || Date.now()) + (s.sessionMin || 30) * 60000;
+            const remain = Math.max(0, Math.round((end - Date.now()) / 1000));
+            card.classList.add('border-solid', 'border-[#9ACD32]', 'bg-[#9ACD32]/5');
+            card.classList.remove('border-dashed', 'border-[#2D5A27]/20');
+            card.innerHTML = `
+                <p class="font-extrabold text-[#2D5A27] text-lg">${esc(s.user)}</p>
+                <p class="text-xs mono text-slate-500 mt-1">${s.model || 'Cabine'} · ouverte à ${new Date(s.start).toLocaleTimeString('fr-FR')}</p>
+                <p class="mono text-3xl font-extrabold text-[#2D3748] mt-3" id="occCount">${fmtSec(remain)}</p>
+                <p class="text-[10px] mono text-slate-400 mt-1">reste avant fin de session (30 min)</p>`;
+            badge.className = 'mono text-[10px] px-3 py-1 rounded-xl bg-[#2D5A27] text-white font-bold';
+            badge.innerText = 'OCCUPÉE';
+            clearInterval(occInterval);
+            occInterval = setInterval(() => {
+                const r = Math.max(0, Math.round((end - Date.now()) / 1000));
+                const el = document.getElementById('occCount');
+                if (el) el.innerText = fmtSec(r); else clearInterval(occInterval);
+            }, 1000);
+        }
+        let occInterval = null;
+
+        function renderSales(orders) {
+            const body = document.getElementById('salesBody');
+            document.querySelector('#salesList p').style.display = orders.length ? 'none' : 'block';
+            document.querySelector('#salesList table').style.display = orders.length ? 'table' : 'none';
+            body.innerHTML = orders.map(o => `
+                <tr class="border-b border-[#2D5A27]/5 hover:bg-[#9ACD32]/5">
+                    <td class="py-2 px-3 font-semibold text-[#2D5A27]">${esc(o.client)}<div class="text-[10px] mono text-slate-400">${esc(o.email || '')}</div></td>
+                    <td class="py-2 px-3">${o.model} <span class="mono text-[10px] text-slate-400">${o.dim || ''}</span></td>
+                    <td class="py-2 px-3 mono">×${o.qty}</td>
+                    <td class="py-2 px-3 text-xs">${esc(o.site)}</td>
+                    <td class="py-2 px-3 mono text-xs text-[#2D5A27] font-bold">${o.access}</td>
+                    <td class="py-2 px-3 mono font-bold">${o.total.toLocaleString('fr-FR')} DT</td>
+                    <td class="py-2 px-3 text-xs mono text-slate-400">${o.date}</td>
+                </tr>`).join('');
+        }
+
+        function renderCharts(orders) {
+            const byModel = {};
+            const bySite = {};
+            orders.forEach(o => {
+                const k = MODELS[o.model] || o.modelName || 'Medium';
+                byModel[k] = (byModel[k] || 0) + o.qty;
+                bySite[o.site] = (bySite[o.site] || 0) + o.total;
+            });
+            const cm = document.getElementById('chartModeles');
+            const maxM = Math.max(1, ...Object.values(byModel));
+            cm.innerHTML = ['Small', 'Medium', 'Large'].map(n => `
+                <div class="flex items-center gap-3">
+                    <span class="mono w-16 text-xs font-bold text-[#2D5A27]">${n}</span>
+                    <div class="flex-1 bg-[#F4F6F0] h-6 rounded-lg overflow-hidden">
+                        <div class="h-full bg-[#9ACD32] rounded-lg transition-all duration-500" style="width:${(byModel[n] || 0) / maxM * 100}%"></div>
+                    </div>
+                    <span class="mono w-8 text-right text-xs font-bold">${byModel[n] || 0}</span>
+                </div>`).join('');
+
+            const cs = document.getElementById('chartSites');
+            const sites = Object.entries(bySite).sort((a, b) => b[1] - a[1]);
+            document.getElementById('sitesEmpty').style.display = sites.length ? 'none' : 'block';
+            const maxS = Math.max(1, ...sites.map(s => s[1]));
+            if (sites.length) {
+                cs.innerHTML = sites.map(([site, total]) => `
+                    <div class="flex items-center gap-3">
+                        <span class="w-40 text-xs font-bold text-[#2D5A27] truncate">${esc(site)}</span>
+                        <div class="flex-1 bg-[#F4F6F0] h-6 rounded-lg overflow-hidden">
+                            <div class="h-full bg-[#2D5A27] rounded-lg transition-all duration-500" style="width:${total / maxS * 100}%"></div>
+                        </div>
+                        <span class="mono w-24 text-right text-xs font-bold">${total.toLocaleString('fr-FR')} DT</span>
+                    </div>`).join('');
+            } else {
+                cs.innerHTML = '<p class="text-xs text-slate-400 text-center py-4">Aucune vente pour l\'instant.</p>';
+            }
+        }
+
+        function renderSessions(list) {
+            const body = document.getElementById('sessionsBody');
+            document.getElementById('sessionsEmpty').style.display = list.length ? 'none' : 'block';
+            body.innerHTML = list.slice(0, 40).map(s => {
+                const dur = s.end ? Math.round((s.end - s.start) / 1000) : 'en cours';
+                return `
+                <tr class="border-b border-[#2D5A27]/5 ${!s.end ? 'bg-[#9ACD32]/10' : ''}">
+                    <td class="py-2 px-3 font-semibold text-[#2D5A27]">${esc(s.user)}</td>
+                    <td class="py-2 px-3 mono text-xs">${s.unit}</td>
+                    <td class="py-2 px-3 text-xs mono">${new Date(s.start).toLocaleTimeString('fr-FR')}</td>
+                    <td class="py-2 px-3 text-xs mono">${s.end ? new Date(s.end).toLocaleTimeString('fr-FR') : '—'}</td>
+                    <td class="py-2 px-3 mono text-xs font-bold">${typeof dur === 'string' ? '—' : fmtSec(dur)}</td>
+                    <td class="py-2 px-3"><span class="mono text-[10px] px-2 py-1 rounded-lg font-bold ${!s.end ? 'bg-[#2D5A27] text-white' : 'bg-[#F4F6F0] text-slate-500'}">${!s.end ? 'EN COURS' : 'TERMINÉE'}</span></td>
+                </tr>`;
+            }).join('');
+        }
+
+        function refresh() {
+            const cab = (() => { try { return localStorage.getItem('atlasCabinId') || 'Cabine N°01'; } catch (e) { return 'Cabine N°01'; } })();
+            const h = document.getElementById('occHeaderId');
+            if (h) h.innerText = cab;
+            renderCabins(cab);
+            renderKPIs();
+        }
+
+        function renderCabins(kioskId) {
+            let list = [];
+            try { list = JSON.parse(localStorage.getItem('atlasCabins') || '[]'); } catch (e) {}
+            const body = document.getElementById('cabinsBody');
+            document.getElementById('cabinsEmpty').style.display = list.length ? 'none' : 'block';
+            body.innerHTML = list.map(c => `
+                <tr class="border-b border-[#2D5A27]/5 ${c.id === kioskId ? 'bg-[#9ACD32]/15' : ''}">
+                    <td class="py-2 px-3 mono font-bold text-[#2D5A27]">${c.id}</td>
+                    <td class="py-2 px-3 mono text-xs font-bold">${c.token}</td>
+                    <td class="py-2 px-3 mono text-xs">${c.password}</td>
+                    <td class="py-2 px-3 text-xs">${esc(c.client)}</td>
+                    <td class="py-2 px-3 text-xs">${c.model}</td>
+                    <td class="py-2 px-3 text-xs">${esc(c.site)}</td>
+                    <td class="py-2 px-3"><span class="mono text-[10px] px-2 py-1 rounded-lg font-bold ${c.id === kioskId ? 'bg-[#2D5A27] text-white' : 'bg-[#F4F6F0] text-slate-500'}">${c.id === kioskId ? 'ACTIVE' : '—'}</span></td>
+                </tr>`).join('');
+            if (!list.length) body.innerHTML = '';
+        }
+
+        if (atlasChannel) atlasChannel.onmessage = (e) => {
+            const d = e.data || {};
+            if (d.type === 'sessionStart') pushFeed('start', `Session démarrée — ${esc(d.user)} · ${d.unit}`);
+            if (d.type === 'sessionEnd') pushFeed('end', `Session terminée — ${esc(d.user)} · ${d.unit}`);
+            refresh();
+        };
+        window.addEventListener('storage', e => {
+            if (e.key === 'atlasEvent') {
+                try {
+                    const d = JSON.parse(e.newValue);
+                    if (d.type === 'sessionStart') pushFeed('start', `Session démarrée — ${esc(d.user)} · ${d.unit}`);
+                    if (d.type === 'sessionEnd') pushFeed('end', `Session terminée — ${esc(d.user)} · ${d.unit}`);
+                } catch (err) {}
+                refresh();
+            }
+        });
+        window.addEventListener('storage', e => { if (e.key === 'atlasCabinId' || e.key === 'atlasCabinConfig') refresh(); });
+        window.addEventListener('focus', refresh);
+
+        setInterval(() => pushFeed('sale', 'Synchronisation OK — écoute active'), 30000);
+        refresh();
+    </script>
+</body>
+</html>

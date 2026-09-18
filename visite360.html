@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atlas Cabine — Visite 360°</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css">
+    <script src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F4F6F0; color: #2D3748; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        #panorama { width: 100%; height: 100%; }
+    </style>
+</head>
+<body class="h-screen w-screen flex flex-col p-6 select-none bg-[#F4F6F0] overflow-hidden">
+
+    <header class="flex justify-between items-center bg-white px-6 py-4 rounded-2xl shadow-sm border border-[#2D5A27]/10 mb-4">
+        <div class="flex items-center space-x-3">
+            <a href="home.html" class="text-2xl hover:scale-110 transition inline-block" title="Accueil">🏠</a>
+            <div class="w-4 h-4 rounded-full bg-[#9ACD32] animate-pulse"></div>
+            <h1 class="text-xl font-bold tracking-tight text-[#2D5A27]">ATLAS CABINE <span class="text-xs text-[#9ACD32] mono font-normal">Visite 360°</span></h1>
+        </div>
+        <nav class="flex gap-2">
+            <a href="catalogue" class="px-4 py-2 rounded-xl bg-[#F4F6F0] hover:bg-[#e4e9dc] border border-[#2D5A27]/15 text-xs font-bold text-[#2D3748] transition">← Catalogue</a>
+            <a href="index.html" class="px-4 py-2 rounded-xl bg-[#2D5A27] text-white text-xs font-bold transition">Interface Cabine</a>
+        </nav>
+    </header>
+
+    <div class="flex-1 grid grid-cols-3 gap-4 min-h-0">
+        <div class="col-span-2 bg-[#2D3748] rounded-2xl overflow-hidden border border-[#2D5A27]/20">
+            <div id="panorama"></div>
+        </div>
+
+        <div class="flex flex-col gap-4 min-h-0 overflow-y-auto no-scrollbar pr-1">
+            <div class="bg-white rounded-2xl border border-[#2D5A27]/15 p-4">
+                <p class="text-xs font-bold text-[#9ACD32] uppercase tracking-wider mb-1">Panorama</p>
+                <p class="font-bold text-[#2D5A27]">Intérieur de la cabine</p>
+                <p class="text-xs text-slate-500 mt-1">Faites glisser pour regarder autour de vous (360°), molette pour zoomer.</p>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-[#2D5A27]/15 p-4">
+                <p class="text-xs font-bold text-[#9ACD32] uppercase tracking-wider mb-2">Galerie</p>
+                <img src="assets/interieur.jpg" alt="Intérieur cabine" class="w-full rounded-xl mb-3 border border-[#2D5A27]/15">
+                <img src="assets/cabine-carrefour-gabes.jpg" alt="Cabine Medium — Carrefour Gabès" class="w-full rounded-xl border border-[#2D5A27]/15">
+                <p class="text-xs text-slate-400 mt-2 mono">Cabine Medium en installation — Espace Carrefour Gabès</p>
+            </div>
+        </div>
+    </div>
+
+    <footer class="flex flex-wrap justify-between items-center gap-2 px-2 pt-3 text-xs text-slate-400">
+        <span class="mono">© 2026 Atlas Working — Idée & cabines · PixelSoftware Design</span>
+        <span>Modèle Medium 240×120×240 cm</span>
+    </footer>
+
+    <style>.no-scrollbar::-webkit-scrollbar{display:none}.no-scrollbar{-ms-overflow-style:none;scrollbar-width:none}</style>
+
+    <script>
+        pannellum.viewer('panorama', {
+            type: 'equirectangular',
+            panorama: 'assets/panorama-360.jpg',
+            autoLoad: true,
+            autoRotate: -2,
+            showZoomCtrl: false,
+            compass: true,
+            title: 'Atlas Cabine — Vue 360°',
+            hfov: 100,
+            minHfov: 60,
+            maxHfov: 130
+        });
+    </script>
+</body>
+</html>

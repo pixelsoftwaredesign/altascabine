@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATLAS CABINE — Présentation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css">
+    <script src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .slide { position: absolute; inset: 0; opacity: 0; pointer-events: none; transform: translateX(40px); transition: opacity .45s ease, transform .45s ease; }
+        .slide.active { opacity: 1; pointer-events: auto; transform: translateX(0); }
+        .dot.active { background-color: #2D5A27 !important; transform: scale(1.35); }
+    </style>
+</head>
+<body class="h-screen w-screen overflow-hidden bg-[#F4F6F0] text-[#2D3748] select-none">
+
+    <!-- PROGRESS BAR -->
+    <div class="absolute top-0 left-0 h-1.5 bg-[#9ACD32] z-50 transition-all duration-300" id="progress"></div>
+
+    <!-- ACCUEIL -->
+    <a href="home.html" class="absolute top-3 right-3 z-50 bg-white/85 backdrop-blur text-[#2D5A27] px-3 py-1.5 rounded-xl text-xs font-bold shadow border border-[#2D5A27]/15 hover:bg-white transition">🏠 Accueil</a>
+
+    <!-- ================= SLIDE 1 : COUVERTURE ================= -->
+    <section class="slide active bg-gradient-to-br from-[#23451E] via-[#2D5A27] to-[#1E3F1A] text-white flex items-center">
+        <div class="max-w-6xl w-full mx-auto px-12 grid grid-cols-2 gap-10 items-center">
+            <div>
+                <div class="flex items-center space-x-3 mb-6">
+                    <div class="w-3 h-3 rounded-full bg-[#9ACD32] animate-pulse"></div>
+                    <span class="text-sm font-bold text-[#9ACD32] uppercase tracking-[0.3em] mono">Atlas Working</span>
+                </div>
+                <h1 class="text-6xl font-extrabold leading-none mb-4">ATLAS<br>CABINE</h1>
+                <p class="text-lg text-white/80 font-medium mb-8">Cabines acoustiques intelligentes — IoT, réservation QR, sécurité &amp; confort.</p>
+                <div class="flex gap-3">
+                    <button onclick="go(2)" class="px-6 py-3 rounded-xl bg-[#9ACD32] text-[#2D3748] font-bold hover:bg-[#8bb82d] transition shadow-lg">Découvrir ➜</button>
+                    <span class="px-6 py-3 rounded-xl bg-white/10 border border-white/20 text-sm font-bold flex items-center">3 modèles · 90→350 cm</span>
+                </div>
+            </div>
+            <div class="flex justify-center">
+                <img src="assets/cabine-medium.svg" alt="Atlas Cabine" class="w-full max-w-md drop-shadow-2xl" style="filter: drop-shadow(0 30px 40px rgba(0,0,0,0.45));">
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= SLIDE 2 : LE CONCEPT ================= -->
+    <section class="slide bg-[#F4F6F0] flex items-center">
+        <div class="max-w-5xl w-full mx-auto px-12">
+            <span class="text-xs font-bold text-[#9ACD32] uppercase tracking-[0.25em] mono mb-3 block">Le Concept</span>
+            <h2 class="text-4xl font-extrabold text-[#2D5A27] mb-8">L'espace de concentration<br>face au bruit du monde</h2>
+            <div class="grid grid-cols-2 gap-6">
+                <div class="bg-white rounded-3xl border border-[#2D5A27]/15 p-6">
+                    <p class="text-sm font-bold text-rose-600 uppercase tracking-wider mb-2">Le Problème</p>
+                    <ul class="space-y-2 text-sm text-[#2D3748]">
+                        <li>• Open spaces bruyants : 0 concentration</li>
+                        <li>• Visioconférences gênées par l'entourage</li>
+                        <li>• Confidentialité des appels compromise</li>
+                        <li>• Aucune réservation structurée</li>
+                    </ul>
+                </div>
+                <div class="bg-[#2D5A27] text-white rounded-3xl p-6">
+                    <p class="text-sm font-bold text-[#9ACD32] uppercase tracking-wider mb-2">La Solution Atlas</p>
+                    <ul class="space-y-2 text-sm">
+                        <li>✔ Cabine acoustique &lt; 28 dB d'isolation en façade</li>
+                        <li>✔ Réservation QR code + ouverture automatique</li>
+                        <li>✔ Air renouvelé : capteurs CO2 &amp; ventilation HEPA</li>
+                        <li>✔ Sécurité : bouton d'urgence &amp; hôte connecté</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= SLIDE 3 : LES 3 MODÈLES ================= -->
+    <section class="slide bg-white flex items-center">
+        <div class="max-w-6xl w-full mx-auto px-12">
+            <div class="flex justify-between items-end mb-8">
+                <div>
+                    <span class="text-xs font-bold text-[#9ACD32] uppercase tracking-[0.25em] mono">La Gamme</span>
+                    <h2 class="text-4xl font-extrabold text-[#2D5A27]">Trois formats, un même standard</h2>
+                </div>
+                <span class="text-xs text-slate-400 mono">AT-S90 · AT-M240 · AT-L350</span>
+            </div>
+            <div class="grid grid-cols-3 gap-6">
+                <div class="rounded-3xl border-2 border-[#2D5A27]/15 bg-[#F4F6F0] p-6 text-center hover:border-[#9ACD32] transition">
+                    <img src="assets/cabine-small.svg" alt="Small" class="h-44 mx-auto mb-4">
+                    <p class="text-xs font-bold text-[#9ACD32] uppercase mono">Small · Solo</p>
+                    <p class="text-xl font-extrabold text-[#2D5A27] mt-1">90 × 120 × 240</p>
+                    <p class="text-xs text-slate-500 mt-1">1 personne — focus &amp; appels</p>
+                </div>
+                <div class="rounded-3xl border-2 border-[#2D5A27] bg-[#F4F6F0] p-6 text-center shadow-lg shadow-[#2D5A27]/10">
+                    <p class="text-xs font-bold text-[#2D5A27] uppercase mono mb-1 bg-[#9ACD32] inline-block px-2 py-0.5 rounded-lg">Le plus demandé</p>
+                    <img src="assets/cabine-medium.svg" alt="Medium" class="h-44 mx-auto mb-4">
+                    <p class="text-xs font-bold text-[#9ACD32] uppercase mono">Medium · Duo</p>
+                    <p class="text-xl font-extrabold text-[#2D5A27] mt-1">240 × 120 × 240</p>
+                    <p class="text-xs text-slate-500 mt-1">2 à 4 personnes — réunions agiles</p>
+                </div>
+                <div class="rounded-3xl border-2 border-[#2D5A27]/15 bg-[#F4F6F0] p-6 text-center hover:border-[#9ACD32] transition">
+                    <img src="assets/cabine-large.svg" alt="Large" class="h-44 mx-auto mb-4">
+                    <p class="text-xs font-bold text-[#9ACD32] uppercase mono">Large · Executive</p>
+                    <p class="text-xl font-extrabold text-[#2D5A27] mt-1">350 × 250 × 240</p>
+                    <p class="text-xs text-slate-500 mt-1">6 à 8 personnes — salles de conseil</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= SLIDE 4 : TECHNOLOGIES ================= -->
+    <section class="slide bg-[#2D5A27] text-white flex items-center">
+        <div class="max-w-5xl w-full mx-auto px-12">
+            <span class="text-xs font-bold text-[#9ACD32] uppercase tracking-[0.25em] mono mb-3 block">Technologie embarquée</span>
+            <h2 class="text-4xl font-extrabold mb-10">4 piliers dans chaque cabine</h2>
+            <div class="grid grid-cols-3 gap-6 mb-8">
+                <div class="bg-[#9ACD32] text-[#2D3748] rounded-3xl p-6 text-center shadow-lg">
+                    <p class="mono text-4xl font-extrabold">100%</p>
+                    <p class="font-bold mt-1">Réglable acoustique</p>
+                </div>
+                <div class="bg-[#9ACD32] text-[#2D3748] rounded-3xl p-6 text-center shadow-lg">
+                    <p class="mono text-4xl font-extrabold">80%</p>
+                    <p class="font-bold mt-1">Débruit vs milieu ambiant</p>
+                </div>
+                <div class="bg-[#9ACD32] text-[#2D3748] rounded-3xl p-6 text-center shadow-lg">
+                    <p class="mono text-4xl font-extrabold">100%</p>
+                    <p class="font-bold mt-1">Isolation acoustique fine</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-4 gap-6">
+                <div class="bg-white/10 border border-white/15 rounded-3xl p-6 text-center">
+                    <span class="text-4xl">🧠</span>
+                    <p class="font-bold text-lg mt-3">Système IoT</p>
+                    <p class="text-xs text-white/70 mt-2">Écran tactile, contrôle LED, réservation QR &amp; télémétrie.</p>
+                </div>
+                <div class="bg-white/10 border border-white/15 rounded-3xl p-6 text-center">
+                    <span class="text-4xl">🔇</span>
+                    <p class="font-bold text-lg mt-3">Acoustique</p>
+                    <p class="text-xs text-white/70 mt-2">Isolation multicouche jusqu'à -38 dB, double vitrage phonique.</p>
+                </div>
+                <div class="bg-white/10 border border-white/15 rounded-3xl p-6 text-center">
+                    <span class="text-4xl">🍃</span>
+                    <p class="font-bold text-lg mt-3">Ventilation</p>
+                    <p class="text-xs text-white/70 mt-2">Extracteurs silencieux &lt; 28 dB, air filtré HEPA, climatisation.</p>
+                </div>
+                <div class="bg-white/10 border border-white/15 rounded-3xl p-6 text-center">
+                    <span class="text-4xl">🚨</span>
+                    <p class="font-bold text-lg mt-3">Sécurité</p>
+                    <p class="text-xs text-white/70 mt-2">Capteurs CO2 temps réel, bouton d'urgence, hôte de sécurité connecté.</p>
+                </div>
+            </div>
+            <p class="text-center mt-8 text-xs text-white/50 mono">Réseau nerveux capteurs CO2 · détection présence · urgence · télémaintenance</p>
+        </div>
+    </section>
+
+    <!-- ================= SLIDE 5 : ÉCOSYSTÈME LOGICIEL ================= -->
+    <section class="slide bg-[#F4F6F0] flex items-center">
+        <div class="max-w-5xl w-full mx-auto px-12">
+            <span class="text-xs font-bold text-[#9ACD32] uppercase tracking-[0.25em] mono mb-3 block">L'écosystème logiciel</span>
+            <h2 class="text-4xl font-extrabold text-[#2D5A27] mb-10">Du scan QR à l'ouverture de la porte</h2>
+            <div class="grid grid-cols-3 gap-6">
+                <div class="bg-white rounded-3xl border border-[#2D5A27]/15 p-6">
+                    <span class="text-3xl">📷</span>
+                    <p class="font-bold text-[#2D5A27] mt-3">Kiosque externe</p>
+                    <p class="text-xs text-slate-600 mt-2">Statut temps réel (Libre/Occupée), scan QR à la caméra, réservation &amp; déverrouillage automatique.</p>
+                </div>
+                <div class="bg-white rounded-3xl border border-[#2D5A27]/15 p-6">
+                    <span class="text-3xl">💡</span>
+                    <p class="font-bold text-[#2D5A27] mt-3">App client interne</p>
+                    <p class="text-xs text-slate-600 mt-2">Porte, LEDs, climatisation, audio &amp; playlist, commande vocale — minuteur de session intégré.</p>
+                </div>
+                <div class="bg-white rounded-3xl border border-[#2D5A27]/15 p-6">
+                    <span class="text-3xl">🛰️</span>
+                    <p class="font-bold text-[#2D5A27] mt-3">Backend MQTT / ESP32</p>
+                    <p class="text-xs text-slate-600 mt-2">Contrôle du relais de porte, capteurs, supervision multi-cabines, alertes de maintenance prédictive.</p>
+                </div>
+            </div>
+            <div class="flex items-center justify-center gap-8 mt-8 text-xs mono text-slate-500">
+                <span>Scan QR</span><span class="text-[#9ACD32]">➜</span><span>Réservation</span><span class="text-[#9ACD32]">➜</span><span>Porte MQTT</span><span class="text-[#9ACD32]">➜</span><span>Session 30 min</span><span class="text-[#9ACD32]">➜</span><span>Libération auto</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= SLIDE 6 : APPLICATIONS ================= -->
+    <section class="slide bg-white flex items-center">
+        <div class="max-w-5xl w-full mx-auto px-12">
+            <span class="text-xs font-bold text-[#9ACD32] uppercase tracking-[0.25em] mono mb-3 block">Où les installer ?</span>
+            <h2 class="text-4xl font-extrabold text-[#2D5A27] mb-10">Des zones de transit aux open spaces</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="rounded-3xl bg-[#F4F6F0] border border-[#2D5A27]/10 p-6 text-center">
+                    <span class="text-4xl">🛫</span>
+                    <p class="font-bold text-[#2D5A27] mt-3">Aéroports</p>
+                    <p class="text-xs text-slate-600 mt-1">Carthage · appels &amp; focus en transit</p>
+                </div>
+                <div class="rounded-3xl bg-[#F4F6F0] border border-[#2D5A27]/10 p-6 text-center">
+                    <span class="text-4xl">🏬</span>
+                    <p class="font-bold text-[#2D5A27] mt-3">Centres commerciaux</p>
+                    <p class="text-xs text-slate-600 mt-1">Carrefour · espaces de détente connectés</p>
+                </div>
+                <div class="rounded-3xl bg-[#F4F6F0] border border-[#2D5A27]/10 p-6 text-center">
+                    <span class="text-4xl">🏢</span>
+                    <p class="font-bold text-[#2D5A27] mt-3">Bureaux &amp; co-working</p>
+                    <p class="text-xs text-slate-600 mt-1">Open spaces, centres d'appels, R&amp;D</p>
+                </div>
+                <div class="rounded-3xl bg-[#F4F6F0] border border-[#2D5A27]/10 p-6 text-center">
+                    <span class="text-4xl">🎓</span>
+                    <p class="font-bold text-[#2D5A27] mt-3">Campus &amp; gares</p>
+                    <p class="text-xs text-slate-600 mt-1">Bibliothèques, zones d'attente, santé</p>
+                </div>
+            </div>
+            <div class="mt-8 bg-[#9ACD32]/15 border border-[#9ACD32]/40 rounded-2xl p-4 flex items-center gap-3">
+                <span class="text-xl">🏷️</span>
+                <p class="text-sm font-semibold text-[#2D5A27]">Déployable en îlot multi-cabines — un seul poste de supervision centralise réservations, télémétrie et sécurité.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= SLIDE 7 : IMAGES RÉELLES / 360 ================= -->
+    <section class="slide bg-white flex items-center">
+        <div class="max-w-6xl w-full mx-auto px-12">
+            <div class="flex justify-between items-end mb-8">
+                <div>
+                    <span class="text-xs font-bold text-[#9ACD32] uppercase tracking-[0.25em] mono mb-3 block">En conditions réelles</span>
+                    <h2 class="text-4xl font-extrabold text-[#2D5A27]">Visitez la cabine avant de l'adopter</h2>
+                </div>
+                <a href="visite360.html" class="px-5 py-2.5 rounded-xl bg-[#9ACD32] hover:bg-[#8bb82d] text-[#2D3748] font-bold text-sm transition shadow-sm">🔄 Lancer la visite 360°</a>
+            </div>
+            <div class="grid grid-cols-2 gap-6">
+                <div class="rounded-3xl overflow-hidden border-2 border-[#2D5A27]/20 shadow-md relative">
+                    <div id="panoramaPres" class="w-full h-[380px]"></div>
+                    <span class="absolute bottom-3 left-3 text-xs font-bold text-white bg-[#2D3748]/80 px-3 py-1 rounded-full shadow-sm">🔄 Visite 360° — tirez pour vous orienter</span>
+                </div>
+                <div class="flex flex-col gap-6">
+                    <div class="rounded-3xl overflow-hidden border-2 border-[#2D5A27]/20 shadow-md flex-1">
+                        <img src="assets/cabine-carrefour-gabes.jpg" alt="Cabine Medium — Carrefour Gabès" class="w-full h-full object-cover">
+                    </div>
+                    <p class="text-xs text-slate-500 mono bg-[#F4F6F0] p-3 rounded-2xl flex items-center justify-between">Modèle Medium en installation — Espace Carrefour Gabès <a href="visite360.html" class="text-[#2D5A27] font-bold hover:underline">Plein écran →</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= SLIDE 8 : CONTACT ================= -->
+    <section class="slide bg-gradient-to-br from-[#23451E] via-[#2D5A27] to-[#1E3F1A] text-white flex items-center">
+        <div class="max-w-4xl w-full mx-auto px-12 text-center">
+            <div class="w-16 h-16 rounded-full bg-[#9ACD32] flex items-center justify-center text-3xl mx-auto mb-6">🌿</div>
+            <h2 class="text-5xl font-extrabold mb-3">Offrons de la voix à vos espaces</h2>
+            <p class="text-white/70 mb-10">Démonstration, devis &amp; études d'emplacement sur mesure.</p>
+            <div class="grid grid-cols-3 gap-6">
+                <div class="bg-white/10 border border-white/15 rounded-3xl p-6">
+                    <p class="text-xs uppercase tracking-wider text-[#9ACD32] font-bold">Téléphone</p>
+                    <p class="font-bold mono text-lg mt-2">+216 52 675 027</p>
+                </div>
+                <div class="bg-white/10 border border-white/15 rounded-3xl p-6">
+                    <p class="text-xs uppercase tracking-wider text-[#9ACD32] font-bold">Email</p>
+                    <p class="font-bold mono text-lg mt-2 truncate">pixelsoftwaredesign@gmail.com</p>
+                </div>
+                <div class="bg-white/10 border border-white/15 rounded-3xl p-6">
+                    <p class="text-xs uppercase tracking-wider text-[#9ACD32] font-bold">Sites</p>
+                    <p class="font-bold mono text-lg mt-2">Gabès · Carthage</p>
+                </div>
+            </div>
+            <p class="mt-10 text-xs text-white/50 mono">© 2026 Atlas Working — Idée & cabines · Logiciel (recherche & développement) : PixelSoftware Design</p>
+        </div>
+    </section>
+
+    <!-- NAVIGATION -->
+    <button onclick="go(cur-1)" class="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/90 backdrop-blur border border-[#2D5A27]/20 shadow-lg text-[#2D5A27] text-xl font-bold z-50 hover:scale-110 transition">‹</button>
+    <button onclick="go(cur+1)" class="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/90 backdrop-blur border border-[#2D5A27]/20 shadow-lg text-[#2D5A27] text-xl font-bold z-50 hover:scale-110 transition">›</button>
+    <div class="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2 z-50" id="dots"></div>
+    <div class="absolute bottom-5 right-6 z-50 mono text-xs text-slate-400" id="counter">01 / 07</div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const TOTAL = slides.length;
+        let cur = 0;
+
+        document.getElementById('dots').innerHTML = Array.from({length: TOTAL}, (_, i) =>
+            `<button onclick="go(${i})" class="dot w-2.5 h-2.5 rounded-full bg-slate-300 transition" data-i="${i}"></button>`).join('');
+
+        function go(n) {
+            cur = Math.max(0, Math.min(TOTAL - 1, n));
+            slides.forEach((s, i) => s.classList.toggle('active', i === cur));
+            document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === cur));
+            document.getElementById('progress').style.width = ((cur + 1) / TOTAL * 100) + '%';
+            document.getElementById('counter').innerText = String(cur + 1).padStart(2, '0') + ' / ' + String(TOTAL).padStart(2, '0');
+            manage360(cur === TOTAL - 2);
+        }
+        let panInstance = null;
+        function manage360(active) {
+            if (!window.pannellum) return;
+            if (active && !panInstance) {
+                panInstance = pannellum.viewer('panoramaPres', {
+                    type: 'equirectangular',
+                    panorama: 'assets/panorama-360.jpg',
+                    autoLoad: true,
+                    autoRotate: -2,
+                    showZoomCtrl: false,
+                    compass: false,
+                    hfov: 100,
+                    minHfov: 60,
+                    maxHfov: 130
+                });
+            } else if (!active && panInstance) {
+                try { panInstance.destroy(); } catch (e) {}
+                panInstance = null;
+            }
+        }
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(cur + 1); }
+            if (e.key === 'ArrowLeft') { e.preventDefault(); go(cur - 1); }
+            if (e.key === 'Home') go(0);
+            if (e.key === 'End') go(TOTAL - 1);
+        });
+        go(0);
+    </script>
+</body>
+</html>
