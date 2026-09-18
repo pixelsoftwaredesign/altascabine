@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atlas Cabine - Kiosque & App Client</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F4F6F0; color: #2D3748; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.2); opacity: 0.2; }
+            100% { transform: scale(0.95); opacity: 0.8; }
+        }
+        .mic-pulse { animation: pulse-ring 2s infinite ease-in-out; }
+        @keyframes micpulse {
+            0%,100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(153,204,51,0.6); }
+            50% { transform: scale(1.08); box-shadow: 0 0 0 18px rgba(153,204,51,0); }
+        }
+        .voice-listening { animation: micpulse 1.2s ease-in-out infinite; }
+    </style>
+</head>
+<body class="h-screen w-screen flex flex-col justify-between p-6 select-none overflow-hidden bg-[#F4F6F0]">
+
+
+    <!-- BARRE DE CONTRÔLE DE DÉMO (bascule Kiosque / App Interne) -->
+    <div class="absolute top-2 left-1/2 transform -translate-x-1/2 bg-[#2D3748] text-white text-xs px-4 py-1.5 rounded-full shadow-lg z-50 flex items-center space-x-3">
+        <span>Mode Démo :</span>
+        <button onclick="switchView('kiosque')" id="btn-kiosque" class="px-3 py-0.5 rounded-full bg-[#9ACD32] text-[#2D3748] font-bold transition">1. Kiosque Extérieur</button>
+        <button onclick="switchView('client')" id="btn-client" class="px-3 py-0.5 rounded-full bg-[#2D3748]/60 text-slate-300 transition">2. App Interne Cabine</button>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- ÉCRAN 1 : KIOSQUE EXTÉRIEUR & OUVERTURE     -->
+    <!-- ========================================== -->
+    <div id="view-kiosque" class="flex-1 flex flex-col justify-between pt-8">
+        <header class="flex justify-between items-center bg-white px-6 py-4 rounded-2xl shadow-sm border border-[#2D5A27]/10">
+            <div class="flex items-center space-x-3">
+                <div class="w-4 h-4 rounded-full bg-[#9ACD32] animate-pulse"></div>
+                <h1 class="text-xl font-bold tracking-tight text-[#2D5A27]">ATLAS KIOSK <span class="text-xs text-[#9ACD32] mono font-normal">Gabès / Carthage</span></h1>
+            </div>
+            <div class="flex items-center space-x-2 bg-[#F4F6F0] px-4 py-2 rounded-xl border border-[#2D5A27]/15">
+                <span id="kioskDot" class="w-3 h-3 rounded-full bg-[#9ACD32]"></span>
+                <span id="kioskStatus" class="text-xs font-bold text-[#2D5A27] uppercase">Cabine N°01 - Libre</span>
+            </div>
+        </header>
+
+        <main class="my-auto grid grid-cols-2 gap-8 items-center max-w-5xl mx-auto w-full">
+            <!-- Carte Scanner QR -->
+            <div class="bg-white border border-[#2D5A27]/15 rounded-3xl p-8 shadow-sm flex flex-col items-center text-center">
+                <h2 class="text-xl font-bold text-[#2D5A27] mb-2">Accès & Réservation</h2>
+                <p class="text-xs text-slate-500 mb-6">Scannez votre QR code mobile ou entrez votre code de session pour ouvrir la cabine.</p>
+
+                <div id="qrCode" class="bg-[#F4F6F0] border border-[#2D5A27]/20 rounded-2xl p-4 mb-6"></div>
+
+                <button onclick="openScanner()" class="w-full py-4 rounded-xl bg-[#9ACD32] hover:bg-[#8bb82d] text-[#2D3748] font-extrabold transition shadow-md">
+                    📷 Scanner & Ouvrir la Cabine
+                </button>
+            </div>
+
+            <!-- Compteur d'entrée -->
+            <div class="bg-white border border-[#2D5A27]/15 rounded-3xl p-8 shadow-sm flex flex-col justify-between h-[400px]">
+                <div>
+                    <h2 class="text-xs font-bold text-[#9ACD32] uppercase tracking-wider mb-1">Entrée & Temps</h2>
+                    <p class="text-2xl font-bold text-[#2D5A27]">Compteur d'Accès</p>
+                </div>
+                <div class="text-center bg-[#F4F6F0] p-6 rounded-2xl border border-[#2D5A27]/10">
+                    <span class="text-xs text-slate-500 block mb-1">Temps avant expiration du déverrouillage</span>
+                    <span class="text-5xl font-extrabold text-[#2D5A27] mono" id="entryTimer">02:00</span>
+                    <span class="text-xs text-slate-400 block mt-2">Veuillez entrer et fermer la porte</span>
+                </div>
+                <button onclick="openCabinFromKiosk()" class="w-full py-3 rounded-xl bg-[#2D5A27] text-white font-bold hover:bg-[#23451e] transition text-sm">
+                    Entrer dans l'interface interne ➔
+                </button>
+            </div>
+        </main>
+
+        <footer class="text-center text-xs text-slate-400 pb-2">
+            ATLAS WORKING - Smart Acoustic Booths System
+        </footer>
+    </div>
+
+
+    <!-- MODAL SCAN CAMÉRA (ouverture porte par QR) -->
+    <div id="cameraModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-[#2D5A27]/40 backdrop-blur-sm p-6">
+        <div class="w-full max-w-md bg-white rounded-3xl shadow-2xl border border-[#2D5A27]/20 p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-bold text-[#2D5A27]">📷 Scanner un QR Code</h2>
+                <button onclick="closeScanner()" class="w-9 h-9 rounded-xl bg-[#F4F6F0] hover:bg-[#e4e9dc] font-bold text-[#2D3748]">✕</button>
+            </div>
+            <div id="qrReader" class="w-full rounded-2xl overflow-hidden bg-black aspect-square"></div>
+            <p id="cameraError" class="text-xs text-rose-600 mt-3 text-center min-h-[16px]">Pointez la caméra vers le QR code de réservation</p>
+            <button onclick="closeScanner()" class="w-full mt-3 py-3 rounded-xl bg-[#9ACD32] hover:bg-[#8bb82d] text-[#2D3748] font-bold transition">Annuler</button>
+        </div>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- ÉCRAN 2 : APP CLIENT INTERNE DE LA CABINE   -->
+    <!-- ========================================== -->
+    <div id="view-client" class="flex-1 flex flex-col justify-between hidden">
+        <header class="flex justify-between items-center bg-white px-6 py-4 rounded-2xl shadow-sm border border-[#2D5A27]/10">
+            <div class="flex items-center space-x-3">
+                <div class="w-4 h-4 rounded-full bg-[#9ACD32] animate-pulse"></div>
+                <h1 class="text-xl font-bold tracking-tight text-[#2D5A27]">ATLAS CABINE <span class="text-xs text-[#9ACD32] mono font-normal">v3.0 Client</span></h1>
+            </div>
+            <div class="flex items-center space-x-2 bg-[#F4F6F0] px-3 py-1.5 rounded-xl border border-[#2D5A27]/15">
+                <span>🌡️ <strong class="mono">22.5°C</strong></span>
+                <span class="text-slate-300">|</span>
+                <span>CO2: <strong class="mono">420 ppm</strong></span>
+            </div>
+            <div class="mono text-lg font-bold text-[#2D5A27] bg-[#9ACD32]/20 px-3 py-1.5 rounded-xl" id="sessionTimer">30:00</div>
+        </header>
+
+        <main class="my-6 flex-1 flex items-center justify-center relative">
+
+            <!-- MODULE 1 : PORTE -->
+            <div id="tab-porte" class="w-full max-w-3xl bg-white border border-[#2D5A27]/15 rounded-3xl p-8 shadow-sm flex flex-col justify-between h-[420px]">
+                <div>
+                    <h2 class="text-xs font-bold text-[#9ACD32] uppercase tracking-wider mb-1">Accès & Sécurité</h2>
+                    <p class="text-2xl font-bold text-[#2D5A27]">Contrôle de la Porte</p>
+                </div>
+                <div class="grid grid-cols-2 gap-6 my-auto">
+                    <button onclick="controlDoor('open')" class="py-8 px-6 rounded-2xl bg-[#9ACD32] text-[#2D3748] font-extrabold text-lg transition hover:bg-[#8bb82d] shadow-md flex flex-col items-center justify-center space-y-2">
+                        <span class="text-3xl">🔓</span><span>Ouvrir la Porte</span>
+                    </button>
+                    <button onclick="controlDoor('close')" class="py-8 px-6 rounded-2xl bg-[#2D5A27] text-white font-extrabold text-lg transition hover:bg-[#23451e] shadow-md flex flex-col items-center justify-center space-y-2">
+                        <span class="text-3xl">🔒</span><span>Fermer & Verrouiller</span>
+                    </button>
+                </div>
+                <div class="text-xs text-slate-500 mono flex justify-between items-center bg-[#F4F6F0] p-3 rounded-xl">
+                    <span>État : <strong id="doorStatus" class="text-[#2D5A27]">Verrouillé (Sécurisé)</strong></span>
+                    <span class="text-[#9ACD32] font-bold">● Capteur actif</span>
+                </div>
+            </div>
+
+            <!-- MODULE 2 : LED & ÉCLAIRAGE -->
+            <div id="tab-eclairage" class="w-full max-w-3xl bg-white border border-[#2D5A27]/15 rounded-3xl p-8 shadow-sm flex flex-col justify-between h-[420px] hidden">
+                <div>
+                    <h2 class="text-xs font-bold text-[#9ACD32] uppercase tracking-wider mb-1">Ambiance Visuelle</h2>
+                    <p class="text-2xl font-bold text-[#2D5A27]">Gestion des LEDs & Intensité</p>
+                </div>
+                <div class="grid grid-cols-3 gap-4 items-center my-auto">
+                    <button onclick="adjustLight(-10)" class="py-6 rounded-2xl bg-[#F4F6F0] text-[#2D3748] border border-[#2D5A27]/20 hover:bg-[#e4e9dc] font-extrabold text-xl transition flex flex-col items-center justify-center">
+                        <span>➖</span><span class="text-xs font-normal mt-1 text-slate-500">Diminuer</span>
+                    </button>
+                    <div class="text-center bg-[#F4F6F0] py-6 rounded-2xl border border-[#2D5A27]/10">
+                        <span class="text-4xl font-extrabold text-[#2D5A27] mono" id="lightLevel">80%</span>
+                        <span class="block text-xs text-slate-500 mt-1 font-medium">Intensité LED</span>
+                    </div>
+                    <button onclick="adjustLight(10)" class="py-6 rounded-2xl bg-[#2D5A27] text-white hover:bg-[#23451e] font-extrabold text-xl transition shadow-md flex flex-col items-center justify-center">
+                        <span>➕</span><span class="text-xs font-normal mt-1 opacity-80">Augmenter</span>
+                    </button>
+                </div>
+                <div class="flex gap-3">
+                    <button onclick="setPresetLight('focus')" class="flex-1 py-2.5 rounded-xl bg-[#2D5A27] text-white text-xs font-bold">Mode Focus (5000K)</button>
+                    <button onclick="setPresetLight('relax')" class="flex-1 py-2.5 rounded-xl bg-[#F4F6F0] text-[#2D3748] border border-[#2D5A27]/20 text-xs font-bold">Mode Relax (3000K)</button>
+                </div>
+            </div>
+
+            <!-- MODULE 3 : CLIMATISATION -->
+            <div id="tab-climatisation" class="w-full max-w-3xl bg-white border border-[#2D5A27]/15 rounded-3xl p-8 shadow-sm flex flex-col justify-between h-[420px] hidden">
+                <div>
+                    <h2 class="text-xs font-bold text-[#9ACD32] uppercase tracking-wider mb-1">Atmosphère</h2>
+                    <p class="text-2xl font-bold text-[#2D5A27]">Ventilation & Climatisation</p>
+                </div>
+                <div class="grid grid-cols-2 gap-6 my-auto">
+                    <div class="bg-[#F4F6F0] p-5 rounded-2xl border border-[#2D5A27]/10 flex flex-col justify-between">
+                        <span class="text-sm font-bold text-[#2D5A27]">🍃 Vitesse Ventilation</span>
+                        <div class="grid grid-cols-3 gap-2 mt-3">
+                            <button onclick="setFanSpeed('Eco')" class="py-2.5 bg-white border border-[#2D5A27]/20 rounded-xl text-xs font-bold hover:bg-[#2D5A27] hover:text-white transition">Eco</button>
+                            <button onclick="setFanSpeed('Auto')" class="py-2.5 bg-[#2D5A27] text-white rounded-xl text-xs font-bold">Auto</button>
+                            <button onclick="setFanSpeed('Max')" class="py-2.5 bg-white border border-[#2D5A27]/20 rounded-xl text-xs font-bold hover:bg-[#2D5A27] hover:text-white transition">Max</button>
+                        </div>
+                    </div>
+                    <div class="bg-[#F4F6F0] p-5 rounded-2xl border border-[#2D5A27]/10 flex flex-col justify-between">
+                        <span class="text-sm font-bold text-[#2D5A27]">❄️ Température Cible</span>
+                        <div class="flex items-center justify-between mt-3">
+                            <button onclick="adjustTemp(-1)" class="w-10 h-10 bg-white border border-[#2D5A27]/20 rounded-xl font-bold text-[#2D5A27]">-</button>
+                            <span class="text-2xl font-extrabold text-[#2D5A27] mono" id="tempDisplay">21°C</span>
+                            <button onclick="adjustTemp(1)" class="w-10 h-10 bg-white border border-[#2D5A27]/20 rounded-xl font-bold text-[#2D5A27]">+</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-xs text-slate-500 mono flex justify-between items-center bg-[#F4F6F0] p-3 rounded-xl">
+                    <span>Qualité de l'air : <strong class="text-[#2D5A27]">Excellente (420 ppm CO2)</strong></span>
+                    <span class="text-[#9ACD32] font-bold">● HEPA actif</span>
+                </div>
+            </div>
+
+            <!-- MODULE 4 : AUDIO -->
+            <div id="tab-audio" class="w-full max-w-3xl bg-white border border-[#2D5A27]/15 rounded-3xl p-8 shadow-sm flex flex-col justify-between h-[420px] hidden">
+                <div>
+                    <h2 class="text-xs font-bold text-[#9ACD32] uppercase tracking-wider mb-1">Ambiance Sonore</h2>
+                    <p class="text-2xl font-bold text-[#2D5A27]">Audio & Playlist de Concentration</p>
+                </div>
+                <div class="space-y-2.5 my-auto overflow-y-auto max-h-[180px] no-scrollbar pr-1">
+                    <div onclick="playTrack('Bruit Blanc - Océan Profond')" class="flex items-center justify-between p-3.5 rounded-xl bg-[#2D5A27] text-white cursor-pointer shadow-sm">
+                        <div class="flex items-center space-x-3">
+                            <span class="text-lg">🌊</span>
+                            <div>
+                                <p class="text-sm font-bold">Bruit Blanc - Océan Profond</p>
+                                <p class="text-xs opacity-80 mono">Masquage acoustique</p>
+                            </div>
+                        </div>
+                        <span class="text-xs bg-[#9ACD32] text-[#2D3748] px-2.5 py-1 rounded-lg font-bold">En cours</span>
+                    </div>
+                    <div onclick="playTrack('Pluie & Orage Léger')" class="flex items-center justify-between p-3.5 rounded-xl bg-[#F4F6F0] hover:bg-[#e4e9dc] border border-[#2D5A27]/10 text-[#2D3748] cursor-pointer transition">
+                        <div class="flex items-center space-x-3">
+                            <span class="text-lg">🌧️</span>
+                            <div>
+                                <p class="text-sm font-bold">Pluie & Orage Léger</p>
+                                <p class="text-xs text-slate-500 mono">Ambiance relaxante</p>
+                            </div>
+                        </div>
+                        <span class="text-xs text-slate-500">Sélectionner</span>
+                    </div>
+                    <div onclick="playTrack('Forêt de Pins (Symphonie Naturelle)')" class="flex items-center justify-between p-3.5 rounded-xl bg-[#F4F6F0] hover:bg-[#e4e9dc] border border-[#2D5A27]/10 text-[#2D3748] cursor-pointer transition">
+                        <div class="flex items-center space-x-3">
+                            <span class="text-lg">🌲</span>
+                            <div>
+                                <p class="text-sm font-bold">Forêt de Pins (Symphonie Naturelle)</p>
+                                <p class="text-xs text-slate-500 mono">Sons binauraux focus</p>
+                            </div>
+                        </div>
+                        <span class="text-xs text-slate-500">Sélectionner</span>
+                    </div>
+                </div>
+                <div class="text-xs text-slate-500 mono flex justify-between items-center bg-[#F4F6F0] p-3 rounded-xl">
+                    <span>Piste active : <strong id="currentTrack" class="text-[#2D5A27]">Bruit Blanc - Océan Profond</strong></span>
+                    <span class="text-[#9ACD32] font-bold">● Bluetooth Prêt</span>
+                </div>
+            </div>
+        </main>
+
+        <!-- BARRE DE NAVIGATION FLOTTANTE CENTRÉE -->
+        <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-40">
+            <nav class="flex items-center space-x-2 bg-white/90 backdrop-blur-md p-2 rounded-2xl shadow-xl border border-[#2D5A27]/20">
+                <button onclick="switchTab('porte')" id="nav-porte" class="px-5 py-3 rounded-xl text-sm font-bold transition bg-[#2D5A27] text-white shadow-sm flex items-center space-x-2">
+                    <span>🚪</span> <span>Porte</span>
+                </button>
+                <button onclick="switchTab('eclairage')" id="nav-eclairage" class="px-5 py-3 rounded-xl text-sm font-bold transition text-[#2D3748] hover:bg-[#F4F6F0] flex items-center space-x-2">
+                    <span>💡</span> <span>LED & Éclairage</span>
+                </button>
+                <button onclick="switchTab('climatisation')" id="nav-climatisation" class="px-5 py-3 rounded-xl text-sm font-bold transition text-[#2D3748] hover:bg-[#F4F6F0] flex items-center space-x-2">
+                    <span>❄️</span> <span>Clim & Air</span>
+                </button>
+                <button onclick="switchTab('audio')" id="nav-audio" class="px-5 py-3 rounded-xl text-sm font-bold transition text-[#2D3748] hover:bg-[#F4F6F0] flex items-center space-x-2">
+                    <span>🎧</span> <span>Audio & Playlist</span>
+                </button>
+                <button onclick="openVoiceModal()" class="w-11 h-11 rounded-xl bg-[#9ACD32] hover:bg-[#8bb82d] text-xl transition shadow-md flex items-center justify-center" title="Commande vocale" aria-label="Commande vocale">🎤</button>
+            </nav>
+        </div>
+
+        <!-- MODAL COMMANDE VOCALE -->
+        <div id="voiceModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-[#2D5A27]/40 backdrop-blur-sm p-6">
+            <div class="w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-[#2D5A27]/20 p-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-lg font-bold text-[#2D5A27]">🎤 Commande Vocale</h2>
+                    <button onclick="closeVoiceModal()" class="w-9 h-9 rounded-xl bg-[#F4F6F0] hover:bg-[#e4e9dc] font-bold text-[#2D3748]">✕</button>
+                </div>
+                <div class="flex flex-col items-center mb-6">
+                    <div id="voiceMic" class="w-20 h-20 rounded-full bg-[#9ACD32] flex items-center justify-center text-4xl shadow-lg">🎤</div>
+                    <p id="voiceStatus" class="mt-3 text-sm font-bold text-[#2D5A27]">Prêt à écouter...</p>
+                </div>
+                <div id="voiceTranscript" class="min-h-[60px] bg-[#F4F6F0] border border-[#2D5A27]/15 rounded-2xl p-4 text-center text-base text-[#2D3748] mb-4 flex items-center justify-center">
+                    Dites une commande, ex : « Ouvre la porte »
+                </div>
+                <div class="flex flex-wrap gap-2 justify-center mb-4">
+                    <button onclick="processCommand('Ouvre la porte')" class="px-3 py-1.5 rounded-lg bg-[#F4F6F0] hover:bg-[#e4e9dc] border border-[#2D5A27]/15 text-xs font-semibold text-[#2D3748]">Ouvre la porte</button>
+                    <button onclick="processCommand('Mode focus')" class="px-3 py-1.5 rounded-lg bg-[#F4F6F0] hover:bg-[#e4e9dc] border border-[#2D5A27]/15 text-xs font-semibold text-[#2D3748]">Mode focus</button>
+                    <button onclick="processCommand('Met de la musique relaxante')" class="px-3 py-1.5 rounded-lg bg-[#F4F6F0] hover:bg-[#e4e9dc] border border-[#2D5A27]/15 text-xs font-semibold text-[#2D3748]">Musique relaxante</button>
+                    <button onclick="processCommand('Augmente la température')" class="px-3 py-1.5 rounded-lg bg-[#F4F6F0] hover:bg-[#e4e9dc] border border-[#2D5A27]/15 text-xs font-semibold text-[#2D3748]">Augmenter la température</button>
+                </div>
+                <div id="voiceFallback" class="hidden bg-[#2D5A27]/5 border border-[#2D5A27]/15 rounded-2xl p-4">
+                    <p class="text-xs font-semibold text-[#2D3748] mb-2">Reconnaissance vocale indisponible sur ce navigateur. Saisissez votre commande :</p>
+                    <div class="flex gap-2">
+                        <input id="voiceInput" type="text" placeholder="Ex : allume les LEDs en mode focus" class="flex-1 px-4 py-2.5 rounded-xl bg-white border border-[#2D5A27]/20 text-sm focus:outline-none focus:border-[#2D5A27]">
+                        <button onclick="processVoiceInput()" class="px-5 py-2.5 rounded-xl bg-[#2D5A27] text-white text-sm font-bold">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="flex justify-between items-center px-2 text-xs text-slate-500">
+            <button onclick="alert('Assistance prévenue.')" class="hover:text-[#2D5A27] font-semibold">⚠️ Assistance</button>
+            <span class="mono">ATLAS WORKING</span>
+            <button onclick="leaveCabin()" class="text-rose-600 font-bold hover:underline">Quitter la cabine (Kiosque)</button>
+        </footer>
+    </div>
+
+
+    <script>
+        // ============ SCAN QR CODE PAR CAMÉRA ============
+        let html5Qr = null;
+        let scannerActive = false;
+
+        function openScanner() {
+            const modal = document.getElementById('cameraModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.getElementById('cameraError').innerText = "Pointez la caméra vers le QR code de réservation";
+            startScanner();
+        }
+
+        function closeScanner() {
+            if (html5Qr) {
+                try { html5Qr.stop(); } catch (e) {}
+                html5Qr = null;
+            }
+            scannerActive = false;
+            const modal = document.getElementById('cameraModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function startScanner() {
+            if (scannerActive) return;
+            scannerActive = true;
+            if (typeof Html5Qrcode === 'undefined') {
+                document.getElementById('cameraError').innerText = "Bibliothèque de scan non chargée.";
+                return;
+            }
+            document.getElementById('qrReader').innerHTML = '';
+            html5Qr = new Html5Qrcode('qrReader');
+            html5Qr.start(
+                { facingMode: 'environment' },
+                { fps: 10, qrbox: { width: 240, height: 240 } },
+                onScanSuccess,
+                () => {}
+            ).catch((err) => {
+                scannerActive = false;
+                document.getElementById('cameraError').innerText =
+                    "Caméra inaccessible : connexion HTTPS requise (ou http://localhost) et autorisation caméra dans les réglages de la tablette.";
+            });
+        }
+
+        function onScanSuccess(decodedText) {
+            if (!scannerActive) return;
+            document.getElementById('cameraError').innerText = "QR détecté : code validé ✔";
+            try { html5Qr.pause(); } catch (e) {}
+            setTimeout(() => {
+                closeScanner();
+                openCabinFromKiosk(decodedText);
+            }, 500);
+        }
+
+        // ============ BASCULE KIOSQUE / CLIENT ============
+        function switchView(view) {
+            const kiosk = document.getElementById('view-kiosque');
+            const client = document.getElementById('view-client');
+            const btnK = document.getElementById('btn-kiosque');
+            const btnC = document.getElementById('btn-client');
+            if (view === 'kiosque') {
+                kiosk.classList.remove('hidden');
+                client.classList.add('hidden');
+                btnK.className = "px-3 py-0.5 rounded-full bg-[#9ACD32] text-[#2D3748] font-bold transition";
+                btnC.className = "px-3 py-0.5 rounded-full bg-[#2D3748]/60 text-slate-300 transition";
+            } else {
+                kiosk.classList.add('hidden');
+                client.classList.remove('hidden');
+                btnC.className = "px-3 py-0.5 rounded-full bg-[#9ACD32] text-[#2D3748] font-bold transition";
+                btnK.className = "px-3 py-0.5 rounded-full bg-[#2D3748]/60 text-slate-300 transition";
+            }
+        }
+
+        // ============ QR CODE ============
+        const BOOKING_URL = 'https://app.atlasworking.tn/cabines/A01';
+        new QRCode(document.getElementById('qrCode'), {
+            text: BOOKING_URL,
+            width: 190,
+            height: 190,
+            colorDark: '#2D3748',
+            colorLight: '#ffffff',
+            correctLevel: QRCode.CorrectLevel.M
+        });
+
+        // ============ COMPTEURS ============
+        let entrySeconds = 120;   // 2 minutes pour entrer après déverrouillage
+        let entryRunning = false;
+        let sessionSeconds = 1800; // session interne 30 minutes
+
+        setInterval(() => {
+            if (entryRunning) {
+                if (entrySeconds > 0) {
+                    entrySeconds--;
+                    document.getElementById('entryTimer').innerText = fmt(entrySeconds);
+                } else {
+                    entryRunning = false;
+                    document.getElementById('entryTimer').innerText = "00:00";
+                }
+            }
+            if (sessionSeconds > 0) {
+                sessionSeconds--;
+                document.getElementById('sessionTimer').innerText = fmt(sessionSeconds);
+            }
+        }, 1000);
+
+        function fmt(sec) {
+            return Math.floor(sec / 60).toString().padStart(2, '0') + ':' + (sec % 60).toString().padStart(2, '0');
+        }
+
+        // ============ OUVERTURE DEPUIS LE KIOSQUE ============
+        function openCabinFromKiosk(code) {
+            entrySeconds = 120;
+            entryRunning = true;
+            document.getElementById('entryTimer').innerText = "02:00";
+            if (doorRemote && uiWs && uiWs.readyState === WebSocket.OPEN) {
+                uiWs.send(JSON.stringify({ type: 'cmd', action: 'open' }));
+                alert(code ? "QR " + code + " validé ! Porte déverrouillée. Entrez dans la cabine." : "QR Code validé ! Porte déverrouillée. Entrez dans la cabine.");
+            } else {
+                alert(code ? "QR " + code + " validé ! (Simulation) Porte déverrouillée." : "QR Code validé ! (Simulation) Porte déverrouillée.");
+            }
+            switchView('client');
+        }
+
+        function leaveCabin() {
+            if (!confirm('Quitter la cabine ?')) return;
+            if (doorRemote && uiWs && uiWs.readyState === WebSocket.OPEN) {
+                uiWs.send(JSON.stringify({ type: 'cmd', action: 'close' }));
+            }
+            entryRunning = false;
+            entrySeconds = 120;
+            document.getElementById('entryTimer').innerText = "02:00";
+            sessionSeconds = 1800;
+            document.getElementById('sessionTimer').innerText = "30:00";
+            switchView('kiosque');
+        }
+
+        // ============ GESTION DES ONGLETS INTERNES ============
+        function switchTab(tabName) {
+            const tabs = ['porte', 'eclairage', 'climatisation', 'audio'];
+            tabs.forEach(t => {
+                const el = document.getElementById('tab-' + t);
+                const btn = document.getElementById('nav-' + t);
+                if (t === tabName) {
+                    el.classList.remove('hidden');
+                    btn.className = "px-5 py-3 rounded-xl text-sm font-bold transition bg-[#2D5A27] text-white shadow-sm flex items-center space-x-2";
+                } else {
+                    el.classList.add('hidden');
+                    btn.className = "px-5 py-3 rounded-xl text-sm font-bold transition text-[#2D3748] hover:bg-[#F4F6F0] flex items-center space-x-2";
+                }
+            });
+        }
+
+        // ============ LIAISON BACKEND (WebSocket + MQTT) ============
+        let uiWs = null;
+        let doorRemote = false;
+
+        function connectBackend() {
+            if (location.host === '' || location.protocol === 'file:') return;
+            const proto = location.protocol === 'https:' ? 'wss://' : 'ws://';
+            try {
+                uiWs = new WebSocket(proto + location.host + '/ws');
+            } catch (e) {
+                return;
+            }
+            uiWs.onopen = () => {
+                doorRemote = true;
+                document.getElementById('doorStatus').innerText = "Backend connecté — en attente de la cabine...";
+            };
+            uiWs.onerror = () => { doorRemote = false; };
+            uiWs.onclose = () => { doorRemote = false; };
+            uiWs.onmessage = (ev) => {
+                try {
+                    const msg = JSON.parse(ev.data);
+                    if (msg.type === 'state' && msg.state) applyRemoteState(msg.state);
+                    else if (msg.type === 'cmd-ack') {
+                        document.getElementById('doorStatus').innerText = msg.action === 'open' ? "Commande d'ouverture envoyée..." : "Commande de verrouillage envoyée...";
+                    }
+                } catch (e) {}
+            };
+        }
+
+        function applyRemoteState(s) {
+            const status = document.getElementById('doorStatus');
+            if (!s.online || s.locked === null) {
+                status.innerText = "Cabine hors ligne";
+                status.className = "text-rose-600";
+                document.getElementById('kioskStatus').innerText = "Cabine N°01 - Hors ligne";
+                document.getElementById('kioskDot').style.backgroundColor = '#6B7280';
+            } else if (s.presence === true || (s.open === true && !s.locked)) {
+                status.innerText = "Occupée — session en cours";
+                status.className = "text-rose-600";
+                document.getElementById('kioskStatus').innerText = "Cabine N°01 - Occupée";
+                document.getElementById('kioskDot').style.backgroundColor = '#DC2626';
+            } else if (!s.locked) {
+                status.innerText = "Déverrouillée — entrez et fermez la porte";
+                status.className = "text-[#9ACD32]";
+                document.getElementById('kioskStatus').innerText = "Cabine N°01 - Déverrouillée";
+                document.getElementById('kioskDot').style.backgroundColor = '#9ACD32';
+            } else {
+                status.innerText = "Fermé & Verrouillé (Sécurisé)";
+                status.className = "text-[#2D5A27]";
+                document.getElementById('kioskStatus').innerText = "Cabine N°01 - Libre";
+                document.getElementById('kioskDot').style.backgroundColor = '#9ACD32';
+            }
+        }
+
+        // ============ CONTRÔLE PORTE ============
+        function controlDoor(action) {
+            const status = document.getElementById('doorStatus');
+            if (doorRemote && uiWs && uiWs.readyState === WebSocket.OPEN) {
+                uiWs.send(JSON.stringify({ type: 'cmd', action: action === 'open' ? 'open' : 'close' }));
+                status.innerText = action === 'open' ? "Ouverture en cours..." : "Verrouillage en cours...";
+                status.className = "text-[#2D3748]";
+                return;
+            }
+            if (action === 'open') {
+                status.innerText = "Ouvert (Déverrouillé)";
+                status.className = "text-[#9ACD32]";
+                alert("Porte ouverte.");
+            } else {
+                status.innerText = "Fermé & Verrouillé (Sécurisé)";
+                status.className = "text-[#2D5A27]";
+                alert("Porte verrouillée.");
+            }
+        }
+
+        // ============ LED ============
+        let currentLight = 80;
+        function adjustLight(change) {
+            currentLight += change;
+            if (currentLight < 10) currentLight = 10;
+            if (currentLight > 100) currentLight = 100;
+            document.getElementById('lightLevel').innerText = currentLight + '%';
+        }
+        function setPresetLight(mode) {
+            currentLight = mode === 'focus' ? 90 : 50;
+            document.getElementById('lightLevel').innerText = currentLight + '%';
+        }
+
+        // ============ CLIMATISATION ============
+        let currentTemp = 21;
+        function adjustTemp(change) {
+            currentTemp += change;
+            if (currentTemp < 16) currentTemp = 16;
+            if (currentTemp > 30) currentTemp = 30;
+            document.getElementById('tempDisplay').innerText = currentTemp + '°C';
+        }
+        function setFanSpeed(speed) { alert("Ventilation : " + speed); }
+
+        // ============ AUDIO ============
+        function playTrack(trackName) {
+            document.getElementById('currentTrack').innerText = trackName;
+            alert("Lecture : " + trackName);
+        }
+
+        // ============ COMMANDE VOCALE ============
+        let voiceRecognition = null;
+        let isListening = false;
+
+        function openVoiceModal() {
+            const modal = document.getElementById('voiceModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.getElementById('voiceTranscript').innerText = "Dites une commande, ex : « Ouvre la porte »";
+            const speechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (speechRec) {
+                document.getElementById('voiceFallback').classList.add('hidden');
+                startVoiceListen();
+            } else {
+                document.getElementById('voiceFallback').classList.remove('hidden');
+                document.getElementById('voiceStatus').innerText = "Saisie manuelle";
+            }
+        }
+
+        function closeVoiceModal() {
+            stopVoiceListen();
+            const modal = document.getElementById('voiceModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function startVoiceListen() {
+            const speechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!speechRec) return;
+            stopVoiceListen();
+            voiceRecognition = new speechRec();
+            voiceRecognition.lang = 'fr-FR';
+            voiceRecognition.interimResults = true;
+            voiceRecognition.continuous = false;
+
+            voiceRecognition.onresult = (event) => {
+                let interim = '', final = '';
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    const transcript = event.results[i][0].transcript;
+                    if (event.results[i].isFinal) final += transcript;
+                    else interim += transcript;
+                }
+                document.getElementById('voiceTranscript').innerText = final || interim;
+                if (final.trim()) {
+                    isListening = false;
+                    setMicVisual(false);
+                    processCommand(final);
+                }
+            };
+
+            voiceRecognition.onend = () => {
+                isListening = false;
+                setMicVisual(false);
+                const modal = document.getElementById('voiceModal');
+                if (!modal.classList.contains('hidden')) {
+                    document.getElementById('voiceStatus').innerText = "Réécoute en cours...";
+                    try { voiceRecognition.start(); isListening = true; setMicVisual(true); } catch (e) {}
+                }
+            };
+
+            voiceRecognition.onerror = (event) => {
+                const status = document.getElementById('voiceStatus');
+                if (event.error === 'no-speech') status.innerText = "Aucune commande entendue, réessayez...";
+                else if (event.error === 'not-allowed') status.innerText = "Accès micro refusé";
+            };
+
+            try {
+                voiceRecognition.start();
+                isListening = true;
+                setMicVisual(true);
+                document.getElementById('voiceStatus').innerText = "Écoute en cours...";
+            } catch (e) {}
+        }
+
+        function stopVoiceListen() {
+            if (voiceRecognition) { try { voiceRecognition.stop(); } catch (e) {} }
+            isListening = false;
+            setMicVisual(false);
+        }
+
+        function setMicVisual(listening) {
+            const mic = document.getElementById('voiceMic');
+            if (listening) mic.classList.add('voice-listening');
+            else mic.classList.remove('voice-listening');
+        }
+
+        function normalize(text) {
+            return text.toLowerCase()
+                .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                .replace(/[^\w\s]/g, ' ').replace(/\s+/g, ' ').trim();
+        }
+
+        function processVoiceInput() {
+            const input = document.getElementById('voiceInput').value;
+            if (input.trim()) processCommand(input);
+            document.getElementById('voiceInput').value = '';
+        }
+
+        function processCommand(text) {
+            const t = normalize(text);
+            const transcript = document.getElementById('voiceTranscript');
+
+            if (t.includes('ouvre la porte') || t.includes('ouvrir la porte')) {
+                switchTab('porte'); controlDoor('open'); closeVoiceModal(); return;
+            }
+            if (t.includes('ferme la porte') || t.includes('fermer la porte') || t.includes('verrouille')) {
+                switchTab('porte'); controlDoor('close'); closeVoiceModal(); return;
+            }
+            if (t.includes('focus')) { setPresetLight('focus'); switchTab('eclairage'); closeVoiceModal(); return; }
+            if (t.includes('relax')) { setPresetLight('relax'); switchTab('eclairage'); closeVoiceModal(); return; }
+            if (t.includes('augmente la lumiere') || t.includes('augmenter la lumiere') || t.includes('plus de lumiere')) {
+                adjustLight(10); switchTab('eclairage'); closeVoiceModal(); return;
+            }
+            if (t.includes('diminue la lumiere') || t.includes('diminuer la lumiere') || t.includes('moins de lumiere')) {
+                adjustLight(-10); switchTab('eclairage'); closeVoiceModal(); return;
+            }
+            if (t.includes('ventilation eco')) { setFanSpeed('Eco'); switchTab('climatisation'); closeVoiceModal(); return; }
+            if (t.includes('ventilation auto')) { setFanSpeed('Auto'); switchTab('climatisation'); closeVoiceModal(); return; }
+            if (t.includes('ventilation max')) { setFanSpeed('Max'); switchTab('climatisation'); closeVoiceModal(); return; }
+            if (t.includes('augmente la temperature') || t.includes('augmenter la temperature') || t.includes('plus chaud')) {
+                adjustTemp(1); switchTab('climatisation'); closeVoiceModal(); return;
+            }
+            if (t.includes('diminue la temperature') || t.includes('diminuer la temperature') || t.includes('plus froid')) {
+                adjustTemp(-1); switchTab('climatisation'); closeVoiceModal(); return;
+            }
+            if (t.includes('relaxante') || t.includes('pluie')) { playTrack('Pluie & Orage Léger'); switchTab('audio'); closeVoiceModal(); return; }
+            if (t.includes('bruit blanc') || t.includes('ocean')) { playTrack('Bruit Blanc - Océan Profond'); switchTab('audio'); closeVoiceModal(); return; }
+            if (t.includes('foret')) { playTrack('Forêt de Pins (Symphonie Naturelle)'); switchTab('audio'); closeVoiceModal(); return; }
+            if (t.includes('terminer la session') || t.includes('termine la session') || t.includes('quitter')) {
+                if (confirm('Terminer la session ?')) { closeVoiceModal(); leaveCabin(); }
+                return;
+            }
+
+            transcript.innerText = '« ' + text.trim() + ' » — commande non reconnue. Essayez : « Ouvre la porte », « Mode focus », « Met de la musique relaxante ».';
+            document.getElementById('voiceStatus').innerText = "Réessayez";
+        }
+
+        connectBackend();
+    </script>
+</body>
+</html>

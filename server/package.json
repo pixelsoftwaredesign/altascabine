@@ -1,0 +1,14 @@
+{
+  "name": "atlas-cabine-server",
+  "version": "0.1.0",
+  "description": "Pont MQTT <-> UI Atlas Cabine (MVP contrôle de porte)",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "mqtt": "^5.7.0",
+    "ws": "^8.18.0"
+  }
+}
