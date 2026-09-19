@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Système Avancé Atlas Cabine — Modes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-thumb { background: #2D5A27; border-radius: 8px; }
+        ::-webkit-scrollbar-track { background: #F4F6F0; }
+    </style>
+</head>
+<body class="bg-[#F4F6F0] text-[#2D3748]">
+
+    <header class="bg-[#2D3748] px-6 py-4 flex items-center justify-between gap-3 sticky top-0 z-50 shadow-lg">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-[#9ACD32] rounded-2xl flex items-center justify-center font-extrabold text-[#2D3748]">⚙️</div>
+            <div>
+                <h1 class="font-extrabold text-white text-lg leading-tight">Système <span class="text-[#9ACD32]">Avancé</span></h1>
+                <p class="text-[10px] text-slate-300 mono">Modes de fonctionnement · sécurité · outils de développement</p>
+            </div>
+        </div>
+        <nav class="flex items-center gap-2 text-xs font-bold">
+            <a href="home.html" class="px-3 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition">🏠 Accueil</a>
+            <a href="portail-usine.html" class="px-3 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition">🏭 Usine</a>
+            <a href="dashboard-usine.html" class="px-3 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition">📊 Dashboard</a>
+            <a href="architecture.html" class="px-3 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition">🏗️ Archi</a>
+            <span id="sysBadge" class="mono px-2.5 py-1.5 rounded-xl text-[10px] font-bold">…</span>
+        </nav>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-6 py-8 space-y-10">
+
+        <!-- MODE ACTUEL -->
+        <section class="bg-gradient-to-br from-[#2D5A27] to-[#23451E] text-white rounded-3xl p-8">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                    <p class="text-[11px] mono font-bold text-[#9ACD32] uppercase tracking-[0.25em]">Mode de fonctionnement actuel</p>
+                    <h2 id="modeTitle" class="text-3xl font-extrabold mt-2">—</h2>
+                    <p id="modeDesc" class="text-sm text-emerald-50/85 mt-2 max-w-xl"></p>
+                </div>
+                <div class="text-right">
+                    <p class="text-[11px] mono text-slate-300">Version système</p>
+                    <p class="mono text-2xl font-extrabold text-[#9ACD32]">v2.1</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SÉLECTEUR DE MODE -->
+        <section>
+            <h2 class="text-xl font-bold text-[#2D5A27] mb-4">Choisir le mode de fonctionnement</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <button onclick="setMode('secure')" class="mode-card text-left bg-white rounded-3xl border-2 border-[#2D5A27]/20 p-6 hover:border-[#2D5A27] transition" data-m="secure">
+                    <div class="w-12 h-12 rounded-2xl bg-[#2D5A27] flex items-center justify-center text-xl">🔒</div>
+                    <h3 class="font-extrabold text-[#2D5A27] mt-4">Mode Sécurisé <span class="mono text-[10px] text-slate-400">PROD</span></h3>
+                    <p class="text-xs text-slate-500 mt-2 leading-relaxed">Environnement de production : données réelles uniquement, démo et outils de test désactivés, suivi verrouillé.</p>
+                    <span class="inline-block mt-4 mono text-[10px] font-bold px-2 py-1 rounded-lg bg-[#2D5A27]/10 text-[#2D5A27]">Conseillé pour le site live</span>
+                </button>
+                <button onclick="setMode('beta')" class="mode-card text-left bg-white rounded-3xl border-2 border-[#2D5A27]/20 p-6 hover:border-[#2D5A27] transition" data-m="beta">
+                    <div class="w-12 h-12 rounded-2xl bg-[#9ACD32] flex items-center justify-center text-xl">🧪</div>
+                    <h3 class="font-extrabold text-[#2D3748] mt-4">Mode Bêta <span class="mono text-[10px] text-slate-400">PRÉ-PROD</span></h3>
+                    <p class="text-xs text-slate-500 mt-2 leading-relaxed">Pré-production : valider les nouvelles fonctions avec des données de test/démo avant mise en production.</p>
+                    <span class="inline-block mt-4 mono text-[10px] font-bold px-2 py-1 rounded-lg bg-[#9ACD32]/20 text-[#2D5A27]">Données de démo autorisées</span>
+                </button>
+                <button onclick="setMode('dev')" class="mode-card text-left bg-white rounded-3xl border-2 border-[#2D5A27]/20 p-6 hover:border-[#2D5A27] transition" data-m="dev">
+                    <div class="w-12 h-12 rounded-2xl bg-[#2D3748] flex items-center justify-center text-xl">🛠️</div>
+                    <h3 class="font-extrabold text-[#2D3748] mt-4">Mode Développement <span class="mono text-[10px] text-slate-400">DEV</span></h3>
+                    <p class="text-xs text-slate-500 mt-2 leading-relaxed">Boîte à outils : données fictives, réinitialisation, tests serveur local &amp; événements temps réel.</p>
+                    <span class="inline-block mt-4 mono text-[10px] font-bold px-2 py-1 rounded-lg bg-[#2D3748]/10 text-[#2D3748]">Outils de test activés</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- OUTILS PAR MODE -->
+        <section class="bg-white border border-[#2D5A27]/15 rounded-3xl p-8">
+            <div class="flex items-center justify-between mb-5">
+                <h2 class="text-xl font-bold text-[#2D5A27]">🧰 Outils disponibles</h2>
+                <span id="toolsLabel" class="mono text-[10px] font-bold px-2 py-1 rounded-lg text-slate-500 bg-slate-100"></span>
+            </div>
+            <div id="toolsBox" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+        </section>
+
+        <!-- ÉTAT DU SYSTÈME -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="bg-white border border-[#2D5A27]/15 rounded-3xl p-8">
+                <h2 class="text-xl font-bold text-[#2D5A27] mb-5">🖥️ État de la plateforme</h2>
+                <div class="space-y-3 text-sm mono" id="envBox"></div>
+            </div>
+            <div class="bg-white border border-[#2D5A27]/15 rounded-3xl p-8">
+                <h2 class="text-xl font-bold text-[#2D5A27] mb-5">🗄️ Données locales</h2>
+                <div class="space-y-3 text-sm mono" id="dataBox"></div>
+            </div>
+        </section>
+
+        <!-- SÉCURITÉ -->
+        <section class="bg-white border border-[#2D5A27]/15 rounded-3xl p-8">
+            <h2 class="text-xl font-bold text-[#2D5A27] mb-5">🔐 Sécurité & accès</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm" id="secBox"></div>
+            <p class="text-[11px] text-slate-400 mt-5 leading-relaxed">Conseil : restez en <b>Mode Sécurisé</b> en production. Les modes Bêta / Développement ouvrent les outils de test et n'affichent pas de verrouillage. Les accès cabines (jetons &amp; QR) ne sortent jamais de ce domaine.</p>
+        </section>
+
+        <!-- MODE TECHNICIEN -->
+        <section class="bg-white border border-[#2D5A27]/15 rounded-3xl p-8">
+            <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+                <h2 class="text-xl font-bold text-[#2D5A27]">🔧 Mode Technicien — jetons d'installation</h2>
+                <div class="flex gap-2">
+                    <input id="techName" placeholder="Nom du technicien" class="px-4 py-2.5 rounded-xl bg-[#F4F6F0] border border-[#2D5A27]/20 text-sm focus:outline-none focus:border-[#2D5A27]">
+                    <button onclick="genInstallToken()" class="px-4 py-2.5 rounded-xl bg-[#2D5A27] hover:bg-[#23451e] text-white font-bold text-xs">＋ Générer un jeton d'installation</button>
+                </div>
+            </div>
+            <p class="text-[11px] text-slate-400 mb-4 leading-relaxed">Un <b>jeton d'installation</b> autorise un technicien à ouvrir le <b>Mode Technicien</b> sur l'app cabine (kiosque) : affectation de la cabine, test porte, scan matériel, et « installation terminée ». Les jetons révoqués deviennent immédiatement invalides partout.</p>
+            <div id="techTokens" class="space-y-3"></div>
+        </section>
+    </main>
+
+    <footer class="text-center text-xs text-slate-400 mono pb-6 px-4">© 2026 · Made in Tunisia 🇹🇳 · Logiciel & R&D : PixelSoftware Design — Design cabine &amp; standard acoustique : Atlas Working (développement / idée)</footer>
+
+    <script>
+        const MODES = {
+            secure: { name: 'Mode Sécurisé', tag: 'PROD', color: '#2D5A27', badge: '● PROD SÉCURISÉ', desc: 'Production : données réelles uniquement. Démo désactivée, outils de test verrouillés, toutes les fonctions opérationnelles.' },
+            beta:   { name: 'Mode Bêta', tag: 'BÊTA', color: '#9ACD32', badge: '● BÊTA', desc: 'Pré-production : vous pouvez valider les fonctions avec des données de démonstration. En production, revenez en Mode Sécurisé.' },
+            dev:    { name: 'Mode Développement', tag: 'DEV', color: '#2D3748', badge: 'DEV', desc: 'Environnement technique : génération de données fictives, réinitialisation complète, tests du serveur local & des événements temps réel.' }
+        };
+        function curMode() { try { const m = localStorage.getItem('atlasMode'); return MODES[m] ? m : 'secure'; } catch (e) { return 'secure'; } }
+        function paint(mode) {
+            const M = MODES[mode];
+            const titles = { secure: '🔒 Mode Sécurisé (PROD)', beta: '🧪 Mode Bêta (PRÉ-PROD)', dev: '🛠️ Mode Développement (DEV)' };
+            document.getElementById('modeTitle').innerText = titles[mode];
+            document.getElementById('modeDesc').innerText = M.desc;
+            const badge = document.getElementById('sysBadge');
+            badge.style.cssText = 'color:' + (mode === 'dev' ? '#9ACD32' : '#fff') + ';background:' + (mode === 'dev' ? '#2D3748' : M.color) + ';';
+            badge.innerText = M.badge;
+            document.querySelectorAll('.mode-card').forEach(c => {
+                const sel = c.dataset.m === mode;
+                c.className = 'mode-card text-left bg-white rounded-3xl border-2 p-6 transition ' + (sel ? 'border-[#2D5A27] ring-2 ring-[#9ACD32]/40' : 'border-[#2D5A27]/20 hover:border-[#2D5A27]');
+            });
+            renderTools(mode);
+            document.getElementById('toolsLabel').innerText = 'Mode ' + M.tag;
+        }
+        function setMode(m) {
+            localStorage.setItem('atlasMode', m);
+            try { const ch = new BroadcastChannel('atlas'); ch.postMessage({ type: 'mode', mode: m, at: new Date().toISOString() }); } catch (e) {}
+            localStorage.setItem('atlasEvent', JSON.stringify({ type: 'mode', mode: m, at: Date.now() }));
+            paint(m);
+        }
+
+        // ---- outils dynamiques ----
+        function renderTools(mode) {
+            const box = document.getElementById('toolsBox');
+            const all = [
+                ['📥', 'Commandes client', '«cn&#39;&#39;>…', () => {}], // placeholder removed below
+            ];
+            const tools = {
+                dev: [
+                    ['🧪', 'Générer des données de test', 'Crée utilisateurs, commandes à différents statuts, cabines & sessions fictives pour tester les portails.', genTestData],
+                    ['🗑️', 'Réinitialiser toutes les données', 'Efface définitivement utilisateurs, commandes, cabines, prix réglés, sessions et événements (retour à zéro).', resetAll],
+                    ['🔌', 'Tester le serveur local (ESP32)', 'Interroge l\'API du pont Node :3000 (état porte & hardwares). Note : caméra/MQTT nécessitent HTTPS.', testServer],
+                    ['📡', 'Émettre un événement temps réel', 'Pousse un événement de test sur le canal temps réel : tous les tableaux de bord se mettent à jour.', emitEvent]
+                ],
+                beta: [
+                    ['🧪', 'Générer des données de démo', 'Peuple commandes & cabines de démonstration pour valider les parcours commercial et usine.', genTestData],
+                    ['📡', 'Émettre un événement temps réel', 'Pousse un événement de test sur le canal temps réel.', emitEvent]
+                ],
+                secure: [
+                    ['🔒', 'Aucun outil de test', 'En Mode Sécurisé, l\'interface est en lecture seule sur les données réelles. Passez en Mode Bêta ou Développement pour les outils de test.', null]
+                ]
+            };
+            box.innerHTML = (tools[mode] || []).map(([icon, t, d, fn], i) => `
+                <div class="bg-[#F4F6F0] border border-[#2D5A27]/10 rounded-2xl p-5 flex flex-col">
+                    <div class="flex items-center gap-3">
+                        <span class="w-10 h-10 rounded-xl bg-white border border-[#2D5A27]/10 flex items-center justify-center">${icon}</span>
+                        <h3 class="font-bold text-[#2D3748] text-sm">${t}</h3>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-2 flex-1 leading-relaxed">${d}</p>
+                    ${fn ? `<button onclick="runTool(${i})" class="mt-4 px-4 py-2.5 rounded-xl bg-[#2D5A27] hover:bg-[#23451e] text-white font-bold text-xs transition w-fit">Exécuter</button>` : ''}
+                </div>`).join('') || '';
+            window._tools = tools[mode];
+        }
+        function runTool(i) {
+            const t = window._tools[i];
+            if (t && t[3]) t[3]();
+        }
+
+        // ---- outils ----
+        function emitEvent() {
+            const at = new Date().toISOString();
+            try { const ch = new BroadcastChannel('atlas'); ch.postMessage({ type: 'test', at }); } catch (e) {}
+            localStorage.setItem('atlasEvent', JSON.stringify({ type: 'test', at: Date.now() }));
+            toast('📡 Événement de test émis sur le canal temps réel.');
+        }
+        function testServer() {
+            const el = document.getElementById('envBox');
+            const before = el.innerHTML;
+            fetch('http://192.168.0.133:3000/api/door/state', { mode: 'no-cors' })
+                .then(() => toast('🔌 Réponse reçue du serveur local (CORS limité en lecture seule).'))
+                .catch(() => toast('⚠️ Serveur local injoignable (HTTP seul — activez HTTPS ou vérifiez le process :3000).'));
+        }
+        function genTestData() {
+            const names = ['Air Carthage Consulting', 'Groupe Hôtel Prestige', 'SITEX Bureaux', 'CFA Gabès Centre'];
+            const sites = ['Aéroport Tunis–Carthage', 'Hall d\'hôtel', 'Open space / bureau privé', 'Carrefour Gabès'];
+            const coords = ['Terminal 2 — hall A1', 'Lobby niveau 0', 'Étage 3 open space', 'Niveau 1 — zone café'];
+            const models = [['AT-M240', 'Medium', '240 × 120 × 240 cm', '42 dB'], ['AT-L350', 'Large', '350 × 250 × 240 cm', '48 dB']];
+            const siteCodes = { 'Aéroport Tunis–Carthage': 'TUN', 'Carrefour Gabès': 'GAB', 'Open space / bureau privé': 'OSP', "Hall d'hôtel": 'HTL' };
+            const cabines = JSON.parse(localStorage.getItem('atlasCabins') || '[]');
+            const orders = JSON.parse(localStorage.getItem('atlasOrders') || '[]');
+            const users = JSON.parse(localStorage.getItem('atlasUsers') || '[]');
+            const sessions = JSON.parse(localStorage.getItem('atlasSessions') || '[]');
+            const now = Date.now();
+            for (let i = 0; i < 4; i++) {
+                const [modId, modName, dim, att] = models[i % 2];
+                const seq = cabines.filter(c => c.id.startsWith('CAB-' + siteCodes[sites[i]])).length;
+                const cabins = Array.from({ length: 1 + (i % 2) }, (_, j) => ({
+                    id: 'CAB-' + siteCodes[sites[i]] + '-' + String(seq + j + 1).padStart(2, '0'),
+                    token: 'ATLAS-TEST' + (100 + i),
+                    password: 'test' + (i + 1)
+                }));
+                const id = now + i;
+                const statut = ['recep', 'confirmee', 'production', 'terminee'][i];
+                const total = 32900 + 1890;
+                const o = { id, access: cabins[0].token, password: cabins[0].password, client: names[i], contact: 'Contact ' + (i + 1), email: 'test' + (i + 1) + '@atlas.tn', phone: '+216 99 000 00' + i, site: sites[i], coords: coords[i], model: modId, modelName: modName, dim, att, qty: cabins.length, sessionMin: 60, prixUnit: 32900, accessories: [{ ref: 'ECRAN-01', label: 'Écran 27" QHD tactile + bras articulé', prix: 1890 }], total, cabins, source: 'test', statut, date: new Date(Date.now() - i * 86400000).toLocaleString('fr-FR') };
+                orders.push(o);
+                cabins.forEach(c => cabines.push({ id: c.id, token: c.token, password: c.password, client: names[i], site: sites[i], coords: coords[i], model: modId, orderId: id, date: o.date, source: 'test' }));
+                users.push({ email: o.email, password: o.password, name: names[i], role: 'client', model: 'Mixte', site: sites[i], coords: coords[i], access: c, date: o.date, source: 'test' });
+            }
+            sessions.push({ id: 'ses-test-' + now, unit: 'CAB-TUN-01', user: 'client.test@atlas.tn', model: 'AT-M240', sessionMin: 60, start: Date.now() - 1200000, end: null, source: 'test' });
+            localStorage.setItem('atlasOrders', JSON.stringify(orders));
+            localStorage.setItem('atlasCabins', JSON.stringify(cabines));
+            localStorage.setItem('atlasUsers', JSON.stringify(users));
+            localStorage.setItem('atlasSessions', JSON.stringify(sessions));
+            emitEvent();
+            toast('🧪 Données de test générées (4 commandes, 6 cabines, 1 session).');
+            refreshEnv();
+        }
+        function resetAll() {
+            if (!confirm('⚠️ Effacer TOUTES les données locales (utilisateurs, commandes, cabines, sessions, prix réglés) ? Cette action est irréversible.')) return;
+            ['atlasUsers', 'atlasOrders', 'atlasCabins', 'atlasSessions', 'atlasCart', 'atlasSession'].forEach(k => localStorage.removeItem(k));
+            toast('🗑️ Données réinitialisées.');
+            refreshEnv();
+        }
+        function toast(msg) {
+            let t = document.getElementById('toast');
+            if (!t) { t = document.createElement('div'); t.id = 'toast'; t.className = 'fixed bottom-6 left-1/2 -translate-x-1/2 px-5 py-3 rounded-2xl bg-[#2D3748] text-white text-sm font-bold shadow-2xl z-50'; document.body.appendChild(t); }
+            t.innerText = msg;
+            t.style.opacity = '1';
+            clearTimeout(t._t);
+            t._t = setTimeout(() => { t.style.opacity = '0'; }, 2600);
+        }
+
+        // ---- état ----
+        function refreshEnv() {
+            const o = window.location.origin;
+            document.getElementById('envBox').innerHTML = `
+                <div class="flex justify-between"><span class="text-slate-400">Domaine</span><b>${esc(o)}</b></div>
+                <div class="flex justify-between"><span class="text-slate-400">Navigateur</span><b class="truncate max-w-[55%]">${esc(navigator.userAgent.split(') ')[0] + ')')}</b></div>
+                <div class="flex justify-between"><span class="text-slate-400">En ligne</span><b class="${navigator.onLine ? 'text-[#2D5A27]' : 'text-rose-600'}">${navigator.onLine ? '● OUI' : '● NON'}</b></div>
+                <div class="flex justify-between"><span class="text-slate-400">HTTPS (sécurisé)</span><b class="${location.protocol === 'https:' ? 'text-[#2D5A27]' : 'text-amber-600'}">${location.protocol}</b></div>
+                <div class="flex justify-between"><span class="text-slate-400">Temps réel</span><b class="text-[#2D5A27]">${typeof BroadcastChannel !== 'undefined' ? '● BroadcastChannel actif' : 'Indisponible'}</b></div>`;
+            const read = k => { try { const v = JSON.parse(localStorage.getItem(k)); return Array.isArray(v) ? v : []; } catch (e) { return []; } };
+            const orders = read('atlasOrders');
+            const st = { recep: 0, devis: 0, confirmee: 0, production: 0, expediee: 0, installee: 0, terminee: 0, annulee: 0 };
+            orders.forEach(o => { st[o.statut] = (st[o.statut] || 0) + 1; });
+            const prix = (() => { try { return JSON.parse(localStorage.getItem('atlasPrices')) || {}; } catch (e) { return {}; } })();
+            const acc = read('atlasAccessories');
+            const sessions = read('atlasSessions');
+            const act = sessions.filter(s => !s.end).length;
+            document.getElementById('dataBox').innerHTML = `
+                <div class="flex justify-between"><span class="text-slate-400">Utilisateurs</span><b>${read('atlasUsers').length}</b></div>
+                <div class="flex justify-between"><span class="text-slate-400">Commandes</span><b>${orders.length} <span class="text-[10px] text-slate-400">(${'rece' in st ? '' : ''}<span id="stMini"></span>)</span></b></div>
+                <div class="flex justify-between"><span class="text-slate-400">Cabines livrées</span><b>${read('atlasCabins').length}</b></div>
+                <div class="flex justify-between"><span class="text-slate-400">Sessions</span><b>${sessions.length} <span class="text-[10px] text-slate-400">(${act} active${act > 1 ? 's' : ''})</span></b></div>
+                <div class="flex justify-between"><span class="text-slate-400">Prix sur mesure (usine)</span><b>${Object.keys(prix).length ? esc(JSON.stringify(prix)) : 'Aucun (défauts)'}</b></div>
+                <div class="flex justify-between"><span class="text-slate-400">Accessoires gérés</span><b>${acc.length}</b></div>
+                <div class="flex justify-between"><span class="text-slate-400">Statuts</span><b class="text-[10px]">${esc(Object.entries(st).filter(([, n]) => n).map(([k, n]) => k + ': ' + n).join(' · ') || 'aucune')}</b></div>`;
+            const users = read('atlasUsers');
+            const admin = users.find(u => u.role === 'admin');
+            const cab = read('atlasCabins');
+            document.getElementById('secBox').innerHTML = `
+                <div class="bg-[#F4F6F0] rounded-2xl p-4">
+                    <p class="mono text-[10px] font-bold text-slate-400">ACCÈS ADMIN</p>
+                    <p class="font-bold text-[#2D3748] mt-1">${admin ? esc(admin.email) : 'admin@atlas.tn'}</p>
+                    <p class="text-[11px] text-slate-500">2 comptes de démo préchargés</p>
+                </div>
+                <div class="bg-[#F4F6F0] rounded-2xl p-4">
+                    <p class="mono text-[10px] font-bold text-slate-400">TOKENS CABINES</p>
+                    <p class="font-bold text-[#2D3748] mt-1">${cab.length} jetons générés</p>
+                    <p class="text-[11px] text-slate-500">Nouveautés gérés par le portail usine</p>
+                </div>
+                <div class="bg-[#F4F6F0] rounded-2xl p-4">
+                    <p class="mono text-[10px] font-bold text-slate-400">PROTECTION</p>
+                    <p class="font-bold text-[#2D5A27] mt-1">● Stockage local unique</p>
+                    <p class="text-[11px] text-slate-500">données du domaine ${esc(o)} uniquement</p>
+                </div>`;
+        }
+        function esc(t) { const d = document.createElement('div'); d.textContent = t == null ? '' : String(t); return d.innerHTML; }
+
+        // ================= MODE TECHNICIEN =================
+        function getInstallTokens() {
+            let arr;
+            try { arr = JSON.parse(localStorage.getItem('atlasInstallTokens') || '[]'); } catch (e) { arr = []; }
+            if (!localStorage.getItem('atlasInstallTokens')) {
+                arr = [{ token: 'INST-MASTER-2026', name: 'Principal (démo)', date: new Date().toLocaleString('fr-FR'), active: true }];
+                localStorage.setItem('atlasInstallTokens', JSON.stringify(arr));
+            }
+            if (!Array.isArray(arr)) arr = [];
+            return arr;
+        }
+        function makeTechCode() { const c = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let s = ''; for (let i = 0; i < 6; i++) s += c[Math.floor(Math.random() * c.length)]; return 'INST-' + s; }
+        function genInstallToken() {
+            const name = document.getElementById('techName').value.trim() || 'Technicien';
+            const arr = getInstallTokens();
+            arr.push({ token: makeTechCode(), name, date: new Date().toLocaleString('fr-FR'), active: true });
+            localStorage.setItem('atlasInstallTokens', JSON.stringify(arr));
+            document.getElementById('techName').value = '';
+            renderInstallTokens();
+            toast('🔧 Jeton d\'installation généré : ' + arr[arr.length - 1].token);
+        }
+        function revokeInstallToken(token) {
+            const arr = getInstallTokens();
+            const t = arr.find(x => x.token === token);
+            if (!t) return;
+            if (!confirm('Révoquer le jeton ' + token + ' (' + t.name + ') ? Il sera immédiatement invalide pour tout technicien.')) return;
+            t.active = false;
+            localStorage.setItem('atlasInstallTokens', JSON.stringify(arr));
+            renderInstallTokens();
+            toast('🔒 Jeton révoqué : ' + token);
+        }
+        function deleteInstallToken(token) {
+            const arr = getInstallTokens().filter(x => x.token !== token);
+            localStorage.setItem('atlasInstallTokens', JSON.stringify(arr));
+            renderInstallTokens();
+            toast('🗑️ Jeton supprimé.');
+        }
+        function renderInstallTokens() {
+            const arr = getInstallTokens();
+            document.getElementById('techTokens').innerHTML = arr.length ? arr.slice().reverse().map(t => `
+                <div class="flex flex-wrap items-center gap-3 bg-[#F4F6F0] border border-[#2D5A27]/10 rounded-2xl p-4">
+                    <span class="w-10 h-10 rounded-xl ${t.active ? 'bg-[#2D5A27] text-white' : 'bg-slate-200 text-slate-500'} flex items-center justify-center text-lg">🔧</span>
+                    <div class="flex-1 min-w-[180px]">
+                        <p class="font-bold text-[#2D3748] text-sm">${esc(t.name)} <span class="mono text-[10px] font-bold ${t.active ? 'text-[#2D5A27]' : 'text-slate-400'}">${t.active ? '● ACTIF' : '● RÉVOQUÉ'}</span></p>
+                        <p class="mono text-xs text-[#2D5A27] font-extrabold">${esc(t.token)}</p>
+                        <p class="text-[10px] text-slate-400 mono">émis le ${esc(t.date)}</p>
+                    </div>
+                    ${t.active
+                        ? `<button onclick="revokeInstallToken('${t.token}')" class="px-4 py-2.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-600 font-bold text-xs hover:bg-amber-100 transition">Révoquer</button>`
+                        : `<button onclick="deleteInstallToken('${t.token}')" class="px-3 py-2 rounded-xl bg-rose-50 border border-rose-200 text-rose-600 font-bold text-xs hover:bg-rose-100">🗑️</button>`}
+                </div>`).join('') : '<p class="text-xs text-slate-400">Aucun jeton. Générez le premier pour autoriser l\'installation.</p>';
+        }
+
+        paint(curMode());
+        refreshEnv();
+        renderInstallTokens();
+        setInterval(refreshEnv, 4000);
+        window.addEventListener('storage', e => { if (e.key === 'atlasMode') paint(curMode()); });
+    </script>
+</body>
+</html>

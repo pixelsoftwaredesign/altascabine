@@ -26,7 +26,9 @@
         </div>
         <nav class="flex items-center gap-2 text-xs font-bold">
             <a href="home.html" class="px-3 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition">🏠 Accueil</a>
+            <a href="portail-commercial.html" class="px-3 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition">💼 Commercial</a>
             <a href="portail-usine.html" class="px-3 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition">Portail Usine</a>
+            <a href="boutique.html" class="px-3 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition">🛒 Boutique</a>
             <span class="bg-[#9ACD32]/15 text-[#9ACD32] px-3 py-1.5 rounded-xl border border-[#9ACD32]/30">📊 Dashboard</span>
             <a href="catalogue.html" class="px-3 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition">Catalogue</a>
         </nav>
@@ -78,6 +80,16 @@
                 </div>
                 <div id="liveFeed" class="space-y-2 max-h-[240px] overflow-y-auto">
                     <p class="text-xs text-slate-400 text-center py-6">En attente d'événements… Ouvrez une cabine depuis l'app pour voir les sessions apparaître en direct.</p>
+                </div>
+            </section>
+
+            <section class="bg-white border border-[#9f1239]/25 rounded-3xl p-6 shadow-sm mt-5">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="font-bold text-[#9f1239]">🚨 Registre des urgences</h2>
+                    <span id="emergencyDot" class="mono text-[10px] px-3 py-1 rounded-xl bg-[#9f1239]/10 text-[#9f1239] font-bold">AUCUNE</span>
+                </div>
+                <div id="emergencyFeed" class="space-y-2 max-h-[200px] overflow-y-auto">
+                    <p class="text-xs text-slate-400 text-center py-6">Aucune urgence déclarée. Les actions (danger interne/extérieur/catastrophique) apparaissent ici en temps réel.</p>
                 </div>
             </section>
         </div>
@@ -135,7 +147,7 @@
         </section>
     </main>
 
-    <footer class="text-center text-xs text-slate-400 mono pb-6">© 2026 Atlas Working — Idée & cabines · Logiciel (recherche & développement) : PixelSoftware Design</footer>
+    <footer class="text-center text-xs text-slate-400 mono pb-6">© 2026 · Made in Tunisia 🇹🇳 · Logiciel & R&D : PixelSoftware Design — Design cabine &amp; standard acoustique : Atlas Working (développement / idée)</footer>
 
     <script>
         const MODELS = { 'AT-S90': 'Small', 'AT-M240': 'Medium', 'AT-L350': 'Large' };
@@ -298,6 +310,7 @@
             if (h) h.innerText = cab;
             renderCabins(cab);
             renderKPIs();
+            renderEmergencies();
         }
 
         function renderCabins(kioskId) {
@@ -318,10 +331,34 @@
             if (!list.length) body.innerHTML = '';
         }
 
+        function renderEmergencies() {
+            let list = [];
+            try { list = JSON.parse(localStorage.getItem('atlasEmergencies') || '[]'); } catch (e) {}
+            const feed = document.getElementById('emergencyFeed');
+            const dot = document.getElementById('emergencyDot');
+            if (!feed) return;
+            if (list.length) {
+                dot.innerText = list[0].kind === 'end' ? 'AUCUNE' : list[0].title.toUpperCase();
+                dot.style.background = list[0].kind === 'end' ? 'rgba(159,18,57,.08)' : 'rgba(159,18,57,.18)';
+            } else dot.innerText = 'AUCUNE';
+            feed.innerHTML = list.length ? list.slice(0, 20).map(e => {
+                const badge = { internal: ['DANGER INTERNE', 'porte OUVERTE', '#9f1239'], external: ['DANGER EXTÉRIEUR', 'porte FERMÉE', '#0369a1'], catastrophic: ['DANGER CATASTROPHIQUE', 'ouverture PARTIELLE', '#2D3748'], end: ['FIN D\'URGENCE', 'retour normal', '#2D5A27'] }[e.kind] || [e.title || e.kind, e.sec || '', '#2D3748'];
+                return `
+                    <div class="flex items-start gap-2 text-xs border rounded-xl px-3 py-2" style="background:${badge[2]}0f;border-color:${badge[2]}44">
+                        <span class="mono text-slate-400 pt-0.5">${e.atFr || ''}</span>
+                        <div class="flex-1">
+                            <b style="color:${badge[2]}">${badge[0]}</b>
+                            <div class="text-slate-500">${esc(e.cab || '—')} · ${badge[1]}</div>
+                        </div>
+                    </div>`;
+            }).join('') : '<p class="text-xs text-slate-400 text-center py-6">Aucune urgence déclarée. Les actions (danger interne/extérieur/catastrophique) apparaissent ici en temps réel.</p>';
+        }
+
         if (atlasChannel) atlasChannel.onmessage = (e) => {
             const d = e.data || {};
             if (d.type === 'sessionStart') pushFeed('start', `Session démarrée — ${esc(d.user)} · ${d.unit}`);
             if (d.type === 'sessionEnd') pushFeed('end', `Session terminée — ${esc(d.user)} · ${d.unit}`);
+            if (d.type === 'emergency') pushFeed('start', `🚨 URGENCE ${String(d.kind || '').toUpperCase()} déclenchée — ${d.cab || ''}`);
             refresh();
         };
         window.addEventListener('storage', e => {
@@ -330,6 +367,7 @@
                     const d = JSON.parse(e.newValue);
                     if (d.type === 'sessionStart') pushFeed('start', `Session démarrée — ${esc(d.user)} · ${d.unit}`);
                     if (d.type === 'sessionEnd') pushFeed('end', `Session terminée — ${esc(d.user)} · ${d.unit}`);
+                    if (d.type === 'emergency') pushFeed('start', `🚨 URGENCE ${String(d.kind || '').toUpperCase()} — ${d.cab || ''}`);
                 } catch (err) {}
                 refresh();
             }

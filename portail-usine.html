@@ -30,6 +30,8 @@
         <nav class="flex items-center gap-2 text-xs font-bold">
             <a href="home.html" class="px-3 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition">🏠 Accueil</a>
             <span class="bg-[#9ACD32]/15 text-[#9ACD32] px-3 py-1.5 rounded-xl border border-[#9ACD32]/30">🏭 Portail Usine</span>
+            <a href="portail-commercial.html" class="px-3 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition">💼 Commercial</a>
+            <a href="boutique.html" class="px-3 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition">🛒 Boutique</a>
             <a href="dashboard-usine.html" class="px-3 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition">📊 Dashboard</a>
             <a href="catalogue.html" class="px-3 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition">Catalogue</a>
             <a href="presentation.html" class="px-3 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition">Présentation</a>
@@ -117,7 +119,10 @@
                     <span id="totalPrix" class="mono text-lg font-extrabold text-[#2D5A27]">— TND HT</span>
                     <span class="text-xs text-slate-500"> · unitaire <span id="unitPrix" class="mono">—</span></span>
                 </div>
-                <button onclick="generateAccess()" class="px-6 py-3 rounded-xl bg-[#9ACD32] hover:bg-[#8bb82d] text-[#2D3748] font-bold transition shadow-sm">🎫 Générer l'accès client & le QR code</button>
+                <div class="flex gap-3">
+                    <button onclick="seedDemoOrder()" class="px-4 py-3 rounded-xl bg-white border border-[#2D5A27]/25 text-[#2D5A27] font-bold transition hover:bg-[#e4e9dc] text-sm">⚡ Passer une commande de démo</button>
+                    <button onclick="generateAccess()" class="px-6 py-3 rounded-xl bg-[#9ACD32] hover:bg-[#8bb82d] text-[#2D3748] font-bold transition shadow-sm">🎫 Générer l'accès client & le QR code</button>
+                </div>
             </div>
         </section>
 
@@ -158,6 +163,42 @@
             <div id="ordersList" class="space-y-4"></div>
             <p id="ordersEmpty" class="text-sm text-slate-400 text-center py-8">Aucune commande enregistrée pour l'instant.</p>
         </section>
+
+        <!-- ============ GESTION PRIX & ACCESSOIRES ============ -->
+        <section class="bg-white border border-[#2D5A27]/15 rounded-3xl p-8 shadow-sm">
+            <div class="mb-6">
+                <span class="text-xs font-bold text-[#9ACD32] uppercase tracking-wider">Administration</span>
+                <h2 class="text-2xl font-bold text-[#2D5A27]">3. Gestion des prix & accessoires</h2>
+                <p class="text-xs text-slate-500 mt-1">Modifiez les prix des cabines et la liste des accessoires — appliqué immédiatement aux commandes, fiches techniques et liste accessoires.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Prix cabines -->
+                <div class="bg-[#F4F6F0] border border-[#2D5A27]/10 rounded-2xl p-5">
+                    <h3 class="font-bold text-[#2D5A27] text-sm mb-4">💰 Prix des cabines (DT HT)</h3>
+                    <div id="priceRows" class="space-y-3"></div>
+                    <button onclick="savePrices()" class="mt-4 w-full py-3 rounded-xl bg-[#2D5A27] text-white font-bold text-sm hover:bg-[#23451e] transition">💾 Enregistrer les prix</button>
+                </div>
+
+                <!-- Ajout accessoire -->
+                <div class="bg-[#F4F6F0] border border-[#2D5A27]/10 rounded-2xl p-5">
+                    <h3 class="font-bold text-[#2D5A27] text-sm mb-4">🧰 Liste des accessoires</h3>
+                    <div class="flex gap-2 mb-3">
+                        <select id="accNewCat" class="px-3 py-2 rounded-xl bg-white border border-[#2D5A27]/20 text-xs focus:outline-none">
+                            <option value="Mobilier & assises">🪑 Mobilier</option>
+                            <option value="Affichage & média">🖥️ Affichage</option>
+                            <option value="Climatisation & qualité d'air">🌡️ Climatisation</option>
+                            <option value="IoT & sécurité">🧠 IoT & sécurité</option>
+                            <option value="Éclairage & confort">💡 Confort</option>
+                        </select>
+                        <input id="accNewName" class="flex-1 min-w-0 px-3 py-2 rounded-xl bg-white border border-[#2D5A27]/20 text-xs focus:outline-none focus:border-[#2D5A27]" placeholder="Nom de l'accessoire">
+                        <input id="accNewPrix" type="number" min="1" class="w-24 px-3 py-2 rounded-xl bg-white border border-[#2D5A27]/20 text-xs focus:outline-none focus:border-[#2D5A27]" placeholder="Prix">
+                    </div>
+                    <button onclick="addAccessory()" class="w-full py-2.5 rounded-xl bg-[#9ACD32] text-[#2D3748] font-bold text-xs hover:bg-[#8bb82d] transition">+ Ajouter l'accessoire</button>
+                    <div id="accAdminTable" class="mt-4 space-y-2 max-h-[320px] overflow-y-auto"></div>
+                </div>
+            </div>
+        </section>
     </main>
 
     <!-- ============ FICHE TECHNIQUE (MODAL) ============ -->
@@ -171,7 +212,7 @@
         </div>
     </div>
 
-    <footer class="text-center text-xs text-slate-400 mono pb-6 no-print">© 2026 Atlas Working — Idée & cabines · Logiciel (recherche & développement) : PixelSoftware Design</footer>
+    <footer class="text-center text-xs text-slate-400 mono pb-6 no-print">© 2026 · Made in Tunisia 🇹🇳 · Logiciel & R&D : PixelSoftware Design — Design cabine &amp; standard acoustique : Atlas Working (développement / idée)</footer>
 
     <script>
         const MODELS = [
@@ -235,7 +276,7 @@
                         </div>
                         <h3 class="font-extrabold text-[#2D5A27] mt-1">Atlas ${m.name}</h3>
                         <p class="text-[11px] text-slate-500 mono">${m.dim} · ${m.surface} · ${m.cap}</p>
-                        <p class="mono text-xl font-extrabold text-[#2D3748] mt-2">${m.prix.toLocaleString('fr-FR')} DT <span class="text-[10px] text-slate-400 font-sans font-semibold">HT</span></p>
+                        <p class="mono text-xl font-extrabold text-[#2D3748] mt-2">${cur(m.id).toLocaleString('fr-FR')} DT <span class="text-[10px] text-slate-400 font-sans font-semibold">HT</span></p>
                         <div class="flex gap-2 mt-3">
                             <button onclick="event.stopPropagation(); openFiche('${m.id}')" class="flex-1 py-2 rounded-xl bg-[#F4F6F0] border border-[#2D5A27]/15 text-[#2D5A27] font-bold text-xs hover:bg-[#e4e9dc] transition">📘 Fiche technique</button>
                         </div>
@@ -280,7 +321,7 @@
                 </div>`).join('') + `
                 <div class="mt-4 flex items-center justify-between bg-[#2D5A27]/5 border border-[#2D5A27]/20 rounded-xl p-4">
                     <span class="font-bold text-[#2D5A27]">Prix de vente conseillé</span>
-                    <span class="mono text-xl font-extrabold text-[#2D5A27]">${m.prix.toLocaleString('fr-FR')} DT HT</span>
+                    <span class="mono text-xl font-extrabold text-[#2D5A27]">${cur(m.id).toLocaleString('fr-FR')} DT HT</span>
                 </div>`;
             const modal = document.getElementById('ficheModal');
             modal.classList.remove('hidden');
@@ -296,13 +337,29 @@
             const qty = Math.max(1, parseInt(document.getElementById('fQty').value) || 1);
             const acc = selectedAccessories();
             const accSum = acc.reduce((a, x) => a + x.prix, 0);
-            document.getElementById('unitPrix').innerText = selectedModel.prix.toLocaleString('fr-FR') + ' DT';
-            document.getElementById('totalPrix').innerHTML = (selectedModel.prix * qty + accSum).toLocaleString('fr-FR') + ' <span class="text-xs">DT HT</span>';
+            document.getElementById('unitPrix').innerText = cur(selectedModel.id).toLocaleString('fr-FR') + ' DT';
+            document.getElementById('totalPrix').innerHTML = (cur(selectedModel.id) * qty + accSum).toLocaleString('fr-FR') + ' <span class="text-xs">DT HT</span>';
             document.getElementById('accTotal').innerText = '+ ' + accSum.toLocaleString('fr-FR') + ' DT';
         }
 
-        // ============ ACCESSOIRES ============
-        const CATS = [
+        // ============ PRIX GÉRÉS (usine) ============
+        const DEF_PRICES = { 'AT-S90': 18500, 'AT-M240': 32900, 'AT-L350': 58500 };
+        function getPrices() {
+            try {
+                const s = JSON.parse(localStorage.getItem('atlasPrices'));
+                if (s && typeof s === 'object') return Object.assign({}, DEF_PRICES, s);
+            } catch (e) {}
+            return Object.assign({}, DEF_PRICES);
+        }
+        function cur(id) { const v = getPrices()[id]; return v != null ? v : DEF_PRICES[id]; }
+
+        // ============ ACCESSOIRES (gérés usine) ============
+        const CAT_CODE = { 'Mobilier & assises': 'MUB', 'Affichage & média': 'ECR', "Climatisation & qualité d'air": 'CLI', 'IoT & sécurité': 'IOT', 'Éclairage & confort': 'COF' };
+        function accCat(ref) {
+            const map = { FAUTE: 'Mobilier & assises', CANAP: 'Mobilier & assises', BANQ: 'Mobilier & assises', TABLE: 'Mobilier & assises', COAT: 'Mobilier & assises', ECRAN: 'Affichage & média', VIDPR: 'Affichage & média', SAMB: 'Affichage & média', MIC: 'Affichage & média', HTEL: 'Affichage & média', CLIM: "Climatisation & qualité d'air", FILT: "Climatisation & qualité d'air", NEB: "Climatisation & qualité d'air", ION: "Climatisation & qualité d'air", TABL: 'IoT & sécurité', CAPT: 'IoT & sécurité', URG: 'IoT & sécurité', CAM: 'IoT & sécurité', LED: 'Éclairage & confort', PRISE: 'Éclairage & confort', MIROIR: 'Éclairage & confort', TAPIS: 'Éclairage & confort', LOR: 'Éclairage & confort' };
+            return map[ref.split('-')[0]] || 'IoT & sécurité';
+        }
+        const ACC_DEFAULT = [
             ['FAUTE-01', 'Fauteuil ergonomique mousse acoustique', 890],
             ['FAUTE-02', 'Fauteuil inclinable "Focus"', 1250],
             ['CANAP-01', 'Canapé 2 places (Medium)', 2350],
@@ -333,24 +390,34 @@
             ['MIROIR-01', 'Miroir de mise à jour', 180],
             ['TAPIS-01', 'Tapis acoustique au sol', 560],
             ['LOR-01', 'Stores / rideaux acoustiques', 640]
-        ];
+        ].map(([ref, label, prix]) => ({ ref, label, prix, cat: accCat(ref) }));
+
+        function getAccStore() {
+            try {
+                const s = JSON.parse(localStorage.getItem('atlasAccessories'));
+                if (Array.isArray(s)) return s;
+            } catch (e) {}
+            localStorage.setItem('atlasAccessories', JSON.stringify(ACC_DEFAULT));
+            return ACC_DEFAULT;
+        }
+        function saveAccStore(list) { localStorage.setItem('atlasAccessories', JSON.stringify(list)); }
+
         function getAccSel() { try { return JSON.parse(sessionStorage.getItem('atlasAccessCom') || '[]'); } catch (e) { return []; } }
         function accChecked() {
-            const sel = getAccSel();
-            return CATS.filter(c => sel.includes(c[0])).map(([ref, label, prix]) => ({ ref, label, prix }));
+            const items = {};
+            getAccStore().forEach(a => items[a.ref] = a);
+            return getAccSel().filter(r => items[r]).map(r => ({ ref: r, label: items[r].label, prix: items[r].prix }));
         }
-        function selectedAccessories() {
-            return accChecked();
-        }
+        function selectedAccessories() { return accChecked(); }
         function renderAccGrid() {
             const sel = getAccSel();
-            document.getElementById('accGrid').innerHTML = CATS.map(([ref, label, prix]) => {
-                const checked = sel.includes(ref);
+            document.getElementById('accGrid').innerHTML = getAccStore().map(a => {
+                const checked = sel.includes(a.ref);
                 return `<label class="flex items-center gap-2 bg-white border ${checked ? 'border-[#9ACD32]' : 'border-[#2D5A27]/15'} rounded-xl px-3 py-2 cursor-pointer text-xs">
-                    <input type="checkbox" ${checked ? 'checked' : ''} onchange="toggleAcc('${ref}')" class="accent-[#2D5A27]">
-                    <span class="mono text-[10px] font-bold text-[#2D5A27]">${ref}</span>
-                    <span class="flex-1 truncate font-semibold" title="${label}">${label}</span>
-                    <span class="mono text-[#2D5A27] font-bold">${prix.toLocaleString('fr-FR')}</span>
+                    <input type="checkbox" ${checked ? 'checked' : ''} onchange="toggleAcc('${a.ref}')" class="accent-[#2D5A27]">
+                    <span class="mono text-[10px] font-bold text-[#2D5A27]">${a.ref}</span>
+                    <span class="flex-1 truncate font-semibold" title="${escapeHtml(a.label)}">${escapeHtml(a.label)}</span>
+                    <span class="mono text-[#2D5A27] font-bold">${a.prix.toLocaleString('fr-FR')}</span>
                 </label>`;
             }).join('');
         }
@@ -358,6 +425,74 @@
             let sel = getAccSel();
             sel = sel.includes(ref) ? sel.filter(r => r !== ref) : sel.concat(ref);
             sessionStorage.setItem('atlasAccessCom', JSON.stringify(sel));
+            renderAccGrid();
+            updateTotal();
+        }
+
+        // ============ GESTION PRIX & ACCESSOIRES ============
+        function renderPriceForm() {
+            document.getElementById('priceRows').innerHTML = MODELS.map(m => `
+                <div class="flex items-center gap-3">
+                    <img src="${m.img}" class="h-10 object-contain" alt="${m.name}">
+                    <div class="flex-1">
+                        <p class="text-xs font-bold text-[#2D5A27]">${m.id} — Atlas ${m.name} <span class="mono text-[10px] text-slate-400 font-normal">${m.dim}</span></p>
+                        <input id="price-${m.id}" type="number" min="1" value="${cur(m.id)}" class="mt-1 w-full px-3 py-2 rounded-xl bg-white border border-[#2D5A27]/20 text-xs mono focus:outline-none focus:border-[#2D5A27]">
+                    </div>
+                </div>`).join('');
+        }
+        function savePrices() {
+            const p = {};
+            MODELS.forEach(m => {
+                const v = parseInt(document.getElementById('price-' + m.id).value);
+                if (v > 0) p[m.id] = v;
+            });
+            localStorage.setItem('atlasPrices', JSON.stringify(p));
+            renderModelCards();
+            updateTotal();
+            alert('Prix enregistrés — appliqués aux commandes, fiches techniques et catalogue.');
+        }
+        function renderAccAdmin() {
+            document.getElementById('accAdminTable').innerHTML = getAccStore().map(a => `
+                <div class="flex items-center gap-2 bg-white border border-[#2D5A27]/15 rounded-xl px-3 py-2">
+                    <span class="mono text-[10px] font-bold text-[#2D5A27] w-16">${a.ref}</span>
+                    <select onchange="saveAccField('${a.ref}','cat',this.value)" class="px-1.5 py-1 rounded-lg bg-[#F4F6F0] text-[10px] border border-[#2D5A27]/15 focus:outline-none">
+                        ${Object.keys(CAT_CODE).map(c => `<option ${a.cat === c ? 'selected' : ''} value="${c}">${c.split(' ')[0]}</option>`).join('')}
+                    </select>
+                    <input value="${escapeHtml(a.label)}" onchange="saveAccField('${a.ref}','label',this.value)" class="flex-1 min-w-0 px-2 py-1 rounded-lg bg-[#F4F6F0] border border-[#2D5A27]/15 text-xs focus:outline-none" placeholder="Nom">
+                    <input type="number" value="${a.prix}" onchange="saveAccField('${a.ref}','prix',parseInt(this.value)||0)" class="w-20 px-2 py-1 rounded-lg bg-[#F4F6F0] border border-[#2D5A27]/15 text-xs mono focus:outline-none">
+                    <button onclick="delAccessory('${a.ref}')" class="px-2 py-1 rounded-lg bg-rose-50 border border-rose-200 text-rose-600 text-[10px] font-bold hover:bg-rose-100">✕</button>
+                </div>`).join('');
+        }
+        function saveAccField(ref, field, val) {
+            const list = getAccStore();
+            const a = list.find(x => x.ref === ref);
+            if (!a) return;
+            a[field] = val;
+            saveAccStore(list);
+            renderAccGrid();
+            updateTotal();
+        }
+        function delAccessory(ref) {
+            if (!confirm('Supprimer l\'accessoire ' + ref + ' ?')) return;
+            saveAccStore(getAccStore().filter(a => a.ref !== ref));
+            renderAccAdmin();
+            renderAccGrid();
+            updateTotal();
+        }
+        function addAccessory() {
+            const cat = document.getElementById('accNewCat').value;
+            const name = document.getElementById('accNewName').value.trim();
+            const prix = parseInt(document.getElementById('accNewPrix').value) || 0;
+            if (!name || !prix) { alert('Renseignez le nom et le prix de l\'accessoire.'); return; }
+            const list = getAccStore();
+            const prefix = CAT_CODE[cat] || 'ACC';
+            const seq = list.filter(a => a.ref.startsWith(prefix + '-')).length + 1;
+            const ref = prefix + '-' + String(seq).padStart(2, '0');
+            list.push({ ref, label: name, prix, cat });
+            saveAccStore(list);
+            document.getElementById('accNewName').value = '';
+            document.getElementById('accNewPrix').value = '';
+            renderAccAdmin();
             renderAccGrid();
             updateTotal();
         }
@@ -382,6 +517,23 @@
                 localStorage.setItem('atlasCabinConfig', JSON.stringify({ id: cabinId, token: token, ts: Date.now() }));
             } catch (e) {}
             alert('Cabine ' + cabinId + ' affectée au kiosque de l\'app cabine (synchronisé en direct).');
+        }
+
+        function seedDemoOrder() {
+            document.getElementById('fClient').value = 'Air Carthage Consulting';
+            document.getElementById('fContact').value = 'Yassine Trabelsi';
+            document.getElementById('fPhone').value = '+216 22 123 456';
+            document.getElementById('fEmail').value = 'contact@aircarthage.tn';
+            document.getElementById('fSite').value = 'Aéroport Tunis–Carthage';
+            document.getElementById('fCoords').value = 'Terminal 2 · niveau 0 · hall d\'attente A1';
+            document.getElementById('fQty').value = '1';
+            document.getElementById('fSession').value = '60';
+            sessionStorage.setItem('atlasAccessCom', JSON.stringify(['ECRAN-01', 'CLIM-01', 'TABL-01']));
+            selectModel('AT-M240');
+            renderAccGrid();
+            updateTotal();
+            generateAccess();
+            window.scrollTo({ top: document.getElementById('resultCard').offsetTop - 20, behavior: 'smooth' });
         }
 
         function generateAccess() {
@@ -411,14 +563,14 @@
 
             const acc = accChecked();
             const accSum = acc.reduce((a, x) => a + x.prix, 0);
-            const total = selectedModel.prix * qty + accSum;
+            const total = cur(selectedModel.id) * qty + accSum;
 
             const order = {
                 id: Date.now(), access, password,
                 client, contact, email, phone, site, coords,
                 model: selectedModel.id, modelName: selectedModel.name,
                 dim: selectedModel.dim, att: selectedModel.att,
-                qty, sessionMin: session, prixUnit: selectedModel.prix,
+                qty, sessionMin: session, prixUnit: cur(selectedModel.id),
                 accessories: acc, total, cabins, date: new Date().toLocaleString('fr-FR')
             };
 
@@ -525,6 +677,8 @@
         document.addEventListener('keydown', e => { if (e.key === 'Escape') closeFiche(); });
         renderModelCards();
         renderAccGrid();
+        renderAccAdmin();
+        renderPriceForm();
         renderOrders();
         updateTotal();
     </script>

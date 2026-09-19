@@ -1,0 +1,15 @@
+[Unit]
+Description=Atlas Cabine — cabin-hub (Raspberry Pi)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+WorkingDirectory=/home/pi/altascabine/hardware/raspberry/cabin-hub
+EnvironmentFile=/home/pi/altascabine/hardware/raspberry/cabin-hub/.env
+ExecStart=/usr/bin/node index.js
+Restart=always
+RestartSec=3
+User=pi
+
+[Install]
+WantedBy=multi-user.target

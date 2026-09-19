@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Architecture numérique des cabines Atlas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .slide { display: none; }
+        .slide.on { display: block; animation: fade .35s ease; }
+        @keyframes fade { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+        .chip { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 600; padding: 5px 10px; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-[#F4F6F0] text-[#2D3748]">
+
+    <header class="bg-[#2D3748] px-6 py-4 flex items-center justify-between gap-3 sticky top-0 z-50 shadow-lg">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-[#9ACD32] rounded-2xl flex items-center justify-center font-extrabold text-[#2D3748]">🏗️</div>
+            <div>
+                <h1 class="font-extrabold text-white text-lg leading-tight">Architecture numérique <span class="text-[#9ACD32]">Atlas Cabine</span></h1>
+                <p class="text-[10px] text-slate-300 mono">Présentation technique · 3 modèles de cabine · technologies</p>
+            </div>
+        </div>
+        <nav class="flex items-center gap-2 text-xs font-bold">
+            <a href="home.html" class="px-3 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition">🏠 Accueil</a>
+            <a href="system.html" class="px-3 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition">⚙️ Système</a>
+            <a href="modele.html" class="px-3 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition">🧬 Modèle</a>
+            <span id="slideCount" class="mono text-[10px] text-[#9ACD32] font-bold">0 / 0</span>
+        </nav>
+    </header>
+
+    <div class="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3">
+        <button onclick="navSlide(-1)" class="w-11 h-11 rounded-full bg-[#2D5A27] text-white font-extrabold shadow-lg hover:bg-[#23451e] transition">←</button>
+        <div id="dots" class="flex gap-1.5"></div>
+        <button onclick="navSlide(1)" class="w-11 h-11 rounded-full bg-[#9ACD32] text-[#2D3748] font-extrabold shadow-lg hover:bg-[#8bb82d] transition">→</button>
+    </div>
+
+    <main class="max-w-5xl mx-auto px-6 py-10 space-y-10">
+
+        <!-- SLIDE 1 : COUVERTURE -->
+        <section class="slide on">
+            <div class="bg-gradient-to-br from-[#2D5A27] to-[#23451E] text-white rounded-3xl p-12 text-center">
+                <p class="mono text-[11px] font-bold text-[#9ACD32] uppercase tracking-[0.3em]">Présentation technique v2.1</p>
+                <h2 class="text-4xl font-extrabold mt-4 leading-tight">Architecture numérique<br>des cabines acoustiques</h2>
+                <p class="text-sm text-emerald-50/85 mt-5 max-w-xl mx-auto">Trois modèles de cabine — ESP32, Raspberry Pi, Arduino — qui s'adaptent au matériel réellement installé sur le terrain, reliés par un réseau privé sécurisé.</p>
+                <div class="flex flex-wrap justify-center gap-3 mt-8">
+                    <span class="chip bg-white/10 border border-white/20 text-[#9ACD32]">Modèle ESP32</span>
+                    <span class="chip bg-white/10 border border-white/20 text-[#9ACD32]">Modèle Raspberry Pi</span>
+                    <span class="chip bg-white/10 border border-white/20 text-[#9ACD32]">Modèle Arduino</span>
+                </div>
+                <p class="mono text-[10px] text-slate-300 mt-8">Naviguez avec ← → ou les flèches du clavier · Made in Tunisia 🇹🇳</p>
+            </div>
+        </section>
+
+        <!-- SLIDE 2 : COUCHES -->
+        <section class="slide">
+            <h2 class="text-3xl font-extrabold text-[#2D5A27] mb-8">Vue en couches</h2>
+            <div class="space-y-3">
+                <div class="bg-white rounded-2xl border-l-8 border-[#9ACD32] p-5"><b>① Matériel</b> <span class="text-slate-500 text-sm">· ESP32 · Pi 4 · Arduino · relais · reed · PIR · LED · clim · capteurs CO₂ · caméra</span></div>
+                <div class="bg-white rounded-2xl border-l-8 border-[#2D5A27] p-5"><b>② Firmware on-device</b> <span class="text-slate-500 text-sm">· scan &amp; détection matériel · porte/urgence · publication MQTT · web diag</span></div>
+                <div class="bg-white rounded-2xl border-l-8 border-[#2D3748] p-5"><b>③ Réseau privé cabine</b> <span class="text-slate-500 text-sm">· WiFi 802.1X (RADIUS) · isolation · broker MQTT local (Pi)</span></div>
+                <div class="bg-white rounded-2xl border-l-8 border-[#9ACD32] p-5"><b>④ Services (edge / cloud)</b> <span class="text-slate-500 text-sm">· cabin-hub Node · télémétrie · portails usine / commercial / boutique</span></div>
+                <div class="bg-white rounded-2xl border-l-8 border-[#2D5A27] p-5"><b>⑤ Interfaces</b> <span class="text-slate-500 text-sm">· kiosque web · app Android · écran externe · dashboard temps réel</span></div>
+            </div>
+            <p class="text-xs text-slate-400 mt-6">Chaque couche ne s'exécute que si le matériel qui la porte est présent — c'est le principe « dépend du matériel installé ».</p>
+        </section>
+
+        <!-- SLIDE 3 : LES 3 MODÈLES -->
+        <section class="slide">
+            <h2 class="text-3xl font-extrabold text-[#2D5A27] mb-8">Les 3 modèles de cabine</h2>
+            <div class="grid md:grid-cols-3 gap-5">
+                <div class="bg-white rounded-3xl border-2 border-[#2D5A27] p-6">
+                    <div class="text-3xl">🔩</div><h3 class="font-extrabold mt-3">Modèle ESP32</h3>
+                    <p class="text-xs text-slate-500 mt-2 leading-relaxed">MCU unique = cerveau. Porte, capteurs, LED, mini web diag, MQTT.</p>
+                    <div class="mt-4 space-y-1 text-[11px] mono text-slate-500"><p>door-esp32.ino</p><p>CabineConfig.h</p><p>WiFi PSK ou 802.1X</p></div>
+                </div>
+                <div class="bg-white rounded-3xl border-2 border-[#9ACD32] ring-2 ring-[#9ACD32]/30 p-6">
+                    <div class="text-3xl">🍓</div><h3 class="font-extrabold mt-3">Modèle Raspberry Pi <span class="chip bg-[#9ACD32]/20 text-[#2D5A27]">RECOMMANDÉ</span></h3>
+                    <p class="text-xs text-slate-500 mt-2 leading-relaxed">Pi = edge brain : broker MQTT local, kiosque web, audio, caméra, télémétrie temps réel. ESP32 en actionneur.</p>
+                    <div class="mt-4 space-y-1 text-[11px] mono text-slate-500"><p>cabin-hub (Node)</p><p>ESP32 rôle 2</p><p>WiFi 802.1X + localhost</p></div>
+                </div>
+                <div class="bg-white rounded-3xl border-2 border-[#2D3748] p-6">
+                    <div class="text-3xl">🔌</div><h3 class="font-extrabold mt-3">Modèle Arduino</h3>
+                    <p class="text-xs text-slate-500 mt-2 leading-relaxed">Arduino classique : relais porte + capteurs. Liaison Ethernet/MQTT ou pont UART vers le Pi.</p>
+                    <div class="mt-4 space-y-1 text-[11px] mono text-slate-500"><p>door-arduino.ino</p><p>ArduinoCabineConfig.h</p><p>Ethernet privé / série</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 4 : MODÈLE ESP32 -->
+        <section class="slide">
+            <h2 class="text-3xl font-extrabold text-[#2D5A27] mb-6">Modèle ESP32 — firmware</h2>
+            <div class="grid md:grid-cols-2 gap-5">
+                <div class="bg-white rounded-3xl border border-[#2D5A27]/15 p-6">
+                    <h3 class="font-bold text-[#2D5A27]">🔍 Détection matériel</h3>
+                    <p class="text-xs text-slate-500 mt-2 leading-relaxed">Au démarrage : <span class="mono">scanHardware()</span> valide chaque GPIO, lit les capteurs analogiques, désactive les modules absents (pin = −1) et publie <span class="mono">atlas/&lt;cab&gt;/material</span> (retained).</p>
+                </div>
+                <div class="bg-white rounded-3xl border border-[#2D5A27]/15 p-6">
+                    <h3 class="font-bold text-[#2D5A27]">🚨 Urgence</h3>
+                    <p class="text-xs text-slate-500 mt-2 leading-relaxed">Danger interne → ouverture ; extérieur → fermeture ; catastrophique → ouverture partielle. Bouton GPIO 36 = danger interne automatique.</p>
+                </div>
+                <div class="bg-white rounded-3xl border border-[#2D5A27]/15 p-6">
+                    <h3 class="font-bold text-[#2D5A27]">🕸 MQTT</h3>
+                    <p class="text-xs text-slate-500 mt-2 leading-relaxed"><span class="mono">atlas/&lt;cab&gt;/cmd|state|status|material</span> · état retained · LWT online/offline · compat <span class="mono">atlas/door/*</span>.</p>
+                </div>
+                <div class="bg-white rounded-3xl border border-[#2D5A27]/15 p-6">
+                    <h3 class="font-bold text-[#2D5A27]">💻 Mode développement</h3>
+                    <p class="text-xs text-slate-500 mt-2 leading-relaxed"><span class="mono">CABINE_MODE_DEV=1</span> : re-scan interactif, page web diag <span class="mono">http://&lt;esp32&gt;/</span>, test relais, logs. Désactivé en production.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 5 : MODÈLE RASPBERRY PI -->
+        <section class="slide">
+            <h2 class="text-3xl font-extrabold text-[#2D5A27] mb-6">Modèle Raspberry Pi — cabin-hub</h2>
+            <div class="bg-[#2D3748] text-white rounded-3xl p-8">
+                <div class="grid md:grid-cols-2 gap-6 text-sm">
+                    <div><p class="mono text-[10px] text-[#9ACD32]">SERVICES</p>
+                        <ul class="mt-2 space-y-1.5 text-slate-200">
+                            <li>· Broker <span class="mono text-[#9ACD32]">MQTT</span> local (localhost:1883)</li>
+                            <li>· <span class="mono text-[#9ACD32]">Express</span> sert le kiosque web + REST</li>
+                            <li>· <span class="mono text-[#9ACD32]">WebSocket</span> /ws temps réel</li>
+                            <li>· Télémétrie → <span class="mono">data/telemetry.jsonl</span></li>
+                        </ul></div>
+                    <div><p class="mono text-[10px] text-[#9ACD32]">API</p>
+                        <ul class="mt-2 space-y-1.5 text-slate-200 mono text-xs">
+                            <li>GET  <span class="text-white">/api/door/state</span></li>
+                            <li>POST /api/door/open · close</li>
+                            <li>POST /api/scan · GET /api/health</li>
+                        </ul></div>
+                </div>
+                <div class="flex flex-wrap gap-2 mt-6 pt-4 border-t border-white/15">
+                    <span class="chip bg-[#9ACD32]/15 text-[#9ACD32]">Node.js</span>
+                    <span class="chip bg-[#9ACD32]/15 text-[#9ACD32]">mqtt.js</span>
+                    <span class="chip bg-[#9ACD32]/15 text-[#9ACD32]">ws</span>
+                    <span class="chip bg-[#9ACD32]/15 text-[#9ACD32]">systemd</span>
+                    <span class="chip bg-[#9ACD32]/15 text-[#9ACD32]">ALSA · libcamera</span>
+                </div>
+            </div>
+            <p class="text-xs text-slate-400 mt-4">Installation : <span class="mono">install.sh</span> → service <span class="mono">cabine-hub.service</span> auto-boot.</p>
+        </section>
+
+        <!-- SLIDE 6 : MODÈLE ARDUINO -->
+        <section class="slide">
+            <h2 class="text-3xl font-extrabold text-[#2D5A27] mb-6">Modèle Arduino — firmware</h2>
+            <div class="grid md:grid-cols-2 gap-5">
+                <div class="bg-white rounded-3xl border border-[#2D5A27]/15 p-6">
+                    <h3 class="font-bold text-[#2D5A27]">🌐 ARDUINO_LINK = 1 · Ethernet/MQTT</h3>
+                    <p class="text-xs text-slate-500 mt-2 leading-relaxed">Shield WIZnet (W5100/W5500) sur le réseau privé câblé. Mêmes commandes, urgence et rapport matériel que l'ESP32 — sans WiFi.</p>
+                </div>
+                <div class="bg-white rounded-3xl border border-[#2D5A27]/15 p-6">
+                    <h3 class="font-bold text-[#2D5A27]">🔗 ARDUINO_LINK = 2 · pont UART vers Pi</h3>
+                    <p class="text-xs text-slate-500 mt-2 leading-relaxed">Chaque ligne reçue = commande (<span class="mono">open</span>, <span class="mono">emergency:…</span>), l'état remonté au Pi qui assure le réseau et la télémétrie.</p>
+                </div>
+                <div class="bg-white rounded-3xl border-l-8 border-[#2D5A27] p-6">
+                    <p class="mono text-[11px] font-bold text-[#2D5A27]">Fonctions identiques (indépendantes de la plateforme)</p>
+                    <p class="text-xs text-slate-500 mt-2">porte + relock · présence · urgence (danger int./ext./catastrophique) · bouton urgence · capteurs · scan matériel au boot.</p>
+                </div>
+                <div class="bg-white rounded-3xl border-l-8 border-[#2D3748] p-6">
+                    <p class="mono text-[11px] font-bold text-[#2D3748]">Note sécurité réseau</p>
+                    <p class="text-xs text-slate-500 mt-2">Pas de WiFi natif → réseau privé câblé (VLAN) ou transit par le Pi. Les commandes restent locales à la cabine.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 7 : RÉSEAU PRIVÉ 802.1X -->
+        <section class="slide">
+            <h2 class="text-3xl font-extrabold text-[#2D5A27] mb-6">Réseau privé cabine — WiFi 802.1X</h2>
+            <div class="grid md:grid-cols-2 gap-5">
+                <div class="bg-[#F4F6F0] border border-[#2D5A27]/15 rounded-3xl p-6">
+                    <p class="mono text-[11px] font-bold text-[#2D5A27]">SCHÉMA</p>
+                    <div class="mt-4 space-y-2 text-xs">
+                        <p class="bg-white rounded-xl p-3"><b>RADIUS</b> authentifie chaque appareil</p>
+                        <p class="text-center text-[#9ACD32] font-bold">▼ WPA2-Enterprise</p>
+                        <p class="bg-[#2D5A27] text-white rounded-xl p-3 text-center">SSID privé « CAB-NET-&lt;n&gt; »</p>
+                        <div class="flex flex-wrap gap-2 mt-3">
+                            <span class="chip bg-white border border-[#2D5A27]/20">ESP32 porte @cabin.atlas.tn</span>
+                            <span class="chip bg-white border border-[#2D5A27]/20">hub Pi @cabin.atlas.tn</span>
+                            <span class="chip bg-white border border-[#2D5A27]/20">clim · LED · caméra · capteurs</span>
+                            <span class="chip bg-white border border-[#2D5A27]/20">tablette Android</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <div class="bg-white rounded-2xl p-5"><b>Identité par appareil</b><p class="text-xs text-slate-500 mt-1">Chaque contrôleur/accessoire = identité unique <span class="mono">@cabin.atlas.tn</span> → révocation possible, aucun partage de mot de passe.</p></div>
+                    <div class="bg-white rounded-2xl p-5"><b>Isolation &amp; broker local</b><p class="text-xs text-slate-500 mt-1">Le Pi héberge le broker MQTT local : les commandes ne quittent jamais le réseau privé. Seule la télémétrie usine sort (égress minimal autorisé).</p></div>
+                    <div class="bg-white rounded-2xl p-5"><b>Fichiers</b><p class="mono text-[11px] text-[#2D5A27] mt-1">hardware/wifi/CabineWifi8021x.h · wpa_supplicant.conf</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 8 : PROTOCOLES & FLUX -->
+        <section class="slide">
+            <h2 class="text-3xl font-extrabold text-[#2D5A27] mb-6">Protocoles &amp; flux de données</h2>
+            <div class="space-y-3 text-sm">
+                <div class="bg-white rounded-2xl p-4"><b>① On-device → hub/usine</b> <span class="mono text-[11px] text-[#2D3748]">MQTT · atlas/&lt;cab&gt;/cmd|state|status|material</span></div>
+                <div class="bg-white rounded-2xl p-4"><b>② Hub → interfaces</b> <span class="mono text-[11px] text-[#2D3748]">WebSocket /ws + REST /api/*</span> · même protocole que le serveur local `server/`</div>
+                <div class="bg-white rounded-2xl p-4"><b>③ Interfaces ↔ orchestration web</b> <span class="mono text-[11px] text-[#2D3748]">BroadcastChannel('atlas') + localStorage atlasEvent</span> · synchronisation multi-onglets temps réel (kiosque ↔ dashboard)</div>
+                <div class="bg-white rounded-2xl p-4"><b>④ Fabricant ↔ clients</b> <span class="mono text-[11px] text-[#2D3748]">Cloudflare Pages · clés partagées atlasUsers/Orders/Cabins/Sessions/Prices/Accessories</span></div>
+                <div class="bg-white rounded-2xl p-4"><b>⑤ Télémétrie</b> <span class="mono text-[11px] text-[#2D3748]">JSONL local (Pi) · JSON retained MQTT · flash brut via event bus</span></div>
+            </div>
+        </section>
+
+        <!-- SLIDE 9 : SÉCURITÉ -->
+        <section class="slide">
+            <h2 class="text-3xl font-extrabold text-[#2D5A27] mb-6">Sécurité &amp; modes</h2>
+            <div class="grid md:grid-cols-3 gap-5 text-sm">
+                <div class="bg-[#2D5A27] text-white rounded-3xl p-6"><b>🔒 Sécurisé (PROD)</b><p class="text-xs text-emerald-50/85 mt-2">Production : données réelles, démo verrouillée, lecture seule sur les outils de test.</p></div>
+                <div class="bg-[#9ACD32] text-[#2D3748] rounded-3xl p-6"><b>🧪 Bêta</b><p class="text-xs mt-2">Pré-prod : validation des fonctions avec données de démonstration.</p></div>
+                <div class="bg-[#2D3748] text-white rounded-3xl p-6"><b>🛠️ Développement</b><p class="text-xs text-slate-200 mt-2">Boîte à outils : données fictives, reset, tests serveur local, événements temps réel.</p></div>
+            </div>
+            <div class="grid md:grid-cols-2 gap-5 mt-5 text-sm">
+                <div class="bg-white rounded-2xl p-5"><b>🔧 Jetons d'installation (technicien)</b><p class="text-xs text-slate-500 mt-1">INST-XXXXXX · actifs/révoqués en direct · Mode Technicien sur le kiosque (cabine, test porte, scan, installation terminée).</p></div>
+                <div class="bg-white rounded-2xl p-5"><b>🔑 Accès cabines</b><p class="text-xs text-slate-500 mt-1">Cabines CAB-&lt;SITE&gt;-NN · tokens ATLAS-XXXXXX · QR « ?cab=&amp;access= » · validés localement, tokens vérifiés par le portail.</p></div>
+            </div>
+            <div class="bg-rose-50 border border-[#9f1239]/30 rounded-2xl p-5 mt-5 text-sm"><b>🚨 Urgence : toujours accessible sans authentification</b><span class="text-xs text-slate-600 ml-2">danger interne → ouverture · extérieur → fermeture (confinement) · catastrophique → ouverture partielle.</span></div>
+        </section>
+
+        <!-- SLIDE 10 : STACK TECHNOLOGIQUE -->
+        <section class="slide">
+            <h2 class="text-3xl font-extrabold text-[#2D5A27] mb-6">Pile technologique</h2>
+            <div class="grid md:grid-cols-2 gap-5">
+                <div class="bg-white rounded-3xl border border-[#2D5A27]/15 p-6">
+                    <h3 class="font-bold text-[#2D5A27]">🔩 Embarqué</h3>
+                    <div class="flex flex-wrap gap-2 mt-3">
+                        <span class="chip bg-[#2D5A27]/10 text-[#2D5A27]">C++ / Arduino (ESP32, U8g)</span>
+                        <span class="chip bg-[#2D5A27]/10 text-[#2D5A27]">ESP-IDF WiFi + MQTT PubSubClient</span>
+                        <span class="chip bg-[#2D5A27]/10 text-[#2D5A27]">Adafruit NeoPixel</span>
+                        <span class="chip bg-[#2D5A27]/10 text-[#2D5A27]">WIZnet W5100 (Arduino)</span>
+                        <span class="chip bg-[#2D5A27]/10 text-[#2D5A27]">802.1X / EAP (RADIUS)</span>
+                    </div>
+                </div>
+                <div class="bg-white rounded-3xl border border-[#2D5A27]/15 p-6">
+                    <h3 class="font-bold text-[#2D5A27]">🍓 Edge (Pi)</h3>
+                    <div class="flex flex-wrap gap-2 mt-3">
+                        <span class="chip bg-[#2D3748] text-[#9ACD32]">Node.js / Express</span>
+                        <span class="chip bg-[#2D3748] text-[#9ACD32]">mqtt.js · ws</span>
+                        <span class="chip bg-[#2D3748] text-[#9ACD32]">systemd + bash</span>
+                        <span class="chip bg-[#2D3748] text-[#9ACD32]">ALSA · libcamera (opt.)</span>
+                    </div>
+                </div>
+                <div class="bg-white rounded-3xl border border-[#2D5A27]/15 p-6">
+                    <h3 class="font-bold text-[#2D5A27]">🤖 Android</h3>
+                    <div class="flex flex-wrap gap-2 mt-3">
+                        <span class="chip bg-[#9ACD32]/15 text-[#2D5A27]">Kotlin / Android Studio</span>
+                        <span class="chip bg-[#9ACD32]/15 text-[#2D5A27]">OkHttp WebSocket</span>
+                        <span class="chip bg-[#9ACD32]/15 text-[#2D5A27]">Coroutines</span>
+                    </div>
+                </div>
+                <div class="bg-white rounded-3xl border border-[#2D5A27]/15 p-6">
+                    <h3 class="font-bold text-[#2D5A27]">🌍 Web &amp; Cloud</h3>
+                    <div class="flex flex-wrap gap-2 mt-3">
+                        <span class="chip bg-[#9ACD32]/15 text-[#2D5A27]">HTML/CSS/Tailwind CDN</span>
+                        <span class="chip bg-[#9ACD32]/15 text-[#2D5A27]">WebSocket · BroadcastChannel</span>
+                        <span class="chip bg-[#9ACD32]/15 text-[#2D5A27]">qrcodejs · html5-qrcode</span>
+                        <span class="chip bg-[#9ACD32]/15 text-[#2D5A27]">Pannellum 360°</span>
+                        <span class="chip bg-[#9ACD32]/15 text-[#2D5A27]">Cloudflare Pages</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 11 : CLÔTURE -->
+        <section class="slide">
+            <div class="bg-gradient-to-br from-[#2D5A27] to-[#23451E] text-white rounded-3xl p-12 text-center">
+                <p class="text-4xl">🇹🇳</p>
+                <h2 class="text-3xl font-extrabold mt-4">Un système au service de la cabine</h2>
+                <p class="text-sm text-emerald-50/85 mt-4 max-w-lg mx-auto">Firmware adaptatif, réseau privé protégé, urgence opérationnelle et interfaces temps réel : chaque cabine est numérique, même dans la salle la plus isolée.</p>
+                <div class="flex flex-wrap justify-center gap-3 mt-8">
+                    <span class="chip bg-white/10 border border-white/20">hardware/door-esp32</span>
+                    <span class="chip bg-white/10 border border-white/20">hardware/door-arduino</span>
+                    <span class="chip bg-white/10 border border-white/20">hardware/raspberry/cabin-hub</span>
+                    <span class="chip bg-white/10 border border-white/20">hardware/android</span>
+                    <span class="chip bg-white/10 border border-white/20">hardware/wifi</span>
+                </div>
+                <p class="mono text-[10px] text-slate-300 mt-8">© 2026 Atlas Working — Made in Tunisia · Logiciel &amp; R&D : PixelSoftware Design</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="text-center text-xs text-slate-400 mono pb-6 px-4">© 2026 · Made in Tunisia 🇹🇳 · Logiciel & R&D : PixelSoftware Design — Design cabine &amp; standard acoustique : Atlas Working (développement / idée)</footer>
+
+    <script>
+        const slides = Array.from(document.querySelectorAll('.slide'));
+        let cur = 0;
+        function paint() {
+            slides.forEach((s, i) => s.classList.toggle('on', i === cur));
+            document.getElementById('slideCount').innerText = (cur + 1) + ' / ' + slides.length;
+            document.getElementById('dots').innerHTML = slides.map((_, i) =>
+                `<button onclick="jump(${i})" class="w-2.5 h-2.5 rounded-full transition ${i === cur ? 'bg-[#2D5A27] scale-125' : 'bg-[#2D5A27]/25'}"></button>`).join('');
+        }
+        function jump(i) { cur = Math.max(0, Math.min(slides.length - 1, i)); paint(); }
+        function navSlide(d) { jump(cur + d); }
+        document.addEventListener('keydown', e => {
+            if (e.key === 'ArrowRight' || e.key === ' ') navSlide(1);
+            if (e.key === 'ArrowLeft') navSlide(-1);
+        });
+        let tx = 0;
+        document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
+        document.addEventListener('touchend', e => {
+            const dx = e.changedTouches[0].clientX - tx;
+            if (Math.abs(dx) > 60) navSlide(dx < 0 ? 1 : -1);
+        }, { passive: true });
+        paint();
+    </script>
+</body>
+</html>

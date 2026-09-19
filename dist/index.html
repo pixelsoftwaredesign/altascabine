@@ -32,10 +32,25 @@
     <!-- BARRE DE CONTRÔLE DE DÉMO (bascule Kiosque / App Interne) -->
     <div class="absolute top-2 left-1/2 transform -translate-x-1/2 bg-[#2D3748] text-white text-xs px-4 py-1.5 rounded-full shadow-lg z-50 flex items-center space-x-3">
         <a href="home.html" class="text-[#9ACD32] hover:text-white transition" title="Accueil">🏠</a>
-        <span>Mode Démo :</span>
+        <a href="system.html" class="text-slate-300 hover:text-white transition" title="Système avancé">⚙️</a>
+        <span id="modeLabel">Mode Démo :</span>
         <button onclick="switchView('kiosque')" id="btn-kiosque" class="px-3 py-0.5 rounded-full bg-[#9ACD32] text-[#2D3748] font-bold transition">1. Kiosque Extérieur</button>
         <button onclick="switchView('client')" id="btn-client" class="px-3 py-0.5 rounded-full bg-[#2D3748]/60 text-slate-300 transition">2. App Interne Cabine</button>
+        <span id="modePill" class="mono text-[10px] font-bold px-2.5 py-0.5 rounded-full transition-all"></span>
+        <button onclick="openTechLogin()" id="btn-tech" class="text-[#9ACD32] hover:text-white transition" title="Mode technicien (installation)">🔧</button>
     </div>
+
+
+    <!-- BANDEAU & BOUTON URGENCE (toujours accessibles, sans connexion) -->
+    <div id="emergencyBanner" class="hidden fixed top-16 left-1/2 -translate-x-1/2 z-[130] bg-[#9f1239] text-white px-6 py-3 rounded-2xl shadow-2xl border-2 border-white/30 flex items-center gap-4 max-w-[90vw]">
+        <span class="text-2xl animate-pulse">🚨</span>
+        <div>
+            <p id="emergencyTitle" class="font-extrabold text-sm">URGENCE EN COURS</p>
+            <p id="emergencySub" class="text-[11px] text-rose-100"></p>
+        </div>
+        <button onclick="endEmergency()" class="ml-2 px-4 py-2 rounded-xl bg-white text-[#9f1239] font-extrabold text-xs hover:bg-rose-50 transition">✓ Terminer l'urgence</button>
+    </div>
+    <button onclick="openEmergency()" class="fixed bottom-5 right-5 z-[135] w-16 h-16 rounded-full bg-[#9f1239] text-white text-2xl shadow-2xl border-4 border-white/40 hover:scale-110 transition flex items-center justify-center" title="Mode Urgence — danger interne/extérieur/catastrophique">🚨</button>
 
 
     <!-- ========================================== -->
@@ -87,7 +102,7 @@
         </main>
 
         <footer class="text-center text-xs text-slate-400 pb-2">
-            © 2026 Atlas Working — Idée & cabines · Logiciel (R&D) : PixelSoftware Design
+            © 2026 · Made in Tunisia 🇹🇳 · Logiciel & R&D : PixelSoftware Design — Design cabine &amp; standard acoustique : Atlas Working (développement / idée)
         </footer>
     </div>
 
@@ -120,6 +135,98 @@
             <div id="qrReader" class="w-full rounded-2xl overflow-hidden bg-black aspect-square"></div>
             <p id="cameraError" class="text-xs text-rose-600 mt-3 text-center min-h-[16px]">Pointez la caméra vers le QR code de réservation</p>
             <button onclick="closeScanner()" class="w-full mt-3 py-3 rounded-xl bg-[#9ACD32] hover:bg-[#8bb82d] text-[#2D3748] font-bold transition">Annuler</button>
+        </div>
+    </div>
+
+
+    <!-- MODAL MODE URGENCE -->
+    <div id="emergencyModal" class="fixed inset-0 z-[140] hidden items-center justify-center bg-[#7f1d1d]/50 backdrop-blur-sm p-6">
+        <div class="w-full max-w-lg bg-white rounded-3xl shadow-2xl border-[3px] border-[#9f1239] p-8">
+            <div class="flex justify-between items-center mb-1">
+                <h2 class="text-xl font-extrabold text-[#9f1239]">🚨 Mode Urgence</h2>
+                <button onclick="closeEmergency()" class="w-9 h-9 rounded-xl bg-[#F4F6F0] hover:bg-[#e4e9dc] font-bold text-[#2D3748]">✕</button>
+            </div>
+            <p class="text-xs text-slate-500 mb-5 leading-relaxed">Accessible sans authentification. Choisissez l'action adaptée à la situation — chaque action est journalisée à l'usine.</p>
+
+            <div class="space-y-3">
+                <button onclick="actEmergency('internal')" class="w-full text-left p-5 rounded-2xl border-2 border-[#9f1239] bg-rose-50 hover:bg-rose-100 transition">
+                    <p class="font-extrabold text-[#9f1239]">⚠️ Danger INTERNE</p>
+                    <p class="text-xs text-slate-600 mt-1">Feu, fumée, malaise, CO₂… → <b>OUVRIR la porte complètement</b> (évacuation immédiate).</p>
+                    <p class="mono text-[10px] text-[#9f1239] font-bold mt-1.5">Commande : emergency:open</p>
+                </button>
+                <button onclick="actEmergency('external')" class="w-full text-left p-5 rounded-2xl border-2 border-[#0369a1] bg-sky-50 hover:bg-sky-100 transition">
+                    <p class="font-extrabold text-[#0369a1]">🚧 Danger EXTÉRIEUR</p>
+                    <p class="text-xs text-slate-600 mt-1">Alerte dehors, intrusion, foule… → <b>FERMER la cabine</b> (confinement protecteur).</p>
+                    <p class="mono text-[10px] text-[#0369a1] font-bold mt-1.5">Commande : emergency:close</p>
+                </button>
+                <button onclick="actEmergency('catastrophic')" class="w-full text-left p-5 rounded-2xl border-2 border-[#2D3748] bg-[#F4F6F0] hover:bg-[#e4e9dc] transition">
+                    <p class="font-extrabold text-[#2D3748]">🌪️ Danger CATASTROPHIQUE</p>
+                    <p class="text-xs text-slate-600 mt-1">Séisme, événement majeur… → <b>OUVERTURE PARTIELLE</b> : issue de secours entre-ouverte (accès possible, protection partielle maintenue).</p>
+                    <p class="mono text-[10px] text-[#2D3748] font-bold mt-1.5">Commande : emergency:partial</p>
+                </button>
+            </div>
+
+            <p id="emergencyDiag" class="mono text-[10px] bg-[#2D3748] text-[#9ACD32] rounded-xl p-3 mt-4 whitespace-pre-wrap leading-relaxed"></p>
+            <button onclick="endEmergency()" class="w-full mt-4 py-3.5 rounded-2xl bg-[#9f1239] hover:bg-[#881337] text-white font-extrabold transition">✓ Terminer l'urgence</button>
+        </div>
+    </div>
+
+
+    <!-- MODAL MODE TECHNICIEN (jets d'installation sécurisés) -->
+    <div id="techModal" class="fixed inset-0 z-[120] hidden items-center justify-center bg-[#2D5A27]/50 backdrop-blur-sm p-6">
+        <div class="w-full max-w-xl bg-white rounded-3xl shadow-2xl border border-[#2D5A27]/20 p-8 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-lg font-bold text-[#2D5A27]">🔧 Mode Technicien</h2>
+                <div class="flex items-center gap-2">
+                    <span id="techBadge" class="hidden mono text-[10px] font-bold px-2 py-1 rounded-lg bg-[#2D5A27] text-white">TECH ACTIF</span>
+                    <button onclick="closeTech()" class="w-9 h-9 rounded-xl bg-[#F4F6F0] hover:bg-[#e4e9dc] font-bold text-[#2D3748]">✕</button>
+                </div>
+            </div>
+
+            <div id="techLockForm">
+                <p class="text-xs text-slate-500 mb-4 leading-relaxed">Saisissez le <b>jeton d'installation</b> fourni par le Système avancé (Sécurité &amp; accès) pour déverrouiller les fonctions d'installation et de maintenance de cette cabine.</p>
+                <input id="techToken" placeholder="INST-XXXXXX" class="w-full px-4 py-3.5 rounded-xl bg-[#F4F6F0] border border-[#2D5A27]/30 mb-4 text-lg mono tracking-widest text-center focus:outline-none focus:border-[#2D5A27] uppercase">
+                <p id="techError" class="text-xs text-rose-600 mb-3 text-center"></p>
+                <button onclick="verifyTechToken()" class="w-full py-4 rounded-2xl bg-[#2D3748] hover:bg-[#1f2937] text-white font-extrabold transition">🔓 Déverrouiller</button>
+                <p class="text-[10px] text-slate-400 mono mt-4 text-center">Les jetons révoqués sont immédiatement invalides.</p>
+            </div>
+
+            <div id="techPanel" class="hidden space-y-5">
+                <div class="grid grid-cols-3 gap-3 text-center">
+                    <div class="bg-[#F4F6F0] rounded-2xl p-3">
+                        <p class="mono text-[10px] font-bold text-slate-400">CABINE</p>
+                        <p id="techCabin" class="mono font-extrabold text-[#2D3748] text-sm mt-1">-</p>
+                    </div>
+                    <div class="bg-[#F4F6F0] rounded-2xl p-3">
+                        <p class="mono text-[10px] font-bold text-slate-400">MATÉRIEL</p>
+                        <p id="techHw" class="mono font-extrabold text-[#2D3748] text-sm mt-1">-</p>
+                    </div>
+                    <div class="bg-[#F4F6F0] rounded-2xl p-3">
+                        <p class="mono text-[10px] font-bold text-slate-400">INSTALLATION</p>
+                        <p id="techInst" class="mono font-extrabold text-[#2D3748] text-sm mt-1">-</p>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-[#2D5A27] mb-1">Profil matériel installé dans cette cabine</label>
+                    <select onchange="setHardware(this.value)" class="w-full px-4 py-3 rounded-xl bg-[#F4F6F0] border border-[#2D5A27]/25 text-sm font-bold focus:outline-none focus:border-[#2D5A27]">
+                        <option value="esp32">ESP32 seul (porte & capteurs)</option>
+                        <option value="esp32+pi">Raspberry Pi + ESP32 (cabine complète)</option>
+                        <option value="android">Tablette Android (interface tactile)</option>
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="techTestDoor()" class="px-4 py-3 rounded-2xl bg-[#9ACD32] hover:bg-[#8bb82d] text-[#2D3748] font-bold text-sm transition">🔌 Test porte</button>
+                    <button onclick="techScan()" class="px-4 py-3 rounded-2xl bg-[#F4F6F0] border border-[#2D5A27]/20 hover:bg-[#e4e9dc] text-[#2D5A27] font-bold text-sm transition">🧪 Scan matériel</button>
+                </div>
+                <div id="techDiag" class="mono text-[11px] bg-[#2D3748] text-[#9ACD32] rounded-2xl p-4 whitespace-pre-wrap leading-relaxed max-h-48 overflow-y-auto"></div>
+
+                <div class="flex gap-3">
+                    <button onclick="techDone()" class="px-4 py-3.5 rounded-2xl bg-[#2D5A27] hover:bg-[#23451e] text-white font-extrabold text-sm transition flex-1">✅ Marquer « Installation terminée »</button>
+                    <button onclick="techExit()" class="px-4 py-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-600 font-bold text-sm transition">✕ Quitter</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -316,7 +423,7 @@
                 <button onclick="alert('Assistance prévenue.')" class="hover:text-[#2D5A27] font-semibold">⚠️ Assistance</button>
                 <button id="footerUser" onclick="logout()" class="hidden items-center gap-1 text-[#2D5A27] font-bold hover:underline"></button>
             </div>
-            <span class="mono text-[10px] text-slate-400">© 2026 Atlas Working — PixelSoftware Design</span>
+            <span class="mono text-[10px] text-slate-400">🇹🇳 Made in Tunisia · PixelSoftware Design (R&D) · Atlas Working</span>
             <button onclick="leaveCabin()" class="text-rose-600 font-bold hover:underline">Quitter la cabine (Kiosque)</button>
         </footer>
     </div>
@@ -467,6 +574,191 @@
             open.end = Date.now();
             localStorage.setItem('atlasSessions', JSON.stringify(sessions));
             atlasEmit('sessionEnd', { unit: open.unit, user: open.user });
+        }
+
+        // ============ MODE URGENCE (danger interne / extérieur / catastrophique) ============
+        function getEmergencies() { try { const a = JSON.parse(localStorage.getItem('atlasEmergencies') || '[]'); return Array.isArray(a) ? a : []; } catch (e) { return []; } }
+        function emergencyActive() { try { const e = sessionStorage.getItem('atlasEmergency'); return e ? JSON.parse(e) : null; } catch (err) { return null; } }
+
+        function openEmergency() {
+            const m = document.getElementById('emergencyModal');
+            m.classList.remove('hidden'); m.classList.add('flex');
+            const d = document.getElementById('emergencyDiag');
+            const hw = localStorage.getItem('atlasHardware') || 'esp32';
+            const mode = curModeLabel();
+            d.textContent = '🚨 Mode urgence — cabine ' + getCabinId() + '\n' +
+                '   • Système   : ' + mode + ' · matériel ' + hw + '\n' +
+                '   • Hub porte : ' + (doorRemote ? 'réel (WS)' : 'simulation') + '\n' +
+                '   • Bouton urgence GPIO 36 de l\'ESP32 actif\n' +
+                '   • L\'action est journalisée et diffusée à l\'usine';
+        }
+        function closeEmergency() { const m = document.getElementById('emergencyModal'); m.classList.add('hidden'); m.classList.remove('flex'); }
+
+        function actEmergency(kind) {
+            const conf = {
+                internal: { icon: '⚠️', title: 'Danger INTERNE', cmd: 'open', msg: 'Ouverture complète (évacuation)'.toUpperCase(), sec: 'OUVERTE', desc: 'évacuation immédiate' },
+                external: { icon: '🚧', title: 'Danger EXTÉRIEUR', cmd: 'close', msg: 'Fermeture de la cabine (confinement)'.toUpperCase(), sec: 'FERMÉE', desc: 'confinement protecteur' },
+                catastrophic: { icon: '🌪️', title: 'Danger CATASTROPHIQUE', cmd: 'partial', msg: 'Ouverture PARTIELLE (issue de secours)'.toUpperCase(), sec: 'ENTRE-OUVERTE', desc: 'sortie partielle + protection partielle' }
+            }[kind];
+            if (!conf) return;
+            if (!confirm(conf.icon + ' Activer l\'urgence « ' + conf.title + ' » ?\n→ Porte ' + conf.sec + ' (' + conf.desc + ').\nCette action est journalisée à l\'usine.')) return;
+
+            // exécution porte réelle (hub) ou simulée
+            if (doorRemote && uiWs && uiWs.readyState === WebSocket.OPEN) {
+                if (conf.cmd === 'partial') {
+                    uiWs.send(JSON.stringify({ type: 'cmd', action: 'open' }));
+                    setTimeout(() => {
+                        if (!emergencyActive() || emergencyActive().kind === 'catastrophic') uiWs.send(JSON.stringify({ type: 'cmd', action: 'close' }));
+                    }, 8000);
+                } else {
+                    uiWs.send(JSON.stringify({ type: 'cmd', action: conf.cmd }));
+                }
+            } else if (conf.cmd === 'partial') {
+                doorStatusText('Ouverture partielle (entre-ouverte) — sortie de secours', '#9ACD32');
+            } else if (conf.cmd === 'open') {
+                doorStatusText('URGENCE — Porte ouverte (évacuation)', '#9f1239');
+            } else {
+                doorStatusText('URGENCE — Porte fermée (confinement)', '#0369a1');
+            }
+
+            const evt = { kind, title: conf.title, desc: conf.desc, at: new Date().toISOString(), atFr: new Date().toLocaleString('fr-FR'), cab: getCabinId(), sec: conf.sec, cmd: conf.cmd };
+            sessionStorage.setItem('atlasEmergency', JSON.stringify(evt));
+
+            const list = getEmergencies();
+            list.unshift(evt);
+            localStorage.setItem('atlasEmergencies', JSON.stringify(list.slice(0, 50)));
+            atlasEmit('emergency', { kind, cab: getCabinId() });
+
+            renderEmergencyBanner();
+            closeEmergency();
+        }
+
+        function doorStatusText(t, color) {
+            const st = document.getElementById('doorStatus');
+            if (st) { st.innerText = t; st.className = 'text-' + color; }
+        }
+
+        function renderEmergencyBanner() {
+            const e = emergencyActive();
+            const banner = document.getElementById('emergencyBanner');
+            if (!e) { banner.classList.add('hidden'); return; }
+            banner.classList.remove('hidden');
+            document.getElementById('emergencyTitle').innerText = '🚨 URGENCE — ' + e.title.toUpperCase();
+            document.getElementById('emergencySub').innerText = e.cab + ' · Porte ' + e.sec + ' (' + e.desc + ') · ' + e.atFr;
+        }
+
+        function endEmergency() {
+            if (emergencyActive() && !confirm('Terminer l\'urgence ? La porte revient en fonctionnement normal.')) return;
+            sessionStorage.removeItem('atlasEmergency');
+            if (doorRemote && uiWs && uiWs.readyState === WebSocket.OPEN) uiWs.send(JSON.stringify({ type: 'cmd', action: 'close' }));
+            else doorStatusText('Fermé & Verrouillé (Sécurisé)', '#2D5A27');
+            renderEmergencyBanner();
+            atlasEmit('emergencyEnd', { cab: getCabinId() });
+        }
+
+        // ============ MODE TECHNICIEN (jeton d'installation sécurisé) ============
+        function getInstallTokens() {
+            try { const arr = JSON.parse(localStorage.getItem('atlasInstallTokens') || '[]'); return Array.isArray(arr) ? arr : []; } catch (e) { return []; }
+        }
+        function validTechToken(t) {
+            const arr = getInstallTokens().filter(x => x.active);
+            return arr.some(x => x.token === t.trim().toUpperCase());
+        }
+        function isTechActive() { return sessionStorage.getItem('atlasTech') === '1'; }
+        function openTechLogin() {
+            const m = document.getElementById('techModal');
+            m.classList.remove('hidden'); m.classList.add('flex');
+            document.getElementById('techError').innerText = '';
+            if (isTechActive()) {
+                document.getElementById('techLockForm').classList.add('hidden');
+                document.getElementById('techPanel').classList.remove('hidden');
+                updateTechPanel();
+            } else {
+                document.getElementById('techLockForm').classList.remove('hidden');
+                document.getElementById('techPanel').classList.add('hidden');
+                setTimeout(() => document.getElementById('techToken').focus(), 50);
+            }
+        }
+        function closeTech() {
+            const m = document.getElementById('techModal');
+            m.classList.add('hidden'); m.classList.remove('flex');
+            document.getElementById('techError').innerText = '';
+        }
+        function verifyTechToken() {
+            const tok = document.getElementById('techToken').value.trim().toUpperCase();
+            if (!tok) { document.getElementById('techError').innerText = 'Saisissez le jeton d\'installation.'; return; }
+            if (!validTechToken(tok)) {
+                document.getElementById('techError').innerText = '⛔ Jeton invalide ou révoqué. Contactez l\'usine (Système avancé → jetons d\'installation).';
+                return;
+            }
+            sessionStorage.setItem('atlasTech', '1');
+            document.getElementById('techToken').value = '';
+            document.getElementById('techBadge').classList.remove('hidden');
+            document.getElementById('btn-tech').style.color = '#9ACD32';
+            document.getElementById('btn-tech').setAttribute('title', 'Mode technicien actif');
+            document.getElementById('techLockForm').classList.add('hidden');
+            document.getElementById('techPanel').classList.remove('hidden');
+            atlasEmit('techLogin', { token: tok });
+            updateTechPanel();
+        }
+        function setHardware(v) {
+            localStorage.setItem('atlasHardware', v);
+            atlasEmit('techHardware', { value: v });
+            updateTechPanel();
+            logTech('▶ Profil matériel réglé : ' + v);
+        }
+        function techTestDoor() {
+            if (doorRemote && uiWs && uiWs.readyState === WebSocket.OPEN) {
+                uiWs.send(JSON.stringify({ type: 'cmd', action: 'open' }));
+                logTech('🔌 Commande d\'ouverture envoyée au hub… (relock auto 15 s)');
+                setTimeout(() => { if (uiWs && uiWs.readyState === WebSocket.OPEN) uiWs.send(JSON.stringify({ type: 'cmd', action: 'close' })); }, 1500);
+            } else {
+                logTech('🔌 (Simulation) impulsion porte test relais — aucun hub connecté.');
+            }
+        }
+        function techScan() {
+            const cabId = getCabinId();
+            const hw = localStorage.getItem('atlasHardware') || 'esp32';
+            const mode = curModeLabel();
+            logTech('🧪 Scan matériel — ' + cabId + '\n' +
+                '   • Mode système  : ' + mode + '\n' +
+                '   • Profil        : ' + hw + '\n' +
+                '   • Hub (WS)      : ' + (doorRemote ? 'connecté' : 'simulation') + '\n' +
+                '   • HTTPS caméra  : ' + (location.protocol === 'https:' ? 'OK' : 'bloqué') + '\n' +
+                '   • Cabinet relais: ' + (doorRemote ? 'Piloté par le hub' : 'GPIO 23 (sim)') + '\n' +
+                '   • Reed / PIR    : GPIO 4 / 18 (sim)');
+            atlasEmit('techScan', { cab: cabId });
+        }
+        function techDone() {
+            localStorage.setItem('atlasInstalled', '1');
+            localStorage.setItem('atlasInstalledAt', new Date().toLocaleString('fr-FR'));
+            atlasEmit('techInstallDone', { cab: getCabinId() });
+            logTech('✅ Installation marquée terminée à ' + new Date().toLocaleString('fr-FR'));
+            updateTechPanel();
+        }
+        function techExit() {
+            sessionStorage.removeItem('atlasTech');
+            document.getElementById('techBadge').classList.add('hidden');
+            document.getElementById('btn-tech').style.color = '';
+            document.getElementById('btn-tech').setAttribute('title', 'Mode technicien (installation)');
+            closeTech();
+            atlasEmit('techLogout', {});
+        }
+        function curModeLabel() {
+            try {
+                const m = localStorage.getItem('atlasMode');
+                return { secure: 'Sécurisé (PROD)', beta: 'Bêta', dev: 'Développement' }[m] || 'Sécurisé (PROD)';
+            } catch (e) { return 'Sécurisé (PROD)'; }
+        }
+        function logTech(msg) {
+            const d = document.getElementById('techDiag');
+            if (d) { d.textContent += (d.textContent ? '\n' : '') + msg; d.scrollTop = d.scrollHeight; }
+        }
+        function updateTechPanel() {
+            document.getElementById('techCabin').innerText = getCabinId();
+            document.getElementById('techHw').innerText = { 'esp32': 'ESP32 seul', 'esp32+pi': 'Pi + ESP32', 'android': 'Android' }[localStorage.getItem('atlasHardware')] || '—';
+            document.getElementById('techInst').innerText = localStorage.getItem('atlasInstalled') === '1' ? 'TERMINÉE' : 'En attente';
+            if (localStorage.getItem('atlasInstalled') === '1') logTech('ℹ️ Cabine installée le ' + (localStorage.getItem('atlasInstalledAt') || '—'));
         }
 
         // ============ BASCULE KIOSQUE / CLIENT ============
@@ -843,9 +1135,32 @@
             document.getElementById('voiceStatus').innerText = "Réessayez";
         }
 
+        function applyModeUI() {
+            const pill = document.getElementById('modePill');
+            let m = 'secure';
+            try { m = localStorage.getItem('atlasMode') || 'secure'; } catch (e) {}
+            const M = {
+                secure: { badge: '● PROD', color: '#2D5A27', label: 'Interface :' },
+                beta: { badge: '● BÊTA', color: '#9ACD32', label: 'Mode Démo :' },
+                dev: { badge: 'DEV', color: '#2D3748', label: 'Mode Démo :' }
+            };
+            const mm = M[m] || M.secure;
+            pill.style.cssText = 'color:' + (m === 'dev' ? '#9ACD32' : '#fff') + ';background:' + mm.color + ';';
+            pill.innerText = mm.badge;
+            const lbl = document.getElementById('modeLabel');
+            if (lbl) lbl.innerText = mm.label;
+        }
+
         renderAuth();
         connectBackend();
-        window.addEventListener('storage', e => { if (e.key === 'atlasCabinId' || e.key === 'atlasCabinConfig') kioskLabel('Libre'); });
+        applyModeUI();
+        renderEmergencyBanner();
+        window.addEventListener('storage', e => {
+            if (e.key === 'atlasCabinId' || e.key === 'atlasCabinConfig') kioskLabel('Libre');
+            if (e.key === 'atlasMode') applyModeUI();
+            if (e.key === 'atlasHardware') updateTechPanel();
+        });
+        if (isTechActive()) document.getElementById('btn-tech').style.color = '#9ACD32';
     </script>
 </body>
 </html>

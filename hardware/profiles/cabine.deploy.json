@@ -1,0 +1,43 @@
+{
+  "atlas": {
+    "projet": "Atlas Cabine",
+    "principe": "Le modèle de cabine se choisit selon le matériel réellement installé.",
+    "modeles": [
+      {
+        "id": "esp32",
+        "nom": "Modèle ESP32",
+        "fonctionnement": "L'ESP32 est le cerveau : porte, capteurs, LED, web diag secours, MQTT usine.",
+        "firmware": "hardware/door-esp32/door-esp32.ino",
+        "config": "hardware/door-esp32/CabineConfig.h",
+        "reseau": "WiFi privé PSK ou 802.1X (hardware/wifi/CabineWifi8021x.h) — CABINE_WIFI_MODE=1",
+        "fonctions": ["porte", "presence", "eclairage", "page web diag", "detection materiel", "urgence"]
+      },
+      {
+        "id": "pi",
+        "nom": "Modèle Raspberry Pi",
+        "fonctionnement": "Le Pi est le cerveau (edge brain) : broker MQTT local, kiosque web, telemetrie, audio/camera. L'ESP32 agit en actionneur (rôle 2).",
+        "logiciels": ["hardware/raspberry/cabin-hub (Node)", "hardware/door-esp32/door-esp32.ino (CABINE_ROLE=2)"],
+        "reseau": "WiFi privé 802.1X (wpa_supplicant.conf) + broker localhost — modelé avance",
+        "fonctions": ["toutes", "audio", "camera", "kiosque web", "telemetrie temps reel", "urgence"]
+      },
+      {
+        "id": "arduino",
+        "nom": "Modèle Arduino",
+        "fonctionnement": "Arduino classique (UNO/2560) : relais porte + capteurs. Liaison Ethernet/MQTT ou pont UART vers un Pi.",
+        "firmware": "hardware/door-arduino/door-arduino.ino",
+        "config": "hardware/door-arduino/ArduinoCabineConfig.h (ARDUINO_LINK 1=ethernet 2=serie)",
+        "reseau": "cable Ethernet privé (VLAN) ou pont serie Pi — pas de WiFi natif",
+        "fonctions": ["porte", "presence", "urgence", "scan materiel", "clim (relais)"]
+      }
+    ],
+    "reseau_prive": {
+      "schema": "SSID CAB-NET-<n>, WPA2-Enterprise (RADIUS), identites <device>@cabin.atlas.tn",
+      "fichiers": ["hardware/wifi/README.md", "hardware/wifi/CabineWifi8021x.h", "hardware/wifi/wpa_supplicant.conf"],
+      "droit": "commande MQTT locales uniquement ; seule la telemetrie usine sort du reseau"
+    },
+    "detection": {
+      "mechanisme": "ESP32/Arduino : scanHardware() au boot + rescan (cmd MQTT 'scan' / HTTP /api/scan)",
+      "rapport_mqtt": "atlas/<cab>/material (retained, mode + modules ok/off)"
+    }
+  }
+}

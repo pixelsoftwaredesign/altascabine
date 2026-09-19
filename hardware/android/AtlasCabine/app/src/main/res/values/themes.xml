@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.AtlasCabine" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:statusBarColor">#2D3748</item>
+        <item name="colorPrimary">#2D5A27</item>
+        <item name="colorAccent">#9ACD32</item>
+    </style>
+</resources>

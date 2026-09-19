@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portail Commercial Atlas Cabine — Répondre aux commandes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-thumb { background: #2D5A27; border-radius: 8px; }
+        ::-webkit-scrollbar-track { background: #F4F6F0; }
+        @media print { body * { visibility: hidden; } .print-only, .print-only * { visibility: visible; } .print-only { position: absolute; inset: 0; display: block !important; } }
+    </style>
+</head>
+<body class="bg-[#F4F6F0] text-[#2D3748]">
+
+    <header class="bg-[#2D3748] px-6 py-4 flex items-center justify-between gap-3 sticky top-0 z-50 shadow-lg">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-[#9ACD32] rounded-2xl flex items-center justify-center font-extrabold text-[#2D3748]">💼</div>
+            <div>
+                <h1 class="font-extrabold text-white text-lg leading-tight">Portail <span class="text-[#9ACD32]">Commercial</span></h1>
+                <p class="text-[10px] text-slate-300 mono">Répondre aux commandes clients · devis · suivi de fabrication</p>
+            </div>
+        </div>
+        <nav class="flex items-center gap-2 text-xs font-bold no-print">
+            <a href="home.html" class="px-3 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition">🏠 Accueil</a>
+            <a href="boutique.html" class="px-3 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition">🛒 Boutique</a>
+            <a href="portail-usine.html" class="px-3 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition">🏭 Usine</a>
+            <a href="dashboard-usine.html" class="px-3 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition">📊 Dashboard</a>
+            <a href="portail-commercial.html" class="px-3 py-1.5 rounded-xl bg-[#9ACD32] text-[#2D3748]">💼 Commercial <span id="navBadge" class="mono bg-[#F4F6F0] px-1.5 rounded-lg">0</span></a>
+        </nav>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 py-8 space-y-8">
+
+        <!-- KPIs -->
+        <section class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="bg-white border border-[#2D5A27]/15 rounded-2xl p-5"><p class="text-[11px] mono font-bold text-slate-400">Commandes reçues</p><p id="kpiTotal" class="mono text-2xl font-extrabold text-[#2D3748] mt-1">0</p></div>
+            <div class="bg-white border border-[#2D5A27]/15 rounded-2xl p-5"><p class="text-[11px] mono font-bold text-slate-400">À traiter</p><p id="kpiTodo" class="mono text-2xl font-extrabold text-[#B45309] mt-1">0</p></div>
+            <div class="bg-white border border-[#2D5A27]/15 rounded-2xl p-5"><p class="text-[11px] mono font-bold text-slate-400">En cours / confirmées</p><p id="kpiRunning" class="mono text-2xl font-extrabold text-[#2D5A27] mt-1">0</p></div>
+            <div class="bg-white border border-[#2D5A27]/15 rounded-2xl p-5"><p class="text-[11px] mono font-bold text-slate-400">CA en cours (HT)</p><p id="kpiCA" class="mono text-2xl font-extrabold text-[#2D5A27] mt-1">0</p></div>
+        </section>
+
+        <!-- Filtres -->
+        <section class="flex flex-wrap gap-2">
+            <button onclick="setFilter('all')" data-f="all" class="f-btn px-4 py-2 rounded-xl bg-[#2D5A27] text-white font-bold text-xs">Toutes</button>
+            <button onclick="setFilter('recep')" data-f="recep" class="f-btn px-4 py-2 rounded-xl bg-white border border-[#2D5A27]/20 text-[#2D5A27] font-bold text-xs">📥 Reçues (à traiter)</button>
+            <button onclick="setFilter('devis')" data-f="devis" class="f-btn px-4 py-2 rounded-xl bg-white border border-[#2D5A27]/20 text-[#2D5A27] font-bold text-xs">📄 Devis envoyé</button>
+            <button onclick="setFilter('active')" data-f="active" class="f-btn px-4 py-2 rounded-xl bg-white border border-[#2D5A27]/20 text-[#2D5A27] font-bold text-xs">🏭 En fabrication</button>
+            <button onclick="setFilter('done')" data-f="done" class="f-btn px-4 py-2 rounded-xl bg-white border border-[#2D5A27]/20 text-[#2D5A27] font-bold text-xs">🏁 Terminées</button>
+            <button onclick="setFilter('annulee')" data-f="annulee" class="f-btn px-4 py-2 rounded-xl bg-white border border-[#2D5A27]/20 text-[#2D5A27] font-bold text-xs">❌ Annulées</button>
+        </section>
+
+        <!-- Liste commandes -->
+        <section id="ordersList" class="space-y-5"></section>
+        <p id="noOrders" class="hidden text-center text-sm text-slate-400 py-10">Aucune commande client pour le moment.<br>Les commandes passées sur la <a href="boutique.html" class="text-[#2D5A27] font-bold underline">boutique en ligne</a> apparaissent ici instantanément.</p>
+    </main>
+
+    <footer class="text-center text-xs text-slate-400 mono pb-6 px-4 no-print">© 2026 · Made in Tunisia 🇹🇳 · Logiciel & R&D : PixelSoftware Design — Design cabine &amp; standard acoustique : Atlas Working (développement / idée)</footer>
+
+    <!-- MODAL DEVIS -->
+    <div id="devisModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-[#2D5A27]/40 backdrop-blur-sm p-6 no-print">
+        <div class="w-full max-w-xl bg-white rounded-3xl shadow-2xl border border-[#2D5A27]/20 p-8 max-h-[85vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-5">
+                <h3 class="text-lg font-extrabold text-[#2D5A27]">📄 Préparer le devis — réponse commerciale</h3>
+                <button onclick="closeDevis()" class="w-9 h-9 rounded-xl bg-[#F4F6F0] hover:bg-[#e4e9dc] font-bold">✕</button>
+            </div>
+            <div id="devisBody" class="space-y-4 text-sm"></div>
+        </div>
+    </div>
+
+    <div id="printZone" class="print-only hidden"></div>
+
+    <script>
+        const STATUS = [
+            ['recep', '📥 Reçue', '#64748b'],
+            ['devis', '📄 Devis envoyé', '#B45309'],
+            ['confirmee', '✅ Confirmée', '#2D5A27'],
+            ['production', '🏭 En production', '#3F6212'],
+            ['expediee', '🚚 Expédiée', '#0F766E'],
+            ['installee', '🔧 Installée', '#334155'],
+            ['terminee', '🏁 Terminée', '#2D5A27'],
+            ['annulee', '❌ Annulée', '#9f1239']
+        ];
+        const S_BY = {}; STATUS.forEach(s => S_BY[s[0]] = s);
+        let CUR_FILTER = 'all';
+
+        function getOrders() {
+            try {
+                const arr = JSON.parse(localStorage.getItem('atlasOrders') || '[]');
+                if (!Array.isArray(arr)) return [];
+                let changed = false;
+                arr.forEach(o => { if (!o.statut) { o.statut = 'recep'; changed = true; } });
+                if (changed) localStorage.setItem('atlasOrders', JSON.stringify(arr));
+                return arr;
+            } catch (e) { return []; }
+        }
+        function saveOrders(arr) { localStorage.setItem('atlasOrders', JSON.stringify(arr)); }
+        function esc(t) { const d = document.createElement('div'); d.textContent = t == null ? '' : String(t); return d.innerHTML; }
+        function fmt(n) { return Number(n || 0).toLocaleString('fr-FR') + ' DT HT'; }
+
+        function statBadge(key) {
+            const s = S_BY[key] || S_BY.recep;
+            return `<span style="background:${s[2]}1a;color:${s[2]};border-color:${s[2]}66" class="mono text-[10px] font-bold border px-2 py-0.5 rounded-lg">${s[1]}</span>`;
+        }
+
+        function match(o) {
+            const k = o.statut;
+            if (CUR_FILTER === 'all') return true;
+            if (CUR_FILTER === 'active') return ['confirmee', 'production', 'expediee', 'installee'].includes(k);
+            if (CUR_FILTER === 'done') return k === 'terminee';
+            return k === CUR_FILTER;
+        }
+
+        function kpis() {
+            const orders = getOrders();
+            const done = orders.filter(o => o.statut === 'terminee' || o.statut === 'annulee').length;
+            document.getElementById('kpiTotal').innerText = orders.length;
+            document.getElementById('kpiTodo').innerText = orders.filter(o => o.statut === 'recep').length;
+            const run = orders.filter(o => ['devis', 'confirmee', 'production', 'expediee', 'installee'].includes(o.statut));
+            document.getElementById('kpiRunning').innerText = run.length + ' / ' + run.filter(o => ['confirmee', 'production', 'expediee', 'installee'].includes(o.statut)).length;
+            document.getElementById('kpiCA').innerText = run.reduce((a, o) => a + (o.total || (o.prixUnit || 0) * o.qty), 0).toLocaleString('fr-FR') + ' DT';
+            document.getElementById('navBadge').innerText = orders.filter(o => o.statut === 'recep').length;
+        }
+
+        function setStat(id, key) {
+            const orders = getOrders();
+            const o = orders.find(x => x.id === id);
+            if (!o) return;
+            o.statut = key;
+            saveOrders(orders);
+            if (key === 'confirmee' && !o.confirmedAt) o.confirmedAt = new Date().toLocaleString('fr-FR');
+            render(); kpis();
+        }
+
+        function advance(id) {
+            const order = NEXT(id);
+            if (order) setStat(id, order[0]);
+        }
+        function NEXT(id) {
+            const o = getOrders().find(x => x.id === id);
+            if (!o || o.statut === 'annulee' || o.statut === 'terminee') return null;
+            const i = STATUS.findIndex(s => s[0] === o.statut);
+            return STATUS[i + 1] || null;
+        }
+
+        function openDevis(id) {
+            const o = getOrders().find(x => x.id === id);
+            if (!o) return;
+            document.getElementById('devisBody').innerHTML = `
+                <div class="bg-[#F4F6F0] border border-[#2D5A27]/10 rounded-xl p-4 space-y-2">
+                    <p class="font-bold text-[#2D5A27]">${esc(o.client)}</p>
+                    <p class="text-xs text-slate-500">${esc(o.modelName || o.model)} × ${o.qty} · ${fmt(o.prixUnit || 0)}/unité</p>
+                    ${o.accessories && o.accessories.length ? `<p class="text-[10px] mono text-slate-400">🧰 ${o.accessories.map(a => a.ref).join(', ')}</p>` : ''}
+                    <div class="flex justify-between"><span class="text-xs">Total HT</span><span class="mono font-extrabold">${fmt(o.total || (o.prixUnit || 0) * o.qty)}</span></div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-[#2D5A27] mb-1">Mode de paiement</label>
+                    <div class="grid grid-cols-2 gap-3 text-xs">
+                        <label class="flex items-center gap-2 bg-white border border-[#2D5A27]/20 rounded-xl px-3 py-2.5 cursor-pointer"><input type="radio" name="mode" value="Paiement à la livraison" checked class="accent-[#2D5A27]"> Paiement à la livraison</label>
+                        <label class="flex items-center gap-2 bg-white border border-[#2D5A27]/20 rounded-xl px-3 py-2.5 cursor-pointer"><input type="radio" name="mode" value="Virement bancaire / sur facture" class="accent-[#2D5A27]"> Virement / facture</label>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label class="block text-xs font-bold text-[#2D5A27] mb-1">Remise (%)</label><input id="dvRemise" type="number" min="0" max="30" value="0" class="w-full px-4 py-3 rounded-xl bg-white border border-[#2D5A27]/20 text-sm focus:outline-none focus:border-[#2D5A27]"></div>
+                    <div><label class="block text-xs font-bold text-[#2D5A27] mb-1">Délai indicatif</label><input id="dvDdl" value="15 jours" class="w-full px-4 py-3 rounded-xl bg-white border border-[#2D5A27]/20 text-sm focus:outline-none focus:border-[#2D5A27]"></div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-[#2D5A27] mb-1">Message commercial (réponse au client)</label>
+                    <textarea id="dvNote" rows="4" class="w-full px-4 py-3 rounded-xl bg-white border border-[#2D5A27]/20 text-sm focus:outline-none focus:border-[#2D5A27]">Bonjour ${esc(o.client)}, merci pour votre commande. Nous vous confirmons votre projet et vous envoyons notre meilleur prix (${fmt(o.total || (o.prixUnit || 0) * o.qty)}). La production débutera dès confirmation. Notre équipe vous contactera pour caler la livraison et l'installation.</textarea>
+                </div>
+                <button onclick="saveDevis(${id})" class="w-full py-4 rounded-2xl bg-[#2D5A27] hover:bg-[#23451e] text-white font-extrabold transition">💾 Enregistrer le devis & envoyer la réponse</button>`;
+            const modal = document.getElementById('devisModal');
+            modal.classList.remove('hidden'); modal.classList.add('flex');
+        }
+        function closeDevis() { const m = document.getElementById('devisModal'); m.classList.add('hidden'); m.classList.remove('flex'); }
+
+        function saveDevis(id) {
+            const o = getOrders().find(x => x.id === id);
+            if (!o) return;
+            const remise = Math.min(30, Math.max(0, Number(document.getElementById('dvRemise').value) || 0));
+            const brut = o.total || (o.prixUnit || 0) * o.qty;
+            const total = Math.round(brut * (1 - remise / 100));
+            o.devis = { ref: 'DVS' + String(Date.now()).slice(-6), mode: document.querySelector('input[name="mode"]:checked').value, remise, total, ddl: document.getElementById('dvDdl').value, note: document.getElementById('dvNote').value, date: new Date().toLocaleString('fr-FR'), commercial: 'Équipe commerciale Atlas — PixelSoftware' };
+            o.statut = 'devis';
+            o.total = total;
+            saveOrders(getOrders());
+            closeDevis(); render(); kpis();
+            alert('✅ Devis ' + o.devis.ref + ' enregistré. La réponse a été envoyée au client (' + o.email + ').');
+        }
+
+        function printDevis(id) {
+            const o = getOrders().find(x => x.id === id);
+            if (!o || !o.devis) return;
+            const z = document.getElementById('printZone');
+            const cab = (o.cabins || []).map(c => `<tr><td class="mono">${c.id}</td><td class="mono">${c.token}</td><td>—</td></tr>`).join('');
+            z.innerHTML = `
+                <div class="p-10" style="font-family:'Plus Jakarta Sans',sans-serif">
+                    <div style="display:flex;justify-content:space-between">
+                        <div>
+                            <div style="font-size:18px;font-weight:800;color:#2D5A27">ATLAS CABINE</div>
+                            <div style="font-size:11px;color:#666;margin-top:4px">Atlas Working — Idée & cabines<br>Logiciel & R&D : PixelSoftware Design</div>
+                        </div>
+                        <div style="text-align:right;font-size:12px">
+                            <b>DEVIS N°</b> ${o.devis.ref}<br>
+                            ${o.devis.date}
+                        </div>
+                    </div>
+                    <h1 style="font-size:22px;color:#2D3748">Devis commercial 📄</h1>
+                    <div style="margin-top:16px;font-size:13px">
+                        <b>Client :</b> ${esc(o.client)}<br>
+                        <b>Contact :</b> ${esc(o.contact || '—')} · ${esc(o.phone || '—')} · ${esc(o.email)}<br>
+                        <b>Site :</b> ${esc(o.site)} — ${esc(o.coords || '—')}<br>
+                        <b>Commande :</b> ${esc(o.modelName || o.model)} × ${o.qty} · session max ${o.sessionMin || 60} min
+                    </div>
+                    <table style="width:100%;margin-top:20px;border-collapse:collapse;font-size:12px">
+                        <thead><tr style="background:#F4F6F0"><th style="border:1px solid #ddd;padding:8px;text-align:left">Désignation</th><th style="border:1px solid #ddd;padding:8px">Qté</th><th style="border:1px solid #ddd;padding:8px">PU HT</th><th style="border:1px solid #ddd;padding:8px">Total HT</th></tr></thead>
+                        <tbody>
+                            <tr><td style="border:1px solid #ddd;padding:8px">Cabine acoustique Atlas ${esc(o.modelName || o.model)} (${o.dim || '—'} · ${o.att || '—'})</td><td style="border:1px solid #ddd;padding:8px;text-align:center">${o.qty}</td><td style="border:1px solid #ddd;padding:8px;text-align:right">${fmt(o.prixUnit || 0)}</td><td style="border:1px solid #ddd;padding:8px;text-align:right">${fmt(o.total || 0)}</td></tr>
+                            ${(o.accessories || []).map(a => `<tr><td style="border:1px solid #ddd;padding:8px">Accessoire ${a.ref} — ${esc(a.label)}</td><td style="border:1px solid #ddd;padding:8px;text-align:center">${o.qty}</td><td style="border:1px solid #ddd;padding:8px;text-align:right">${fmt(a.prix)}</td><td style="border:1px solid #ddd;padding:8px;text-align:right">${fmt(a.prix * o.qty)}</td></tr>`).join('')}
+                            ${o.devis.remise ? `<tr><td style="border:1px solid #ddd;padding:8px">Remise</td><td colspan="2"></td><td style="border:1px solid #ddd;padding:8px;text-align:right">−${o.devis.remise}%</td></tr>` : ''}
+                        </tbody>
+                    </table>
+                    <div style="text-align:right;margin-top:12px;font-size:15px"><b>TOTAL HT : ${fmt(o.devis.total || o.total)}</b></div>
+                    ${cab ? `<div style="margin-top:20px;font-size:11px"><b>Cabines pré-assignées :</b><table style="width:100%;border-collapse:collapse;margin-top:6px;font-size:10px"><thead><tr style="background:#F4F6F0"><th style="border:1px solid #ddd;padding:6px;text-align:left">ID cabine</th><th style="border:1px solid #ddd;padding:6px">Token d'accès</th><th style="border:1px solid #ddd;padding:6px" colspan="3"></th></tr></thead><tbody>${cab}</tbody></table></div>` : ''}
+                    <div style="margin-top:20px;font-size:11px;color:#555">Message commercial et d'information : ${esc(o.devis.note)}</div>
+                    <div style="margin-top:28px;font-size:11px;color:#888">Mode de paiement : ${esc(o.devis.mode)} · Délai indicatif : ${esc(o.devis.ddl)} · ${esc(o.devis.commercial)}</div>
+                </div>`;
+            z.classList.remove('hidden');
+            window.print();
+            setTimeout(() => z.classList.add('hidden'), 500);
+        }
+
+        function orderCard(o) {
+            const next = NEXT(o.id);
+            const accs = (o.accessories || []).map(a => `<span class="mono text-[10px] font-bold text-[#2D5A27] bg-[#9ACD32]/15 px-2 py-0.5 rounded-lg">${a.ref}</span>`).join(' ');
+            const cabins = (o.cabins || []).map(c => `<span class="mono text-[10px] bg-[#2D3748] text-white px-2 py-0.5 rounded-lg">${c.id}</span>`).join(' ');
+            const badges = [];
+            if (o.source === 'boutique') badges.push('<span class="mono text-[9px] font-bold px-1.5 py-0.5 rounded-lg bg-slate-100 border border-slate-200 text-slate-500">🛒 BOUTIQUE</span>');
+            if (o.source === 'manuel') badges.push('<span class="mono text-[9px] font-bold px-1.5 py-0.5 rounded-lg bg-slate-100 border border-slate-200 text-slate-500">🏭 USINE</span>');
+            return `
+            <div class="bg-white rounded-3xl border ${o.statut === 'annulee' ? 'border-rose-200 opacity-70' : 'border-[#2D5A27]/15'} shadow-sm p-6">
+                <div class="flex flex-wrap items-start justify-between gap-3">
+                    <div>
+                        <div class="flex items-center gap-2 flex-wrap">
+                            ${statBadge(o.statut)}
+                            ${badges.join('')}
+                            ${o.devis ? `<span class="mono text-[10px] font-bold text-[#B45309] bg-amber-100 px-2 py-0.5 rounded-lg">DEVIS ${o.devis.ref}</span>` : ''}
+                        </div>
+                        <p class="font-extrabold text-[#2D3748] mt-2">${esc(o.client)} <span class="mono text-xs text-slate-400">### ${String(o.id).slice(-5)}</span></p>
+                        <p class="text-[11px] text-slate-500">${esc(o.contact || '')} · <span class="mono">${esc(o.phone || '—')}</span> · ${esc(o.email)}</p>
+                        <p class="text-[10px] text-slate-400 mono mt-1">${o.date} · ${o.sessionMin || 60} min/session</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="mono text-2xl font-extrabold text-[#2D5A27]">${fmt(o.total || (o.prixUnit || 0) * o.qty)}</p>
+                        <p class="text-[11px] text-slate-500">Atlas ${esc(o.modelName || o.model)} × ${o.qty}</p>
+                        ${o.devis ? `<p class="text-[10px] text-slate-400 mono mt-1">${esc(o.devis.mode)} · remise ${o.devis.remise}% · délai ${esc(o.devis.ddl)}</p>` : ''}
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-4 mt-4 bg-[#F4F6F0] border border-[#2D5A27]/10 rounded-2xl p-4 text-[11px]">
+                    <div>
+                        <p class="mono font-bold text-slate-400 mb-1">SITE</p>
+                        <p class="font-bold text-[#2D3748]">${esc(o.site)}</p>
+                        <p class="text-slate-500">${esc(o.coords || '—')}</p>
+                    </div>
+                    <div>
+                        <p class="mono font-bold text-slate-400 mb-1">ACCESSOIRES</p>
+                        ${accs || '<span class="text-slate-400">Aucun</span>'}
+                        ${(o.accessories || []).length ? `<p class="mono text-[10px] text-slate-500 mt-1">+${fmt(o.accessories.reduce((a, x) => a + x.prix * o.qty, 0))}</p>` : ''}
+                    </div>
+                    <div>
+                        <p class="mono font-bold text-slate-400 mb-1">CABINES</p>
+                        ${cabins || '<span class="text-slate-400">À générer en usine</span>'}
+                    </div>
+                </div>
+
+                ${o.devis ? `
+                <div class="mt-4 bg-amber-50 border border-amber-200 rounded-2xl p-4 flex flex-wrap items-start gap-3">
+                    <span class="text-lg">📄</span>
+                    <div class="flex-1">
+                        <p class="text-xs text-[#B45309] font-bold">Devis ${o.devis.ref} — réponse envoyée ${o.devis.date}</p>
+                        <p class="text-[11px] text-slate-600 mt-1">${esc(o.devis.note)}</p>
+                    </div>
+                    <button onclick="printDevis(${o.id})" class="px-3 py-2 rounded-xl bg-white border border-amber-300 text-[#B45309] font-bold text-xs hover:bg-amber-100">🖨️ Imprimer / PDF</button>
+                </div>` : ''}
+
+                <div class="flex flex-wrap gap-2 mt-4 no-print">
+                    ${o.statut === 'recep' ? `<button onclick="openDevis(${o.id})" class="px-4 py-2.5 rounded-xl bg-[#2D5A27] hover:bg-[#23451e] text-white font-bold text-xs transition">📄 Préparer le devis</button>` : ''}
+                    ${['devis', 'confirmee', 'production', 'expediee', 'installee'].includes(o.statut) ? `<button onclick="advance(${o.id})" class="px-4 py-2.5 rounded-xl bg-[#9ACD32] text-[#2D3748] hover:bg-[#8bb82d] font-bold text-xs transition">${next ? next[1] : ''}</button>` : ''}
+                    ${o.statut === 'devis' ? `<button onclick="printDevis(${o.id})" class="px-4 py-2.5 rounded-xl bg-white border border-amber-300 text-[#B45309] font-bold text-xs hover:bg-amber-50">🖨️ Devis</button>` : ''}
+                    ${!['terminee', 'annulee'].includes(o.statut) ? `<button onclick="setStat(${o.id},'annulee')" class="px-4 py-2.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-600 font-bold text-xs hover:bg-rose-100">❌ Annuler la commande</button>` : ''}
+                    <select onchange="if(this.value) setStat(${o.id},this.value)" class="ml-auto px-3 py-2.5 rounded-xl bg-white border border-[#2D5A27]/20 text-xs font-bold text-[#2D5A27]">
+                        <option value="">Passer à…</option>
+                        ${STATUS.filter(([k]) => k !== o.statut).map(([k, label]) => `<option value="${k}">${label}</option>`).join('')}
+                    </select>
+                </div>
+            </div>`;
+        }
+
+        function render() {
+            const orders = getOrders().filter(match).sort((a, b) => (b.id || 0) - (a.id || 0));
+            document.getElementById('ordersList').innerHTML = orders.map(orderCard).join('');
+            document.getElementById('noOrders').classList.toggle('hidden', orders.length > 0);
+            document.querySelectorAll('.f-btn').forEach(b => b.classList.toggle('bg-[#2D5A27]', b.dataset.f === CUR_FILTER));
+        }
+        function setFilter(f) { CUR_FILTER = f; render(); }
+
+        window.addEventListener('storage', e => { if (e.key === 'atlasOrders') { render(); kpis(); } });
+        setInterval(() => { render(); kpis(); }, 4000);
+        kpis();
+        render();
+    </script>
+</body>
+</html>

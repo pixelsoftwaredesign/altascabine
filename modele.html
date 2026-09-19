@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modèle — Architecture matérielle & logicielle · PixelSoftware Design</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .slide { display: none; }
+        .slide.on { display: block; animation: fade .35s ease; }
+        @keyframes fade { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+        .chip { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 600; padding: 5px 10px; border-radius: 10px; }
+        .box { border-radius: 1rem; }
+    </style>
+</head>
+<body class="bg-[#F4F6F0] text-[#2D3748]">
+
+    <header class="bg-[#2D3748] px-6 py-4 flex items-center justify-between gap-3 sticky top-0 z-50 shadow-lg">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-[#9ACD32] rounded-2xl flex items-center justify-center font-extrabold text-[#2D3748]">🧬</div>
+            <div>
+                <h1 class="font-extrabold text-white text-lg leading-tight">Modèle — Architecture <span class="text-[#9ACD32]">Matériel &amp; Logiciel</span></h1>
+                <p class="text-[10px] text-slate-300 mono">R&D : PixelSoftware Design · un modèle de cabine, deux mondes : hardware + software</p>
+            </div>
+        </div>
+        <nav class="flex items-center gap-2 text-xs font-bold">
+            <a href="home.html" class="px-3 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition">🏠 Accueil</a>
+            <a href="architecture.html" class="px-3 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition">🏗️ 3 modèles</a>
+            <a href="system.html" class="px-3 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition">⚙️ Système</a>
+            <span id="slideCount" class="mono text-[10px] text-[#9ACD32] font-bold">0 / 0</span>
+        </nav>
+    </header>
+
+    <div class="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3">
+        <button onclick="navSlide(-1)" class="w-11 h-11 rounded-full bg-[#2D5A27] text-white font-extrabold shadow-lg hover:bg-[#23451e] transition">←</button>
+        <div id="dots" class="flex gap-1.5"></div>
+        <button onclick="navSlide(1)" class="w-11 h-11 rounded-full bg-[#9ACD32] text-[#2D3748] font-extrabold shadow-lg hover:bg-[#8bb82d] transition">→</button>
+    </div>
+
+    <main class="max-w-5xl mx-auto px-6 py-10 space-y-10">
+
+        <!-- SLIDE 1 : COUVERTURE -->
+        <section class="slide on">
+            <div class="bg-gradient-to-br from-[#2D3748] to-[#1f2937] text-white rounded-3xl p-12 text-center">
+                <p class="mono text-[11px] font-bold text-[#9ACD32] uppercase tracking-[0.3em]">by PixelSoftware Design</p>
+                <h2 class="text-4xl font-extrabold mt-4 leading-tight">Un modèle de cabine :<br><span class="text-[#9ACD32]">matériel</span> + <span class="text-[#9ACD32]">logiciel</span></h2>
+                <p class="text-sm text-slate-300 mt-5 max-w-2xl mx-auto">Chaque cabine est pensée comme un système : un cerveau, des actionneurs, des capteurs, et une couche logicielle qui s'adapte au matériel installé. Deux architectures, un seul serment : <b>ce qui n'existe pas physiquement ne s'exécute pas.</b></p>
+                <div class="flex flex-wrap justify-center gap-3 mt-8">
+                    <span class="chip bg-white/10 border border-white/20 text-[#9ACD32]">HARDWARE</span>
+                    <span class="chip bg-white/10 border border-white/20 text-[#9ACD32]">FIRMWARE</span>
+                    <span class="chip bg-white/10 border border-white/20 text-[#9ACD32]">EDGE (Pi)</span>
+                    <span class="chip bg-white/10 border border-white/20 text-[#9ACD32]">APP &amp; WEB</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 2 : VUE D'ENSEMBLE (schéma double) -->
+        <section class="slide">
+            <h2 class="text-3xl font-extrabold text-[#2D5A27] mb-8">Vue d'ensemble du modèle</h2>
+            <div class="grid md:grid-cols-2 gap-5">
+                <div class="bg-[#2D5A27] text-white rounded-3xl p-6">
+                    <p class="mono text-[10px] font-bold text-[#9ACD32]">MATÉRIEL — salle + contrôleur</p>
+                    <div class="mt-4 space-y-2 text-xs">
+                        <p class="bg-white/10 rounded-xl px-3 py-2">🛡️ Contrôleur central (ESP32 / Pi / Arduino)</p>
+                        <p class="bg-white/10 rounded-xl px-3 py-2">🔋 Alimentation + coupure d'urgence secteur</p>
+                        <p class="bg-white/10 rounded-xl px-3 py-2">⚙️ Gâche électrique · relais 16 A · voyant</p>
+                        <p class="bg-white/10 rounded-xl px-3 py-2">👂 Reed porte · PIR présence · bouton urgence 36</p>
+                        <p class="bg-white/10 rounded-xl px-3 py-2">💡 LED RGBW · clim 2,7 kW · capteur CO₂ / AC</p>
+                        <p class="bg-white/10 rounded-xl px-3 py-2">📷 Caméra (modèle Pi) · écran / tablette HMI</p>
+                    </div>
+                </div>
+                <div class="bg-[#2D3748] text-white rounded-3xl p-6">
+                    <p class="mono text-[10px] font-bold text-[#9ACD32]">LOGICIEL — cerveau de bord → cloud</p>
+                    <div class="mt-4 space-y-2 text-xs">
+                        <p class="bg-white/10 rounded-xl px-3 py-2">🔩 Firmware C++ : commandes porte, scan, urgence</p>
+                        <p class="bg-white/10 rounded-xl px-3 py-2">🍓 cabin-hub Node : broker MQTT local + API + WS</p>
+                        <p class="bg-white/10 rounded-xl px-3 py-2">🤖 App Android : détection du hub, télécommande</p>
+                        <p class="bg-white/10 rounded-xl px-3 py-2">🌍 Kiosque web : session, QR, éclairage, télémétrie</p>
+                        <p class="bg-white/10 rounded-xl px-3 py-2">📊 Dashboards usine/commercial : temps réel</p>
+                        <p class="bg-white/10 rounded-xl px-3 py-2">☁️ Cloudflare Pages : orchestration &amp; identités</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 3 : HARDWARE -->
+        <section class="slide">
+            <h2 class="text-3xl font-extrabold text-[#2D5A27] mb-8">Matériel — schéma de la cabine</h2>
+            <div class="bg-white rounded-3xl border border-[#2D5A27]/15 p-6">
+                <div class="flex flex-col items-center gap-2 text-xs mono">
+                    <p class="chip bg-[#F4F6F0] border border-[#2D5A27]/20">🌐 RÉSEAU PRIVÉ CABINE — WiFi 802.1X / câblé</p>
+                    <div class="border-l-2 border-[#9ACD32] h-4"></div>
+                    <div class="bg-[#2D5A27] text-white rounded-2xl px-5 py-3 font-bold text-center">CONTROLEUR<br><span class="mono text-[10px] font-normal opacity-80">ESP32 · Raspberry Pi · Arduino</span></div>
+                    <div class="grid grid-cols-3 gap-3 w-full mt-3">
+                        <p class="bg-[#F4F6F0] rounded-xl p-3 text-center">⚙️ Actionneurs<br><span class="text-[10px] text-slate-500">gâche · LED RGBW · clim · buzzer</span></p>
+                        <p class="bg-[#F4F6F0] rounded-xl p-3 text-center">🎚️ Capteurs<br><span class="text-[10px] text-slate-500">reed · PIR · bouton urgence</span></p>
+                        <p class="bg-[#F4F6F0] rounded-xl p-3 text-center">🔋 Énergie<br><span class="text-[10px] text-slate-500">alim sectorielle + secours</span></p>
+                    </div>
+                    <div class="border-l-2 border-[#9ACD32] h-4"></div>
+                    <p class="chip bg-[#F4F6F0] border border-[#2D5A27]/20">📟 HMI — kiosque web · app Android · écran extérieur</p>
+                </div>
+                <p class="text-xs text-slate-400 mt-5 text-center">Buses internes : GPIO / UART (pont Arduino schéma 2) / I²C capteurs · chaque broche = −1 si composant absent (scan matériel)</p>
+            </div>
+        </section>
+
+        <!-- SLIDE 4 : LOGICIEL -->
+        <section class="slide">
+            <h2 class="text-3xl font-extrabold text-[#2D5A27] mb-8">Logiciel — architecture en couches</h2>
+            <div class="space-y-3">
+                <div class="bg-white rounded-2xl border-l-8 border-[#2D5A27] p-5 flex items-center gap-4">
+                    <span class="chip bg-[#2D5A27]/10 text-[#2D5A27]">C++ / Arduino</span>
+                    <div><b>Firmware on-device</b><p class="text-xs text-slate-500">door-esp32.ino · door-arduino.ino — scan matériel, porte, urgence, publish MQTT, web diag.</p></div>
+                </div>
+                <div class="bg-white rounded-2xl border-l-8 border-[#9ACD32] p-5 flex items-center gap-4">
+                    <span class="chip bg-[#9ACD32]/15 text-[#2D5A27]">Node.js</span>
+                    <div><b>cabin-hub (edge Pi)</b><p class="text-xs text-slate-500">Express + mqtt.js + ws — broker local, kiosque, REST, telemetry.jsonl, systemd.</p></div>
+                </div>
+                <div class="bg-white rounded-2xl border-l-8 border-[#2D3748] p-5 flex items-center gap-4">
+                    <span class="chip bg-[#2D3748] text-[#9ACD32]">Kotlin</span>
+                    <div><b>App Android AtlasCabine</b><p class="text-xs text-slate-500">OkHttp WS + coroutines — probe du hub (Pi vs ESP32), QR, open/close/light.</p></div>
+                </div>
+                <div class="bg-white rounded-2xl border-l-8 border-[#9ACD32] p-5 flex items-center gap-4">
+                    <span class="chip bg-[#9ACD32]/15 text-[#2D5A27]">Web + Cloud</span>
+                    <div><b>Applications &amp; orchestration</b><p class="text-xs text-slate-500">kiosque · dashboard · portails (usine, commercial, boutique) · BroadcastChannel temps réel · Cloudflare Pages.</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 5 : MAPPING FONCTION → M/V → S/W -->
+        <section class="slide">
+            <h2 class="text-3xl font-extrabold text-[#2D5A27] mb-8">Fonctions : qui fait quoi (H/S)</h2>
+            <div class="overflow-x-auto bg-white rounded-3xl border border-[#2D5A27]/15">
+                <table class="w-full text-xs">
+                    <thead><tr class="bg-[#2D5A27] text-white text-left"><th class="px-4 py-3">Fonction</th><th class="px-4 py-3">Matériel</th><th class="px-4 py-3">Logiciel</th><th class="px-4 py-3">Moyen</th></tr></thead>
+                    <tbody class="text-slate-600">
+                        <tr class="border-t border-[#2D5A27]/10"><td class="px-4 py-3 font-bold text-[#2D3748]">Ouvrir / fermer la porte</td><td>gâche + relais</td><td>firmware</td><td class="mono">cmd open|close</td></tr>
+                        <tr class="border-t border-[#2D5A27]/10"><td class="px-4 py-3 font-bold text-[#2D3748]">Relock 15 s</td><td>—</td><td>firmware (timer)</td><td class="mono">UNLOCK_MS</td></tr>
+                        <tr class="border-t border-[#2D5A27]/10"><td class="px-4 py-3 font-bold text-[#2D3748]">Présence / occupation</td><td>PIR + reed</td><td>firmware + hub</td><td class="mono">state · session</td></tr>
+                        <tr class="border-t border-[#2D5A27]/10"><td class="px-4 py-3 font-bold text-[#2D3748]">Urgence 3 niveaux</td><td>btn 36 + buzzer</td><td>firmware + kiosque</td><td class="mono">emergency:…</td></tr>
+                        <tr class="border-t border-[#2D5A27]/10"><td class="px-4 py-3 font-bold text-[#2D3748]">Éclairage RGBW</td><td>LED bande</td><td>firmware / hub</td><td class="mono">light</td></tr>
+                        <tr class="border-t border-[#2D5A27]/10"><td class="px-4 py-3 font-bold text-[#2D3748]">Climatisation</td><td>unite gainable + relais</td><td>hub / firmware</td><td class="mono">ac on|off</td></tr>
+                        <tr class="border-t border-[#2D5A27]/10"><td class="px-4 py-3 font-bold text-[#2D3748]">Télémétrie usine</td><td>—</td><td>firmware + hub + web</td><td class="mono">MQTT retained</td></tr>
+                        <tr class="border-t border-[#2D5A27]/10"><td class="px-4 py-3 font-bold text-[#2D3748]">Accès client (QR)</td><td>écran/tablette</td><td>kiosque + portail usine</td><td class="mono">?cab=…&amp;access=</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- SLIDE 6 : FLUX DE COMMANDE -->
+        <section class="slide">
+            <h2 class="text-3xl font-extrabold text-[#2D5A27] mb-8">Flux de commande, de bout en bout</h2>
+            <div class="bg-white rounded-3xl border border-[#2D5A27]/15 p-6">
+                <div class="flex flex-wrap items-center justify-between gap-2 text-xs mono">
+                    <p class="bg-[#2D3748] text-white rounded-xl px-4 py-3">📱 Tap client</p>
+                    <span class="text-[#9ACD32] font-bold">→</span>
+                    <p class="bg-[#F4F6F0] rounded-xl px-4 py-3 text-[#2D5A27] font-bold">kiosque / app</p>
+                    <span class="text-[#9ACD32] font-bold">→</span>
+                    <p class="bg-[#F4F6F0] rounded-xl px-4 py-3">WS <span class="text-[#2D3748]">/ws</span></p>
+                    <span class="text-[#9ACD32] font-bold">→</span>
+                    <p class="bg-[#2D5A27] text-white rounded-xl px-4 py-3">hub Pi</p>
+                    <span class="text-[#9ACD32] font-bold">→</span>
+                    <p class="bg-[#F4F6F0] rounded-xl px-4 py-3">MQTT local</p>
+                    <span class="text-[#9ACD32] font-bold">→</span>
+                    <p class="bg-[#2D3748] text-white rounded-xl px-4 py-3">firmware</p>
+                    <span class="text-[#9ACD32] font-bold">→</span>
+                    <p class="bg-[#9ACD32]/25 text-[#2D5A27] font-bold rounded-xl px-4 py-3">⚙️ RELAIS</p>
+                </div>
+                <div class="flex flex-wrap items-center justify-between gap-2 text-xs mono mt-8">
+                    <p class="bg-[#9ACD32]/25 text-[#2D5A27] font-bold rounded-xl px-4 py-3">🎚️ CAPTEURS</p>
+                    <span class="text-[#9ACD32] font-bold">→</span>
+                    <p class="bg-[#2D3748] text-white rounded-xl px-4 py-3">firmware </p>
+                    <span class="text-[#9ACD32] font-bold">→</span>
+                    <p class="bg-[#F4F6F0] rounded-xl px-4 py-3">state retained</p>
+                    <span class="text-[#9ACD32] font-bold">→</span>
+                    <p class="bg-[#2D5A27] text-white rounded-xl px-4 py-3">hub / web</p>
+                    <span class="text-[#9ACD32] font-bold">→</span>
+                    <p class="bg-[#F4F6F0] rounded-xl px-4 py-3">BroadcastChannel</p>
+                    <span class="text-[#9ACD32] font-bold">→</span>
+                    <p class="bg-white border border-[#2D5A27]/15 rounded-xl px-4 py-3">📊 dashboard temps réel</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 7 : PIXELSOFTWARE DESIGN -->
+        <section class="slide">
+            <div class="bg-gradient-to-br from-[#2D3748] to-[#1f2937] text-white rounded-3xl p-12 text-center">
+                <p class="text-3xl">👨‍💻</p>
+                <h2 class="text-3xl font-extrabold mt-4">Signé <span class="text-[#9ACD32]">PixelSoftware Design</span></h2>
+                <p class="text-sm text-slate-300 mt-4 max-w-xl mx-auto">Logiciel &amp; R&amp;D : firmware embarqué, hub edge, app Android, web-apps et deploiement cloud — conçus comme un seul système adaptatif. Design cabine &amp; standard acoustique : <b>Atlas Working</b>.</p>
+                <div class="flex flex-wrap justify-center gap-3 mt-8">
+                    <span class="chip bg-white/10 border border-white/20">Firmware C++</span>
+                    <span class="chip bg-white/10 border border-white/20">Edge Node.js</span>
+                    <span class="chip bg-white/10 border border-white/20">App Kotlin</span>
+                    <span class="chip bg-white/10 border border-white/20">Web temps réel</span>
+                    <span class="chip bg-white/10 border border-white/20">Cloudflare Pages</span>
+                </div>
+                <p class="mono text-[10px] text-slate-400 mt-8">© 2026 Atlas Working — Made in Tunisia 🇹🇳 · Logiciel &amp; R&D : PixelSoftware Design</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="text-center text-xs text-slate-400 mono pb-6 px-4">© 2026 · Made in Tunisia 🇹🇳 · Logiciel & R&D : PixelSoftware Design — Design cabine &amp; standard acoustique : Atlas Working (développement / idée)</footer>
+
+    <script>
+        const slides = Array.from(document.querySelectorAll('.slide'));
+        let cur = 0;
+        function paint() {
+            slides.forEach((s, i) => s.classList.toggle('on', i === cur));
+            document.getElementById('slideCount').innerText = (cur + 1) + ' / ' + slides.length;
+            document.getElementById('dots').innerHTML = slides.map((_, i) =>
+                `<button onclick="jump(${i})" class="w-2.5 h-2.5 rounded-full transition ${i === cur ? 'bg-[#2D5A27] scale-125' : 'bg-[#2D5A27]/25'}"></button>`).join('');
+        }
+        function jump(i) { cur = Math.max(0, Math.min(slides.length - 1, i)); paint(); }
+        function navSlide(d) { jump(cur + d); }
+        document.addEventListener('keydown', e => {
+            if (e.key === 'ArrowRight' || e.key === ' ') navSlide(1);
+            if (e.key === 'ArrowLeft') navSlide(-1);
+        });
+        let tx = 0;
+        document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
+        document.addEventListener('touchend', e => {
+            const dx = e.changedTouches[0].clientX - tx;
+            if (Math.abs(dx) > 60) navSlide(dx < 0 ? 1 : -1);
+        }, { passive: true });
+        paint();
+    </script>
+</body>
+</html>
