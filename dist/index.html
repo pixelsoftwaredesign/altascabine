@@ -1739,6 +1739,7 @@
                 const m = norm(q);
                 if (/(salam|salem|labes|chneya|3alacbed|brabi|baddel|kifach|n3awnek|sghir|reje3|hamdoullah)/.test(m)) return 'darja';
                 if (/(merhaba|nasilsin|nasıl|selam|klima|sicaklik|teşekkür|teşekkuder|lütfen)/.test(m)) return 'tr';
+                if (/(je suis|je m'appelle|mon nom est|comment puis|pouvez[- ]vous|merci beaucoup|voulez[- ]vous)/.test(m)) return 'fr';
                 if (/(^|[^a-zé])(ciao|salve|buongiorno|buonasera|come stai|come posso|aiutarmi|grazie mille|per favore)([^a-z]|$)/.test(m)) return 'it';
                 if (/(^|[^a-z])(hello|\bhi\b|how are you|can you|could you|please|thank|thanks|help me|i want|i would|what is|how do|whats|welcome|good (morning|afternoon|evening))\b/.test(m)) return 'en';
                 return 'fr';
@@ -1769,7 +1770,41 @@
                     if (s && s.name) return String(s.name).trim();
                 } catch (e) {}
                 const c = clients[clients.length - 1];
-                return c && c.name ? String(c.name).trim() : null;
+                if (c && c.name) return String(c.name).trim();
+                try {
+                    const v = JSON.parse(localStorage.getItem('pixelVisitorName') || 'null');
+                    if (v && String(v).trim()) return String(v).trim();
+                } catch (e) {}
+                return null;
+            }
+            function extractName(q) {
+                const qs = String(q || '').trim();
+                const pats = [
+                    /(?:je m'appelle|je m'apelle|mon nom est|prénom|c'est|moi c'est|je suis)\s+([a-zà-ÿ]{2,20})/i,
+                    /(?:mi chiamo)\s+([a-zà-ÿ]{2,20})/i,
+                    /(?:my name is|call me|i am|i'm)\s+([a-zà-ÿ]{2,20})/i,
+                    /(?:benim adım|adım|ben)\s+([a-zà-ÿçğıöşü]{2,20})/i,
+                    /(?:اسمي|إسمي|أنا اسمي|انا اسمي)\s+([\u0600-\u06ff]{2,18})/,
+                    /(?:ismi|smi)\s+([a-zà-ÿ]{2,20})/i,
+                    /^(?:nom|ad|isim)\s*[:：]\s*([a-zà-ÿçğıöşü]{2,20})/i
+                ];
+                for (const p of pats) {
+                    const mm = qs.match(p);
+                    if (mm && mm[1]) return mm[1].trim();
+                }
+                return null;
+            }
+            function greetName(lang, n) {
+                const cap = n.charAt(0).toUpperCase() + n.slice(1);
+                const g = {
+                    fr: 'Oui ' + cap + ' ! Comment puis-je vous aider ? Je peux : état de la cabine, climatisation, maintenance, prix, ou piloter la cabine par la voix.',
+                    it: 'Certo ' + cap + '! Come posso aiutarti? Posso: stato cabina, clima, manutenzione, prezzi, oppure gestire la cabina con la voce.',
+                    en: 'Yes ' + cap + '! How can I help you today? Status, climate, maintenance, pricing, contact, or voice control.',
+                    tr: 'Evet ' + cap + '! Size nasıl yardımcı olabilirim? Durum, iklim, bakım, fiyat veya sesli komut.',
+                    ar: 'نعم ' + n + '! كيف يمكنني مساعدتك؟ الحالة، المناخ، الصيانة، الأسعار، أو التواصل معنا.',
+                    darja: 'Ah ' + cap + '! Kifach najem n3awnek? État, climat, maintenance, prix walla contact.'
+                };
+                return g[lang] || g.fr;
             }
             function serverUrl() { const s = (localStorage.getItem('atlasPixelServer') || '').trim().replace(/\/+$/, ''); return s || null; }
             async function syncLeads() {
@@ -1848,7 +1883,7 @@
                 const lang = detect(q);
                 const t = norm(q);
                 const em = q.match(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i);
-                const nm = q.match(/(?:appelle|nom|isim|اسمي|ismi|smi)[\s:]+([a-zà-ÿ]{2,20})/i);
+                const nm = extractName(q);
                 const ph = q.match(/(\+?\d[\d\s.-]{7,}\d)/);
 
                 if (em) {
@@ -1857,13 +1892,18 @@
                     pend.email = em[0].toLowerCase(); store('pixelLeadPend', pend);
                     return { text: rep(lang, 'Merci ! Pour préparer une proposition adaptée, puis-je avoir votre nom et votre numéro de téléphone ?', 'شكراً! لأجهز لكم عرضاً مناسباً، هل يمكنني الحصول على اسمك ورقم هاتفك؟', 'Thank you! To prepare a tailored proposal, may I have your name and phone number?', 'Teşekkürler! Uygun bir teklif hazırlamak için adınızı ve telefon numaranızı alabilir miyim?'), lang };
                 }
-                if (nm || ph) {
-                    if (nm) pend.name = nm[1].trim();
-                    if (ph) pend.phone = ph[1].replace(/\s+/g, ' ').trim();
+                if (ph) {
+                    if (nm) pend.name = nm;
+                    pend.phone = ph[1].replace(/\s+/g, ' ').trim();
                     const who = pend.name || 'Cher client';
                     store('pixelLeadPend', pend);
                     if (saveLead()) return { text: rep(lang, '✅ Prospect enregistré, ' + who + ' ! Un expert PixelSoftware Design vous recontacte rapidement. (+216 52 675 027 en attendant)', '✅ تم تسجيل بياناتكم! سيتواصل معكم خبير PixelSoftware Design قريباً.', '✅ Lead captured, ' + who + '! A PixelSoftware Design expert will reach out shortly.', '✅ Müşteri kaydedildi! Bir uzmanımız en kısa sürede sizinle iletişime geçecek.'), lang };
                     return { text: rep(lang, 'J\'enregistre vos coordonnées. Il me faut un email pour finaliser votre fiche (ou dites « je m\'appelle … » avec votre téléphone).', '', 'One more thing — I need an email to complete your lead.', ''), lang };
+                }
+                if (nm) {
+                    pend.name = nm; store('pixelLeadPend', pend);
+                    try { localStorage.setItem('pixelVisitorName', JSON.stringify(nm)); } catch (e) {}
+                    return { text: greetName(lang, nm), lang };
                 }
 
                 const occ = { bebe: 'neo', 'bébé': 'neo', nourrisson: 'neo', neo: 'neo', righdha: 'neo', 'رضيع': 'neo', enfant: 'enfant', child: 'enfant', 'طفل': 'enfant', adulte: 'adulte', homme: 'adulte', femme: 'adulte', man: 'adulte', woman: 'adulte', 'رجل': 'adulte' };
