@@ -1653,6 +1653,7 @@
                 const m = norm(q);
                 if (/(salam|salem|labes|chneya|3alacbed|brabi|baddel|kifach|n3awnek|sghir|reje3|hamdoullah)/.test(m)) return 'darja';
                 if (/(merhaba|nasilsin|nasıl|selam|klima|sicaklik|teşekkür|teşekkuder|lütfen)/.test(m)) return 'tr';
+                if (/(^|[^a-zé])(ciao|salve|buongiorno|buonasera|come stai|come posso|aiutarmi|grazie mille|per favore)([^a-z]|$)/.test(m)) return 'it';
                 if (/(^|[^a-z])(hello|\bhi\b|how are you|can you|could you|please|thank|thanks|help me|i want|i would|what is|how do|whats|welcome|good (morning|afternoon|evening))\b/.test(m)) return 'en';
                 return 'fr';
             }
@@ -1676,6 +1677,14 @@
             const QKEY = 'pixelLeadQueue';
             const queue = () => load(QKEY, []);
             const queueSave = (a) => store(QKEY, a);
+            function knownName() {
+                try {
+                    const s = JSON.parse(localStorage.getItem('atlasSession') || 'null');
+                    if (s && s.name) return String(s.name).trim();
+                } catch (e) {}
+                const c = clients[clients.length - 1];
+                return c && c.name ? String(c.name).trim() : null;
+            }
             function serverUrl() { const s = (localStorage.getItem('atlasPixelServer') || '').trim().replace(/\/+$/, ''); return s || null; }
             async function syncLeads() {
                 const s = serverUrl();
@@ -1782,9 +1791,15 @@
                         { neo: '❄️ Climate set to 23°C, gentle ventilation, no draft.', enfant: '❄️ Temperature set to 22°C.', adulte: '❄️ Climate set to 21.5°C.' }[prof] || '',
                         { neo: '❄️ İklim 23°C\'ye ayarlandı, cereyan yok.', enfant: '❄️ Sıcaklık 22°C\'ye ayarlandı.', adulte: '❄️ İklim 21.5°C\'ye ayarlandı.' }[prof] || ''), lang };
                 }
+                if (lang === 'it') {
+                    const n = knownName();
+                    if (n) return { text: '👋 Ciao ' + n + '! Come posso assisterti? Posso: stato cabina, clima, manutenzione, prezzi, assistenza.', lang };
+                    return { text: '👋 Ciao! Sono Pixel, l\'assistente di Pixel Software Design. Con chi parlo? Dimmi il tuo nome o la tua email per riconoscerti.', lang };
+                }
                 if (lang === 'darja') {
                     if (/baddel|climat/.test(t)) { setClimate('adulte'); return { text: '❄️ Aya, faddaltelkom el climat w ch3alt el ventilation 3la el modo — ahsen wadheb ayadi !', lang }; }
-                    return { text: 'Ahla bik! Najem n3awnek b: état, élément, climatisation, maintenance, prix, wala devis. Chbih shnabghiw?', lang };
+                    const n = knownName();
+                    return { text: (n ? 'Ahla bik ' + n + '! ' : 'Ahla bik! ') + 'Najem n3awnek b: état, élément, climatisation, maintenance, prix, wala devis. Chbih shnabghiw?', lang };
                 }
                 if (lang !== 'fr') {
                     if (/(panne|maintenance|reboot|rasseps|reparer|broken|fix)/.test(t)) {
@@ -1793,7 +1808,15 @@
                     if (/(devis|prix|price|quote|contact|telephone|tarif)/.test(t)) {
                         return { text: rep(lang, '', 'للحصول على عرض سعر: اسمك ورقم هاتفك؟ أو اتصل بنا: +216 52 675 027 — pixelsoftwaredesign@gmail.com', 'For a quote: your name and phone? Or call +216 52 675 027 — pixelsoftwaredesign@gmail.com', 'Fiyat teklifi için ad ve telefon? Ya da: +216 52 675 027 — pixelsoftwaredesign@gmail.com'), lang };
                     }
-                    return { text: rep(lang, '', 'أهلاً بكم في Pixel Software Design. أساعدكم في: الحالة، المناخ، الصيانة، الأسعار، والتواصل.', 'Welcome to Pixel Software Design. I can help with: status, climate, maintenance, pricing, contact.', 'Pixel Software Design\'e hoş geldiniz. Yardımcı olabilirim: durum, iklim, bakım, fiyat, iletişim.'), lang };
+                    const n = knownName();
+                    if (lang === 'ar') {
+                        return { text: (n ? 'أهلاً ' + n + '! Pixel Software Design في خدمتكم.' : 'أهلاً بكم في Pixel Software Design.') + ' أساعدكم في: الحالة، المناخ، الصيانة، الأسعار، والتواصل.', lang };
+                    }
+                    if (lang === 'en') {
+                        return { text: (n ? 'Hello ' + n + '! Welcome to Pixel Software Design.' : 'Welcome to Pixel Software Design.') + ' I can help with: status, climate, maintenance, pricing, contact.', lang };
+                    }
+                    const optr = n ? 'Merhaba ' + n + '! Pixel Software Design\'e hoş geldiniz.' : 'Pixel Software Design\'e hoş geldiniz.';
+                    return { text: optr + ' Yardımcı olabilirim: durum, iklim, bakım, fiyat, iletişim.', lang };
                 }
                 return null;
             }
