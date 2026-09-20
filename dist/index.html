@@ -286,6 +286,12 @@
             <button onclick="switchTab('audio')" id="nav-audio" class="px-4 py-2.5 sm:px-5 sm:py-3 rounded-xl text-xs sm:text-sm font-bold transition shrink-0 text-[#2D3748] hover:bg-[#F4F6F0] flex items-center space-x-2">
                 <span>🎧</span> <span>Audio & Playlist</span>
             </button>
+            <button onclick="switchTab('assistant')" id="nav-assistant" class="px-4 py-2.5 sm:px-5 sm:py-3 rounded-xl text-xs sm:text-sm font-bold transition shrink-0 text-[#2D3748] hover:bg-[#F4F6F0] flex items-center space-x-2">
+                <span>✴️</span> <span>Assistant</span>
+            </button>
+            <button onclick="switchTab('settings')" id="nav-settings" class="px-4 py-2.5 sm:px-5 sm:py-3 rounded-xl text-xs sm:text-sm font-bold transition shrink-0 text-[#2D3748] hover:bg-[#F4F6F0] flex items-center space-x-2">
+                <span>⚙️</span> <span>Réglages</span>
+            </button>
             <button onclick="openVoiceModal()" class="w-10 h-10 sm:w-11 sm:h-11 shrink-0 rounded-xl bg-[#9ACD32] hover:bg-[#8bb82d] text-lg sm:text-xl transition shadow-md flex items-center justify-center" title="Commande vocale" aria-label="Commande vocale">🎤</button>
         </nav>
 
@@ -419,6 +425,84 @@
                 <div class="text-xs text-slate-500 mono flex flex-wrap justify-between items-center gap-2 bg-[#F4F6F0] p-3 rounded-xl">
                     <span>Piste active : <strong id="currentTrack" class="text-[#2D5A27]">Bruit Blanc - Océan Profond</strong></span>
                     <span class="text-[#9ACD32] font-bold">● Bluetooth Prêt</span>
+                </div>
+            </div>
+
+            <!-- MODULE 5 : ASSISTANT ATLAS (Pixel AI) -->
+            <div id="tab-assistant" class="w-full max-w-3xl bg-white border border-[#2D5A27]/15 rounded-3xl p-5 md:p-6 shadow-sm flex flex-col min-h-[400px] lg:h-[420px] hidden">
+                <div class="flex items-center justify-between mb-3">
+                    <div>
+                        <h2 class="text-xs font-bold text-[#9ACD32] uppercase tracking-wider mb-1">IA privée · PixelTranslate</h2>
+                        <p class="text-xl md:text-2xl font-bold text-[#2D5A27]">Assistant Atlas</p>
+                    </div>
+                    <button onclick="paToggle()" class="text-[11px] px-3 py-2 rounded-xl bg-[#F4F6F0] border border-[#2D5A27]/15 text-[#2D5A27] font-bold hover:bg-[#e4e9dc] transition shrink-0">✴️ PixelAssistante ⇱</button>
+                </div>
+                <div id="tabChat" class="flex-1 overflow-y-auto space-y-2.5 pr-1 no-scrollbar min-h-[170px]">
+                    <div class="pa-msg bg-[#F4F6F0] rounded-2xl p-3 text-xs text-slate-700 leading-relaxed">
+                        👋 Bonjour ! Je suis l'<b>Assistant Atlas</b> (Pixel AI).<br>
+                        Posez une question en français, arabe, darija, anglais, turc ou italien — je peux aussi <b>agir</b> : « ouvre la porte », « lumière à 80 % », « température 21 °C »…
+                    </div>
+                </div>
+                <div class="flex gap-1.5 mt-2 pt-1 overflow-x-auto no-scrollbar" id="tabChips"></div>
+                <div class="flex gap-2 mt-2.5 border-t border-[#2D5A27]/10 pt-3">
+                    <input id="tabQ" class="flex-1 bg-[#F4F6F0] rounded-xl px-3 py-2.5 text-xs outline-none focus:ring-2 ring-[#9ACD32] min-w-0" placeholder="Votre demande… (multilingue)">
+                    <button onclick="tabSend()" class="px-4 rounded-xl bg-[#2D5A27] text-white font-extrabold text-xs hover:bg-[#23451e] transition shrink-0">Envoyer ➤</button>
+                    <button onclick="tabMic()" id="tabMicBtn" class="w-10 h-10 shrink-0 rounded-xl bg-[#9ACD32] text-[#2D3748] font-bold text-lg hover:bg-[#8bb82d] transition" title="Parler">🎤</button>
+                </div>
+            </div>
+
+            <!-- MODULE 6 : RÉGLAGES KIOSQUE -->
+            <div id="tab-settings" class="w-full max-w-3xl bg-white border border-[#2D5A27]/15 rounded-3xl p-5 md:p-6 shadow-sm flex flex-col min-h-[400px] lg:h-[420px] hidden">
+                <div class="mb-4">
+                    <h2 class="text-xs font-bold text-[#9ACD32] uppercase tracking-wider mb-1">Kiosque & Système</h2>
+                    <p class="text-xl md:text-2xl font-bold text-[#2D5A27]">⚙️ Réglages</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 overflow-y-auto no-scrollbar pr-1">
+                    <div class="bg-[#F4F6F0] rounded-2xl p-3.5 border border-[#2D5A27]/10">
+                        <p class="text-xs font-extrabold text-[#2D5A27] mb-2">🧠 Matériel</p>
+                        <select id="setHardware" onchange="setHardwareS(this.value)" class="w-full bg-white border border-[#2D5A27]/20 rounded-xl px-2 py-2 text-xs font-bold">
+                            <option value="esp32">ESP32 seul</option>
+                            <option value="esp32+pi">Pi + ESP32 (hub)</option>
+                            <option value="android">Tablette Android</option>
+                        </select>
+                    </div>
+                    <div class="bg-[#F4F6F0] rounded-2xl p-3.5 border border-[#2D5A27]/10">
+                        <p class="text-xs font-extrabold text-[#2D5A27] mb-2">🌍 Mode système</p>
+                        <select id="setMode" onchange="setModeS(this.value)" class="w-full bg-white border border-[#2D5A27]/20 rounded-xl px-2 py-2 text-xs font-bold">
+                            <option value="secure">Sécurisé (PROD)</option>
+                            <option value="beta">Bêta</option>
+                            <option value="dev">Développement</option>
+                        </select>
+                    </div>
+                    <div class="bg-[#F4F6F0] rounded-2xl p-3.5 border border-[#2D5A27]/10">
+                        <p class="text-xs font-extrabold text-[#2D5A27] mb-2">🏷️ ID cabine</p>
+                        <input id="setCabin" onchange="setCabinS(this.value)" class="w-full bg-white border border-[#2D5A27]/20 rounded-xl px-2 py-2 text-xs font-bold mono" placeholder="Cabine N°01">
+                    </div>
+                    <div class="bg-[#F4F6F0] rounded-2xl p-3.5 border border-[#2D5A27]/10">
+                        <p class="text-xs font-extrabold text-[#2D5A27] mb-2">🗣️ Conversation vocale</p>
+                        <button id="setVoiceBtn" onclick="toggleVoiceS()" class="w-full bg-[#2D5A27] text-white rounded-xl px-2 py-2 text-xs font-extrabold">🎤 Activer la voix</button>
+                    </div>
+                    <div class="bg-[#F4F6F0] rounded-2xl p-3.5 border border-[#2D5A27]/10">
+                        <p class="text-xs font-extrabold text-[#2D5A27] mb-2">🌐 Hub backend (Pi)</p>
+                        <input id="setHub" onchange="setHubS(this.value)" class="w-full bg-white border border-[#2D5A27]/20 rounded-xl px-2 py-2 text-xs font-bold mono" placeholder="192.168.1.50:3000">
+                    </div>
+                    <div class="bg-[#F4F6F0] rounded-2xl p-3.5 border border-[#2D5A27]/10">
+                        <p class="text-xs font-extrabold text-[#2D5A27] mb-2">✴️ Serveur Pixel AI</p>
+                        <div class="flex gap-1.5">
+                            <input id="setPixel" onchange="setPixelS(this.value)" class="flex-1 bg-white border border-[#2D5A27]/20 rounded-xl px-2 py-2 text-xs font-bold mono min-w-0" placeholder="http://192.168.1.50:3000">
+                            <button onclick="testPixelS()" class="shrink-0 bg-[#9ACD32] text-[#2D3748] rounded-xl px-2 py-2 text-xs font-extrabold" title="Tester la connexion">Tester</button>
+                        </div>
+                        <p id="setPixelState" class="text-[10px] text-slate-500 mono mt-1.5">Aucun test effectué pour le moment.</p>
+                    </div>
+                    <div class="col-span-1 sm:col-span-2 bg-[#2D3748] text-[#9ACD32] rounded-2xl p-3.5 text-[11px] mono leading-relaxed">
+                        PixelSoftware Design — Gabès, Tunisie<br>
+                        Matricule fiscal : 1969711pam000 · CERT/ANCE · INPDP (Loi 63-2022) · Facturation TEJ<br>
+                        +216 52 675 027 · pixelsoftwaredesign@gmail.com
+                    </div>
+                </div>
+                <div class="flex gap-2 justify-end mt-3">
+                    <button onclick="resetSettingsS()" class="text-[11px] px-3 py-2 rounded-xl bg-rose-50 text-rose-600 border border-rose-200 font-bold hover:bg-rose-100 transition">↺ Réinitialiser</button>
+                    <button onclick="switchTab('assistant')" class="text-[11px] px-3 py-2 rounded-xl bg-[#2D5A27] text-white font-bold hover:bg-[#23451e] transition">✴️ Ouvrir l'Assistant</button>
                 </div>
             </div>
         </main>
@@ -892,7 +976,7 @@
 
         // ============ GESTION DES ONGLETS INTERNES ============
         function switchTab(tabName) {
-            const tabs = ['porte', 'eclairage', 'climatisation', 'audio'];
+            const tabs = ['porte', 'eclairage', 'climatisation', 'audio', 'assistant', 'settings'];
             const active = "px-4 py-2.5 sm:px-5 sm:py-3 rounded-xl text-xs sm:text-sm font-bold transition shrink-0 bg-[#2D5A27] text-white shadow-sm flex items-center space-x-2";
             const idle = "px-4 py-2.5 sm:px-5 sm:py-3 rounded-xl text-xs sm:text-sm font-bold transition shrink-0 text-[#2D3748] hover:bg-[#F4F6F0] flex items-center space-x-2";
             tabs.forEach(t => {
@@ -1637,6 +1721,8 @@
             });
             setTimeout(() => { const h = $('paHint'); h.style.opacity = '1'; setTimeout(() => h.style.opacity = '0', 4200); }, 900);
             paChips();
+            window.paAnswer = answer;
+            window.paSpeakG = function (t, l) { if (paVoiceOn) { try { paDoSpeak(t, l); } catch (e) {} } };
         })();
     </script>
 
@@ -1955,6 +2041,124 @@
     else { document.body.insertBefore(wrap, document.body.firstChild); }
 })();
 </script>
+
+<script>window.tabAssistant=(function(){
+    'use strict';
+    var $=function(id){return document.getElementById(id)};
+    function msg(mine,text){
+        var b=$('tabChat'); if(!b)return;
+        var d=document.createElement('div');
+        d.className='pa-msg max-w-[85%] rounded-2xl p-3 text-xs whitespace-pre-line leading-relaxed '+(mine?'ml-auto bg-[#2D5A27] text-white':'bg-[#F4F6F0] text-slate-700');
+        d.textContent=text;
+        b.appendChild(d); b.scrollTop=b.scrollHeight;
+        return d;
+    }
+    function typing(fn){
+        var b=$('tabChat'); if(!b)return fn&&fn();
+        var d=document.createElement('div');
+        d.className='max-w-[85%] bg-white border border-[#2D5A27]/15 rounded-2xl px-3 py-2.5 text-slate-400 text-xs';
+        d.textContent='✴️ rédige…';
+        b.appendChild(d); b.scrollTop=b.scrollHeight;
+        setTimeout(function(){ d.remove(); fn&&fn(); },380);
+    }
+    window.tabSend=function(){
+        var q=$('tabQ'); if(!q)return;
+        var v=q.value.trim(); if(!v)return;
+        q.value='';
+        msg(true,v);
+        typing(function(){
+            var r=window.paAnswer?window.paAnswer(v):{text:'🤔 Assistant non disponible.'};
+            if(r.act){ try{ r.act(); }catch(e){} }
+            msg(false,r.text);
+            try{ window.paSpeakG&&window.paSpeakG(r.text,r.lang); }catch(e){}
+        });
+    };
+    window.tabMic=function(){
+        var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+        if(!SR){ msg(false,'Votre navigateur ne supporte pas la reconnaissance vocale (essayez Chrome/Edge). La saisie écrite reste active.'); return; }
+        var btn=$('tabMicBtn'), rec=null, timer=null;
+        if(btn&&btn.classList.contains('voice-listening')){ try{ rec&&rec.stop(); }catch(e){} return; }
+        function cleanup(){
+            if(timer){ clearTimeout(timer); timer=null; }
+            if(btn){ btn.classList.remove('voice-listening'); btn.textContent='🎤'; }
+            var v=$('tabQ').value.trim();
+            if(v) tabSend();
+        }
+        rec=new SR();
+        rec.lang='fr-FR'; rec.continuous=false; rec.interimResults=true;
+        rec.onresult=function(e){
+            var t='';
+            for(var i=e.resultIndex;i<e.results.length;i++) t+=e.results[i][0].transcript;
+            if(e.results[e.results.length-1].isFinal&&t.trim()){ $('tabQ').value=t.trim(); }
+        };
+        rec.onend=cleanup;
+        rec.onerror=function(){ cleanup(); msg(false,'🚫 Micro inaccessible — autorisez le micro ou utilisez la saisie écrite.'); };
+        if(btn){ btn.classList.add('voice-listening'); btn.textContent='🎙️'; }
+        timer=setTimeout(function(){ try{ rec.stop(); }catch(e){} },6000);
+        try{ rec.start(); }catch(e){ cleanup(); }
+    };
+    var CHIPS=['Comment utiliser la cabine ?','État des composants','Quelle heure ?','Ouvre la porte','Urgence','Température bébé','أهلا','Baddel el climat','Ciao pixel'];
+    function chips(){
+        var c=$('tabChips'); if(!c)return;
+        c.innerHTML=CHIPS.map(function(x){ return '<button class="shrink-0 text-[10px] bg-[#9ACD32]/20 text-[#2D5A27] font-bold px-2.5 py-1 rounded-full hover:bg-[#9ACD32]/40 transition">'+x+'</button>'; }).join('');
+        [].forEach.call(c.querySelectorAll('button'),function(b){ b.addEventListener('click',function(){ $('tabQ').value=b.textContent; tabSend(); }); });
+    }
+    chips();
+    var qs=$('tabQ'); if(qs) qs.addEventListener('keydown',function(e){ if(e.key==='Enter') tabSend(); });
+    return { msg: msg, chips: chips };
+})();</script>
+
+<script>window.tabSettings=(function(){
+    'use strict';
+    var $=function(id){return document.getElementById(id)};
+    function get(k,d){ try{ var v=localStorage.getItem(k); return v===null?d:v; }catch(e){ return d; } }
+    function set(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+    function render(){
+        var hw=$('setHardware'); if(hw) hw.value=get('atlasHardware','esp32+pi');
+        var md=$('setMode'); if(md) md.value=get('atlasMode','secure');
+        var cb=$('setCabin'); if(cb) cb.value=get('atlasCabinId','');
+        var hb=$('setHub'); if(hb) hb.value=get('atlasHub','');
+        var px=$('setPixel'); if(px) px.value=get('atlasPixelServer','');
+        var v=$('setVoiceBtn'); if(v){
+            var on=get('atlasVoice','off')==='on';
+            v.textContent=on?'🔇 Voix active — désactiver':'🎤 Activer la voix';
+            v.className='w-full rounded-xl px-2 py-2 text-xs font-extrabold text-white bg-'+(on?'rose-500':'[#2D5A27]');
+        }
+    }
+    window.setHardwareS=function(v){ set('atlasHardware',v); try{ if(window.setHardware) setHardware(v); }catch(e){} };
+    window.setModeS=function(m){ set('atlasMode',m); try{ if(window.applyModeUI) applyModeUI(); }catch(e){} };
+    window.setCabinS=function(v){ set('atlasCabinId',String(v||'').trim()); try{ if(window.kioskLabel) kioskLabel('Libre'); }catch(e){} };
+    window.setHubS=function(v){ set('atlasHub',String(v||'').trim()); };
+    window.setPixelS=function(v){ set('atlasPixelServer',String(v||'').trim().replace(/\/+$/,'')); };
+    window.toggleVoiceS=function(){
+        var on=get('atlasVoice','off')==='on';
+        if(on){ set('atlasVoice','off'); try{ if(window.paStopVoice) paStopVoice(); }catch(e){} }
+        else{ set('atlasVoice','on'); try{ if(window.paMic) paMic(); }catch(e){} }
+        render();
+    };
+    window.testPixelS=function(){
+        var p=$('setPixelState'); if(!p)return;
+        var u=get('atlasPixelServer','').trim().replace(/\/+$/,'');
+        if(!u){ p.textContent='⚠️ Renseignez d’abord l’URL du serveur (ex. http://192.168.1.50:3000).'; p.style.color='#b45309'; return; }
+        p.textContent='🔄 Test en cours…'; p.style.color='#2D3748';
+        fetch(u+'/api/system/status',{method:'GET'})
+            .then(function(r){ return r.ok?r.json():Promise.reject(new Error('HTTP '+r.status)); })
+            .then(function(d){ p.textContent='✅ Pixel AI en ligne — '+(d.name||'serveur')+(d.version?' v'+d.version:''); p.style.color='#2D5A27'; })
+            .catch(function(){
+                p.textContent='⚠️ Serveur injoignable ('+u+'). Leads mis en file locale.';
+                p.style.color='#b45309';
+                try{ if(window.PixelAI&&window.PixelAI.syncLeads) PixelAI.syncLeads(); }catch(e){}
+            });
+    };
+    window.resetSettingsS=function(){
+        if(!confirm('Réinitialiser les réglages du kiosque ?')) return;
+        ['atlasHardware','atlasMode','atlasCabinId','atlasHub','atlasPixelServer','atlasVoice'].forEach(function(k){ try{ localStorage.removeItem(k); }catch(e){} });
+        try{ if(window.paStopVoice) paStopVoice(); }catch(e){}
+        render();
+    };
+    render();
+    return { render: render };
+})();</script>
 
 <script>"serviceWorker"in navigator&&location.protocol==="https:"&&navigator.serviceWorker.register("/sw.js").catch(function(){})</script>
 
