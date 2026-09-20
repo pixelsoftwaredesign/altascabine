@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <style data-rsp="1">html,body{overflow-x:hidden}body{word-wrap:break-word;overflow-wrap:break-word}img,svg,canvas,iframe,video,embed{max-width:100%;height:auto}h1,h2,h3,h4,p,a,button,label,td,th,legend{overflow-wrap:break-word}.min-w-\[180px\],.min-w-\[220px\],.min-w-\[640px\],.min-w-\[720px\]{min-width:0!important}@media (max-width:420px){input,select,textarea{min-width:0;max-width:100%}}</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutoriel animé · Utilisation de la cabine Atlas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>*{font-family:'Plus Jakarta Sans',sans-serif}.mono{font-family:'JetBrains Mono',monospace}.scene{display:none}.scene.on{display:flex}@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}.scene .anim{opacity:0;animation:animStep .5s ease forwards;animation-delay:calc(var(--d)* .42s)}@keyframes animStep{to{opacity:1;transform:none}}@keyframes beam{0%{top:-8%;opacity:.9}90%{opacity:.9}100%{top:100%;opacity:0}}@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}@keyframes scanline{0%{left:0}100%{left:100%}}@keyframes doorOpen{0%{transform:rotateY(0deg)}100%{transform:rotateY(-55deg)}}@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(154,205,50,.7)}50%{box-shadow:0 0 0 12px rgba(154,205,50,0)}}@keyframes heat{0%,100%{height:30%}50%{height:62%}}@keyframes barAnim{from{width:0}to{width:var(--w)}}@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}.pulse-on{animation:pulse 1.6s infinite}.blink-on{animation:blink 1.2s infinite}.float-on{animation:floatY 2.4s ease-in-out infinite}.bar{--w:80%}.locked-true{color:#2D5A27}.led{width:12px;height:12px;border-radius:9999px;display:inline-block}#progress{transition:width .3s linear}button:disabled{opacity:.45;cursor:not-allowed}.uxSplineBg{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;perspective:1100px}.uxSplineFx{position:absolute;inset:0;width:100%;height:100%;transform-style:preserve-3d;transform-origin:center center;animation:spline3d var(--sd,28s) ease-in-out infinite}.splinePath{fill:none;stroke-linecap:round;stroke-linejoin:round}.uxDotHalo{transform-box:fill-box;transform-origin:center;animation:uxPulse 3.4s ease-in-out infinite}@keyframes spline3d{0%,100%{transform:rotateX(0deg)rotateY(0deg)translateZ(0)scale(1)}25%{transform:rotateX(var(--rx1,0deg))rotateY(var(--ry1,0deg))translateZ(var(--tz1,40px))scale(var(--s1,1.06))}50%{transform:rotateX(0deg)rotateY(0deg)translateZ(0)scale(1)}75%{transform:rotateX(var(--rx2,0deg))rotateY(var(--ry2,0deg))translateZ(var(--tz2,30px))scale(var(--s2,1.05))}}@keyframes uxPulse{0%,100%{opacity:.22;transform:scale(1)}50%{opacity:.6;transform:scale(1.65)}}</style>
+
+<meta name="description" content="Tutoriel animé : prendre en main la cabine Atlas en quelques étapes.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ATLAS CABINE">
+<meta property="og:title" content="ATLAS CABINE">
+<meta property="og:description" content="Tutoriel animé : prendre en main la cabine Atlas en quelques étapes.">
+<meta property="og:url" content="https://atlascabine.pages.dev/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#2D5A27">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Organization","name":"ATLAS CABINE","legalName":"PixelSoftware Design","foundingLocation":{"@type":"Place","name":"Tunisie"},"slogan":"L'espace de concentration","description":"Cabines acoustiques Atlas et leur écosystème numérique (kiosque, application, portails).","sameAs":[]}
+</script>
+<script src="/lang.js"></script></head>
+<body class="bg-[#F4F6F0] text-[#2D3748]">
+
+    
+
+    <header class="bg-[#2D3748] px-6 py-4 flex items-center justify-between gap-3 sticky top-0 z-50 shadow-lg">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-[#9ACD32] rounded-2xl flex items-center justify-center font-extrabold text-[#2D3748]">🎬</div>
+            <div>
+                <h1 class="font-extrabold text-white text-lg leading-tight">Tutoriel animé <span class="text-[#9ACD32]">Utilisation de la cabine</span></h1>
+                <p class="text-[10px] text-slate-300 mono">Scénario standard · Cabine S (AT-S90) · mode démo</p>
+            </div>
+        </div>
+        <nav class="flex items-center gap-2 text-xs font-bold no-print">
+            <a href="home.html" class="px-3 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition">🏠 Accueil</a>
+            <a href="manuel-utilisation.html" class="px-3 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition">📕 Manuel</a>
+        </nav>
+    </header>
+
+    <main class="max-w-3xl mx-auto px-6 py-8">
+
+        <!-- Barre de contrôle -->
+        <div class="bg-[#2D5A27] text-white rounded-3xl p-4 mb-6">
+            <div class="h-1.5 bg-white/20 rounded-full overflow-hidden"><div id="progress" class="h-full bg-[#9ACD32] w-0"></div></div>
+            <div class="flex items-center justify-between mt-4">
+                <button id="bPrev" onclick="step(-1)" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 font-bold">← Précédent</button>
+                <div class="flex gap-1.5" id="dots"></div>
+                <div class="flex gap-2">
+                    <button id="bToggle" onclick="togglePlay()" class="px-4 py-2 rounded-xl bg-[#9ACD32] text-[#2D3748] font-extrabold">⏸</button>
+                    <button id="bNext" onclick="step(1)" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 font-bold">Suivant →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scène : l'écran de la cabine -->
+        <div class="bg-[#2D3748] rounded-[2rem] p-6 shadow-2xl">
+            <div class="relative bg-[#EDF0E8] rounded-3xl overflow-hidden h-[380px]">
+
+                <!-- ÉTAPE 0 : veille -->
+                <section data-step="0" class="scene items-center justify-center">
+                    <div class="text-center space-y-3">
+                        <div class="text-5xl float-on">🏗️</div>
+                        <p class="mono text-[10px] font-bold text-[#2D5A27] tracking-[0.3em]">ATLAS CABINE</p>
+                        <p class="text-xl font-extrabold text-[#2D5A27]">Écran allumé</p>
+                        <p class="text-xs text-slate-500">La cabine est prête à l'emploi.</p>
+                    </div>
+                </section>
+
+                <!-- ÉTAPE 1 : accueil libre -->
+                <section data-step="1" class="scene flex-col items-center justify-center p-6">
+                    <div class="anim bg-white rounded-2xl p-5 text-center w-full max-w-xs" style="--d:0">
+                        <div class="flex items-center justify-center gap-2"><span class="led bg-[#2D5A27] blink-on"></span><span class="mono text-[10px] font-bold text-[#2D5A27]">LIBRE</span></div>
+                        <p class="font-extrabold mt-2">Cabine S · AT-S90</p>
+                        <p class="text-[11px] text-slate-500">Scannez le QR ou touchez Connexion</p>
+                        <div class="grid grid-cols-2 gap-2 mt-3">
+                            <button class="py-2 rounded-xl bg-[#2D5A27] text-white text-xs font-bold pulse-on">Connexion</button>
+                            <button class="py-2 rounded-xl bg-[#9ACD32] text-[#2D3748] text-xs font-bold">Ouvrir</button>
+                        </div>
+                    </div>
+                    <p class="anim mt-4 text-xs text-slate-400 mono" style="--d:2">voyant vert · cabine libre · porte fermée</p>
+                </section>
+
+                <!-- ÉTAPE 2 : scan du QR -->
+                <section data-step="2" class="scene flex-col items-center justify-center p-6">
+                    <div class="anim flex items-center gap-5" style="--d:0">
+                        <div class="bg-white rounded-2xl p-4 w-36 h-44 flex flex-col items-center justify-center relative overflow-hidden">
+                            <div class="w-20 h-20 border-4 border-[#2D5A27] rounded-md"></div>
+                            <div class="absolute w-full h-3 bg-[#9ACD32]/70" style="animation: beam 1.6s ease-in-out infinite;"></div>
+                            <p class="text-[9px] text-slate-400 mt-2 mono">QR · CAB-TUN-01</p>
+                        </div>
+                        <div class="text-2xl text-[#9ACD32]">➜</div>
+                        <div class="bg-white rounded-2xl p-4 w-32 text-center">
+                            <p class="text-2xl">✅</p>
+                            <p class="text-[10px] font-bold text-[#2D5A27] mono">reconnaissance</p>
+                        </div>
+                    </div>
+                    <p class="anim mt-4 text-xs text-slate-400 mono" style="--d:2">le QR est lu → l'accès de la cabine est vérifié</p>
+                </section>
+
+                <!-- ÉTAPE 3 : connexion -->
+                <section data-step="3" class="scene flex-col items-center justify-center p-6">
+                    <div class="anim bg-white rounded-2xl p-5 w-full max-w-xs" style="--d:0">
+                        <p class="font-extrabold text-[#2D5A27] text-sm">Connexion client</p>
+                        <div class="space-y-2 mt-3">
+                            <div class="bg-[#F4F6F0] rounded-lg px-3 py-2 text-xs">👤 <span class="mono" id="typeUser"></span></div>
+                            <div class="bg-[#F4F6F0] rounded-lg px-3 py-2 text-xs">🔑 <span class="mono text-[#2D5A27]">••••••••</span></div>
+                        </div>
+                        <div class="mt-3 flex items-center gap-2">
+                            <button class="px-3 py-1.5 rounded-lg bg-[#2D5A27] text-white text-[11px] font-bold">Se connecter</button>
+                            <span id="okLogin" class="hidden text-[#2D5A27] font-extrabold">✔ OK</span>
+                        </div>
+                    </div>
+                    <p class="anim mt-4 text-xs text-slate-400 mono" style="--d:2">compte client reconnu → session démarrée</p>
+                </section>
+
+                <!-- ÉTAPE 4 : déverrouillage -->
+                <section data-step="4" class="scene flex-col items-center justify-center p-6 gap-4">
+                    <div class="anim flex items-end gap-4" style="--d:0">
+                        <div class="text-center">
+                            <div class="bg-[#2D5A27] text-white rounded-t-xl px-6 py-3 text-xs font-bold" style="transform-origin:left; animation: doorOpen 1.4s ease both;">PORTE</div>
+                            <p class="text-[9px] text-slate-400 mt-1 mono">gâche ⚙️</p>
+                        </div>
+                        <div class="text-2xl text-[#9ACD32]">➜</div>
+                        <div class="bg-white rounded-xl px-4 py-3 text-center">
+                            <p class="text-xl">🔓</p>
+                            <p class="text-[10px] font-extrabold text-[#2D5A27] mono">DÉVERROUILLÉE</p>
+                        </div>
+                    </div>
+                    <p class="anim text-xs text-slate-500" style="--d:1">La gâche s'ouvre pendant 15 s, puis se referme automatiquement.</p>
+                </section>
+
+                <!-- ÉTAPE 5 : confort -->
+                <section data-step="5" class="scene flex-col items-center justify-center p-6 gap-4">
+                    <div class="anim bg-white rounded-2xl p-5 w-full max-w-sm" style="--d:0">
+                        <p class="font-extrabold text-sm text-[#2D5A27]">Confort</p>
+                        <div class="mt-3 space-y-3">
+                            <div><div class="flex justify-between text-[10px] text-slate-500"><span>💡 Éclairage RGBW</span><span class="mono" id="lvl">82 %</span></div>
+                                <div class="h-2 bg-[#F4F6F0] rounded-full overflow-hidden"><div class="h-full bg-[#9ACD32]" style="height:10px; width:0; animation: barAnim 1.6s ease forwards; --w: 82%;"></div></div></div>
+                            <div><div class="flex justify-between text-[10px] text-slate-500"><span>❄️ Climatisation M</span><span class="mono">21 °C</span></div>
+                                <div class="h-8 bg-[#F4F6F0] rounded-full overflow-hidden"><div class="bg-[#2D5A27] rounded" style="width:20%; animation: heat 2s ease-in-out infinite;"></div></div></div>
+                        </div>
+                    </div>
+                    <p class="anim text-xs text-slate-400 mono" style="--d:2">réglez votre ambiance — la cabine s'en charge</p>
+                </section>
+
+                <!-- ÉTAPE 6 : urgence -->
+                <section data-step="6" class="scene flex-col items-center justify-center p-6 gap-4">
+                    <div class="anim bg-white rounded-2xl p-4 w-full max-w-sm text-center" style="--d:0">
+                        <p class="text-2xl">🚨</p>
+                        <p class="font-extrabold text-[#9f1239] text-sm">Secours toujours disponible</p>
+                        <div class="flex gap-2 justify-center mt-3">
+                            <button class="px-2 py-1.5 rounded-lg bg-[#9f1239] text-white text-[10px] font-bold pulse-on">Danger int.</button>
+                            <button class="px-2 py-1.5 rounded-lg bg-[#0369a1] text-white text-[10px] font-bold">Danger ext.</button>
+                            <button class="px-2 py-1.5 rounded-lg bg-[#2D3748] text-white text-[10px] font-bold">Partielle</button>
+                        </div>
+                    </div>
+                    <p class="anim text-xs text-slate-400 mono" style="--d:2">fonctionne sans connexion ni authentification · enregistré</p>
+                </section>
+
+                <!-- ÉTAPE 7 : fin de session -->
+                <section data-step="7" class="scene flex-col items-center justify-center p-6">
+                    <div class="anim bg-white rounded-2xl p-5 w-full max-w-xs text-center" style="--d:0">
+                        <p class="text-2xl">👋</p>
+                        <p class="font-extrabold text-[#2D5A27]">Session terminée</p>
+                        <p class="text-[11px] text-slate-500 mt-1">Durée : <b class="mono">25 min</b> · détection de présence OK</p>
+                        <div class="flex items-center justify-center gap-2 mt-3 text-[10px] text-slate-500"><span class="led bg-[#2D5A27] blink-on"></span> la cabine est de nouveau <b>libre</b></div>
+                    </div>
+                    <p class="anim mt-4 text-xs text-slate-400 mono" style="--d:2">données d'occupation envoyées au dashboard usine</p>
+                </section>
+            </div>
+        </div>
+
+        <!-- Légende -->
+        <div class="mt-6 bg-white rounded-3xl border border-[#2D5A27]/15 p-6">
+            <p id="caption" class="text-sm font-bold text-[#2D5A27]"></p>
+            <p id="detail" class="text-xs text-slate-500 mt-1"></p>
+        </div>
+    </main>
+
+    <footer class="text-center text-xs text-slate-400 mono pb-6 px-4">© 2026 · Made in Tunisia 🇹🇳 · Logiciel & R&D : PixelSoftware Design — Design cabine &amp; standard acoustique : Atlas Working (développement / idée)
+    <div style="width:1200px;max-width:96vw;margin:0 auto;padding:10px 16px;text-align:center;font-size:12px;font-weight:700;color:#2D5A27">Logiciel © 2026 PixelSoftware Design — Tous droits réservés.</div>
+<div style="max-width:1200px;margin:0 auto;padding:14px 16px;text-align:center;font-size:12px;color:#5b6b52;border-top:1px solid rgba(45,90,39,.15);background:rgba(45,90,39,.04)">
+        <a href="mentions-legales.html" style="color:#2D5A27;text-decoration:none;margin:0 8px">Mentions légales</a> ·
+        <a href="cgv.html" style="color:#2D5A27;text-decoration:none;margin:0 8px">CGV / CGU</a> ·
+        <a href="confidentialite.html" style="color:#2D5A27;text-decoration:none;margin:0 8px">Confidentialité</a> ·
+        <a href="cookies.html" style="color:#2D5A27;text-decoration:none;margin:0 8px">Cookies</a> ·
+        <a href="changelog.html" style="color:#2D5A27;text-decoration:none;margin:0 8px">Journal des versions</a>
+    </div>
+    </footer>
+
+    <script>
+        const SCENES = [
+            { t: 'Allumage de l\'écran', d: 'La cabine démarre automatiquement. L\'écran affiche l\'identité et l\'état de la cabine.', dur: 3200 },
+            { t: '1 · Cabine libre — voyant vert', d: 'La porte est fermée et verrouillée. Le voyant vert indique "libre". Le client se présente.', dur: 3600 },
+            { t: '2 · Scan du QR code', d: 'Le client scanne le QR collé sur la porte. La reconnaissance vérifie la cabine et l\'accès en local.', dur: 3600 },
+            { t: '3 · Connexion du compte', d: 'Le compte client est reconnu : la session démarre automatiquement (horodatage enregistré).', dur: 3800 },
+            { t: '4 · Ouverture de la porte', d: 'La gâche se déverrouille pendant 15 secondes. La porte se referme toute seule à l\'entrée.', dur: 3400 },
+            { t: '5 · Confort & ambiance', d: 'Lumière RGBW, climatisation et ventilation se règlent à l\'écran. La cabine maintient le confort.', dur: 3600 },
+            { t: '6 · Sécurité : urgence', d: 'Le secours (danger interne/extérieur) est toujours disponible, sans connexion. Chaque alerte est enregistrée.', dur: 3600 },
+            { t: '7 · Fin de session', d: 'À la sortie, la présence n\'est plus détectée : la session se clôt, la cabine repasse "libre". Occupations envoyées au dashboard.', dur: 3600 },
+        ];
+        const N = SCENES.length;
+        let cur = 0, playing = true, timer = null;
+
+        function togglePlay() {
+            playing = !playing;
+            document.getElementById('bToggle').textContent = playing ? '⏸' : '▶';
+            if (playing) schedule(); else clearTimeout(timer);
+        }
+        function schedule() {
+            clearTimeout(timer);
+            timer = setTimeout(() => { if (!playing) return; step(1); }, SCENES[cur].dur);
+        }
+        function paint() {
+            document.querySelectorAll('.scene').forEach(s => s.classList.toggle('on', +s.dataset.step === cur));
+            const c = SCENES[cur];
+            document.getElementById('caption').textContent = c.t;
+            document.getElementById('detail').textContent = c.d;
+            document.getElementById('dots').innerHTML = SCENES.map((_, i) =>
+                `<button onclick="jump(${i})" class="w-2 h-2 rounded-full transition ${i === cur ? 'bg-[#9ACD32] w-5' : 'bg-white/30'}"></button>`).join('');
+            document.getElementById('bPrev').disabled = cur === 0;
+            document.getElementById('bNext').disabled = cur === N - 1;
+            document.getElementById('progress').style.width = ((cur + 1) / N * 100) + '%';
+            if (cur === 3) hintLogin();
+        }
+        function hintLogin() {
+            const user = 'client@atlas.tn', el = document.getElementById('typeUser');
+            el.textContent = '';
+            let i = 0;
+            const iv = setInterval(() => { el.textContent = user.slice(0, ++i); if (i >= user.length) { clearInterval(iv); document.getElementById('okLogin').classList.remove('hidden'); } }, 45);
+        }
+        function jump(i) {
+            cur = Math.max(0, Math.min(N - 1, i));
+            document.querySelectorAll('.scene').forEach(s => { s.classList.remove('on'); void s.offsetWidth; });
+            paint();
+            if (playing) schedule();
+        }
+        function step(d) { jump(cur + d); }
+        document.addEventListener('keydown', e => { if (e.key === 'ArrowRight') step(1); if (e.key === 'ArrowLeft') step(-1); if (e.key === ' ') { e.preventDefault(); togglePlay(); } });
+        paint(); schedule();
+    </script>
+
+<script>
+(function () {
+    function R(a, b) { return a + Math.random() * (b - a); }
+    function arcD(cx, cy, S) {
+        return "M " + (cx - S * 1.6).toFixed(0) + " " + (cy + S - 60).toFixed(0) +
+            " Q " + (cx).toFixed(0) + " " + (cy + S + 30).toFixed(0) +
+            ", " + (cx + S * 1.6).toFixed(0) + " " + (cy - S * 0.8).toFixed(0);
+    }
+    function splineD(cx, cy, S) {
+        return "M " + (cx - S * 2.0).toFixed(0) + " " + (cy + R(-90, 90)).toFixed(0) +
+            " C " + (cx - S).toFixed(0) + " " + (cy + R(-160, 160)).toFixed(0) +
+            ", " + (cx + S).toFixed(0) + " " + (cy + R(-160, 160)).toFixed(0) +
+            ", " + (cx + S * 2.0).toFixed(0) + " " + (cy + R(-90, 90)).toFixed(0);
+    }
+    function infiniD(cx, cy, S) {
+        var r = S, v = S * 0.55;
+        return "M " + (cx - r).toFixed(0) + " " + cy + " A " + r.toFixed(0) + " " + v.toFixed(0) + " 0 1 1 " + (cx + r).toFixed(0) + " " + cy +
+            " A " + r.toFixed(0) + " " + v.toFixed(0) + " 0 1 1 " + (cx - r).toFixed(0) + " " + cy;
+    }
+    function ringD(cx, cy, S) {
+        return "M " + (cx - S).toFixed(0) + " " + cy + " A " + S.toFixed(0) + " " + S.toFixed(0) + " 0 1 0 " + (cx + S).toFixed(0) + " " + cy +
+            " A " + S.toFixed(0) + " " + S.toFixed(0) + " 0 1 0 " + (cx - S).toFixed(0) + " " + cy;
+    }
+    function orbitPath(o, r) {
+        return "M " + (o.cx - r).toFixed(0) + " " + o.cy + " A " + r.toFixed(0) + " " + r.toFixed(0) + " 0 1 0 " + (o.cx + r).toFixed(0) + " " + o.cy +
+            " A " + r.toFixed(0) + " " + r.toFixed(0) + " 0 1 0 " + (o.cx - r).toFixed(0) + " " + o.cy;
+    }
+    var makers = [arcD, splineD, infiniD, ringD];
+    var F = ["rgba(45,90,39,", "rgba(154,205,50,"];
+    var shapes = [];
+    for (var i = 0; i < 3; i++) {
+        var S = R(115, 300);
+        var cx = R(130, 1070), cy = R(80, 560);
+        var t = Math.floor(R(0, 4));
+        shapes.push({ d: makers[t](cx, cy, S), cx: cx, cy: cy, r: S,
+            stroke: F[Math.floor(R(0, 2))] + R(0.5, 0.95).toFixed(2) + ")",
+            sw: R(2, 11).toFixed(1) });
+    }
+    var ns = "http://www.w3.org/2000/svg";
+    var svg = document.createElementNS(ns, "svg");
+    svg.setAttribute("class", "uxSplineFx");
+    svg.setAttribute("viewBox", "0 0 1200 700");
+    svg.setAttribute("preserveAspectRatio", "xMidYMid slice");
+    svg.setAttribute("aria-hidden", "true");
+    svg.style.cssText="--sd:"+R(14,26).toFixed(1)+"s;--rx1:"+R(-22,22).toFixed(0)+"deg;--ry1:"+R(-22,22).toFixed(0)+"deg;--rx2:"+R(-20,20).toFixed(0)+"deg;--ry2:"+R(-20,20).toFixed(0)+"deg;--tz1:"+R(40,150).toFixed(0)+"px;--tz2:"+R(20,100).toFixed(0)+"px;--s1:"+R(1.03,1.12).toFixed(3)+";--s2:"+R(1.02,1.09).toFixed(3)+";";
+    shapes.forEach(function (s) {
+        var p = document.createElementNS(ns, "path");
+        p.setAttribute("class", "splinePath");
+        p.setAttribute("d", s.d);
+        p.setAttribute("stroke", s.stroke);
+        p.setAttribute("stroke-width", s.sw);
+        svg.appendChild(p);
+    });
+    function dot(fill, dur, begin, path) {
+        var c = document.createElementNS(ns, "circle");
+        c.setAttribute("class", "uxDotHalo");
+        c.setAttribute("r", "3");
+        c.setAttribute("fill", fill);
+        var am = document.createElementNS(ns, "animateMotion");
+        am.setAttribute("dur", dur + "s");
+        am.setAttribute("begin", begin + "s");
+        am.setAttribute("repeatCount", "indefinite");
+        am.setAttribute("path", path);
+        c.appendChild(am);
+        svg.appendChild(c);
+    }
+    var o0 = orbitPath({ cx: shapes[0].cx, cy: shapes[0].cy }, shapes[0].r + 8);
+    var o1 = orbitPath({ cx: shapes[1].cx, cy: shapes[1].cy }, shapes[1].r + 8);
+    var d0 = R(10, 18);
+    dot("#d9ff8c", d0, 0, o0);
+    dot("#9ACD32", d0, 0, o0);
+    dot("#d9ff8c", R(14, 23), R(2, 7), o1);
+    var wrap = document.createElement("div");
+    wrap.setAttribute("class", "uxSplineBg");
+    wrap.appendChild(svg);
+    var bk = document.getElementById("uxBack");
+    if (bk && bk.nextSibling) { bk.parentNode.insertBefore(wrap, bk.nextSibling); }
+    else { document.body.insertBefore(wrap, document.body.firstChild); }
+})();
+</script>
+
+<script>"serviceWorker"in navigator&&location.protocol==="https:"&&navigator.serviceWorker.register("/sw.js").catch(function(){})</script>
+
+<button id="langBtnX" onclick="ML.cycle(this)" style="position:fixed;top:12px;right:12px;z-index:99999;font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:800;padding:7px 12px;border:none;border-radius:12px;background:#2D5A27;color:#fff;cursor:pointer;box-shadow:0 6px 18px rgba(45,90,39,.35)">Français</button>
+</body>
+</html>

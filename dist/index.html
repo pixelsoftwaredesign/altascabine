@@ -1,45 +1,60 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+    <style data-rsp="1">html,body{overflow-x:hidden}body{word-wrap:break-word;overflow-wrap:break-word}img,svg,canvas,iframe,video,embed{max-width:100%;height:auto}h1,h2,h3,h4,p,a,button,label,td,th,legend{overflow-wrap:break-word}.min-w-\[180px\],.min-w-\[220px\],.min-w-\[640px\],.min-w-\[720px\]{min-width:0!important}@media (max-width:420px){input,select,textarea{min-width:0;max-width:100%}}</style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Atlas Cabine - Kiosque & App Client</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="tailwind.prod.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F4F6F0; color: #2D3748; }
-        .mono { font-family: 'JetBrains Mono', monospace; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        @keyframes pulse-ring {
-            0% { transform: scale(0.95); opacity: 0.8; }
-            50% { transform: scale(1.2); opacity: 0.2; }
-            100% { transform: scale(0.95); opacity: 0.8; }
-        }
-        .mic-pulse { animation: pulse-ring 2s infinite ease-in-out; }
-        @keyframes micpulse {
-            0%,100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(153,204,51,0.6); }
-            50% { transform: scale(1.08); box-shadow: 0 0 0 18px rgba(153,204,51,0); }
-        }
-        .voice-listening { animation: micpulse 1.2s ease-in-out infinite; }
-    </style>
-</head>
-<body class="h-screen w-screen flex flex-col justify-between p-6 select-none overflow-hidden bg-[#F4F6F0]">
+    <style>body{font-family:'Plus Jakarta Sans',sans-serif;background-color:#F4F6F0;color:#2D3748}.mono{font-family:'JetBrains Mono',monospace}.no-scrollbar::-webkit-scrollbar{display:none}.no-scrollbar{-ms-overflow-style:none;scrollbar-width:none}@keyframes pulse-ring{0%{transform:scale(0.95);opacity:0.8}50%{transform:scale(1.2);opacity:0.2}100%{transform:scale(0.95);opacity:0.8}}.mic-pulse{animation:pulse-ring 2s infinite ease-in-out}@keyframes micpulse{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(153,204,51,0.6)}50%{transform:scale(1.08);box-shadow:0 0 0 18px rgba(153,204,51,0)}}.voice-listening{animation:micpulse 1.2s ease-in-out infinite}@keyframes uxOrb1{0%,100%{transform:translate(0,0)scale(1)}25%{transform:translate(4vw,-6vh)scale(1.12)}50%{transform:translate(-3vw,4vh)scale(.95)}75%{transform:translate(2vw,6vh)scale(1.06)}}@keyframes uxOrb2{0%,100%{transform:translate(0,0)scale(1)}33%{transform:translate(-5vw,-4vh)scale(1.18)}66%{transform:translate(4vw,3vh)scale(.9)}}@keyframes uxOrb3{0%,100%{transform:translate(0,0)scale(1)}50%{transform:translate(3vw,-5vh)scale(1.22)}}#uxBack{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}.uxOrb{position:absolute;border-radius:50%;filter:blur(70px)}.uxOrb1{width:520px;height:520px;background:radial-gradient(circle,rgba(154,205,50,.55)0%,rgba(45,90,39,.28)100%);top:-140px;left:-120px;animation:uxOrb1 18s ease-in-out infinite}.uxOrb2{width:460px;height:460px;background:radial-gradient(circle,rgba(154,205,50,.4)0%,transparent 70%);bottom:-120px;right:-100px;animation:uxOrb2 22s ease-in-out infinite}.uxOrb3{width:360px;height:360px;background:radial-gradient(circle,rgba(154,205,50,.3)0%,transparent 70%);top:38%;left:46%;animation:uxOrb3 26s ease-in-out infinite}.uxGrid{position:absolute;inset:0;background-image:radial-gradient(rgba(45,90,39,.09)1px,transparent 1px);background-size:26px 26px;-webkit-mask-image:radial-gradient(ellipse at center,black 25%,transparent 78%);mask-image:radial-gradient(ellipse at center,black 25%,transparent 78%)}@keyframes uxUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}.ux-up{opacity:0;animation:uxUp .6s cubic-bezier(.22,1,.36,1)forwards}.glass{background:rgba(255,255,255,.74)!important;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 8px 32px rgba(45,90,39,.10);border:1px solid rgba(45,90,39,.10)!important}.card-lift{transition:transform .35s cubic-bezier(.22,1,.36,1),box-shadow .35s}.card-lift:hover{transform:translateY(-6px)scale(1.014);box-shadow:0 26px 50px-20px rgba(45,90,39,.35)}.btn-glow{position:relative;overflow:hidden}.btn-glow::after{content:'';position:absolute;top:0;left:-80%;height:100%;width:50%;background:linear-gradient(105deg,transparent,rgba(255,255,255,.5),transparent);animation:shine 3.2s ease-in-out infinite}@keyframes shine{0%{left:-80%}60%,100%{left:145%}}@keyframes pingRing{0%{box-shadow:0 0 0 0 rgba(154,205,50,.55)}100%{box-shadow:0 0 0 14px rgba(154,205,50,0)}}.ping-on{animation:pingRing 1.7s cubic-bezier(0,0,.2,1)infinite}@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}.float-slow{animation:floaty 6s ease-in-out infinite}body{-webkit-tap-highlight-color:transparent;overscroll-behavior:none}@media(max-width:767px){.uxOrb1{width:300px;height:300px;top:-80px;left:-90px;filter:blur(50px)}.uxOrb2{width:260px;height:260px;bottom:-80px;right:-70px;filter:blur(50px)}.uxOrb3{width:220px;height:220px;top:42%;left:42%;filter:blur(46px)}.uxGrid{background-size:18px 18px}.card-lift:hover{transform:none}.btn-glow::after{animation:none}}@media(min-width:768px)and(max-width:1023px){.uxOrb1{width:420px;height:420px}.uxOrb2{width:380px;height:380px}.uxOrb3{width:300px;height:300px}}@media(max-width:1023px){#uxBack .uxGrid{-webkit-mask-image:radial-gradient(ellipse at center,black 30%,transparent 82%);mask-image:radial-gradient(ellipse at center,black 30%,transparent 82%)}}.uxSplineBg{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;perspective:1100px}.uxSplineFx{position:absolute;inset:0;width:100%;height:100%;transform-style:preserve-3d;transform-origin:center center;animation:spline3d var(--sd,28s) ease-in-out infinite}.splinePath{fill:none;stroke-linecap:round;stroke-linejoin:round}.uxDotHalo{transform-box:fill-box;transform-origin:center;animation:uxPulse 3.4s ease-in-out infinite}@keyframes spline3d{0%,100%{transform:rotateX(0deg)rotateY(0deg)translateZ(0)scale(1)}25%{transform:rotateX(var(--rx1,0deg))rotateY(var(--ry1,0deg))translateZ(var(--tz1,40px))scale(var(--s1,1.06))}50%{transform:rotateX(0deg)rotateY(0deg)translateZ(0)scale(1)}75%{transform:rotateX(var(--rx2,0deg))rotateY(var(--ry2,0deg))translateZ(var(--tz2,30px))scale(var(--s2,1.05))}}@keyframes uxPulse{0%,100%{opacity:.22;transform:scale(1)}50%{opacity:.6;transform:scale(1.65)}}</style>
 
+<meta name="description" content="Kiosque et application client des cabines acoustiques Atlas : réservation par QR code, accès sécurisé, assistance vocale PixelAssistante et mode urgence.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ATLAS CABINE">
+<meta property="og:title" content="ATLAS CABINE">
+<meta property="og:description" content="Kiosque et application client des cabines acoustiques Atlas : réservation par QR code, accès sécurisé, assistance vocale PixelAssistante et mode urgence.">
+<meta property="og:url" content="https://atlascabine.pages.dev/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#2D5A27">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Organization","name":"ATLAS CABINE","legalName":"PixelSoftware Design","foundingLocation":{"@type":"Place","name":"Tunisie"},"slogan":"L'espace de concentration","description":"Cabines acoustiques Atlas et leur écosystème numérique (kiosque, application, portails).","sameAs":[]}
+</script>
+<style>@media (max-width:639px){header.flex.justify-between{flex-wrap:wrap;row-gap:.4rem}header h1{font-size:.95rem!important}.glass .flex.items-center.space-x-3{gap:.35rem}.space-x-3{column-gap:.35rem}}</style>
+<script src="/lang.js"></script></head>
+<body class="min-h-screen w-full flex flex-col justify-between p-3 sm:p-6 select-none bg-[#F4F6F0] overflow-y-auto lg:overflow-hidden">
 
-    <!-- BARRE DE CONTRÔLE DE DÉMO (bascule Kiosque / App Interne) -->
-    <div class="absolute top-2 left-1/2 transform -translate-x-1/2 bg-[#2D3748] text-white text-xs px-4 py-1.5 rounded-full shadow-lg z-50 flex items-center space-x-3">
-        <a href="home.html" class="text-[#9ACD32] hover:text-white transition" title="Accueil">🏠</a>
-        <a href="system.html" class="text-slate-300 hover:text-white transition" title="Système avancé">⚙️</a>
-        <span id="modeLabel">Mode Démo :</span>
-        <button onclick="switchView('kiosque')" id="btn-kiosque" class="px-3 py-0.5 rounded-full bg-[#9ACD32] text-[#2D3748] font-bold transition">1. Kiosque Extérieur</button>
-        <button onclick="switchView('client')" id="btn-client" class="px-3 py-0.5 rounded-full bg-[#2D3748]/60 text-slate-300 transition">2. App Interne Cabine</button>
-        <span id="modePill" class="mono text-[10px] font-bold px-2.5 py-0.5 rounded-full transition-all"></span>
-        <button onclick="openTechLogin()" id="btn-tech" class="text-[#9ACD32] hover:text-white transition" title="Mode technicien (installation)">🔧</button>
+    
+
+    <!-- Spline-style fond animé (mesh gradient + grille) -->
+    <div id="uxBack"><div class="uxOrb uxOrb1"></div>
+    
+<div class="uxOrb uxOrb2"></div><div class="uxOrb uxOrb3"></div><div class="uxGrid"></div></div>
+
+    <!-- Widget Temps · Heure · Calendrier (écran principal kiosque + app interne) -->
+    <div id="uxWidget" class="hidden md:block fixed bottom-5 left-5 z-[80] glass card-lift rounded-2xl px-4 py-3 w-[224px]">
+        <div onclick="paExpandCal()" class="flex items-center justify-between gap-2 cursor-grab active:cursor-grabbing group select-none" id="uxDrag" title="Glissez pour déplacer · cliquez pour ouvrir l'agenda">
+            <span class="mono text-xl font-black text-[#2D5A27] tabular-nums tracking-tight flex items-center gap-1.5"><span class="text-[#9ACD32] text-xs">✥</span><span id="uxClock">--:--:--</span></span>
+            <span class="text-[9px] mono font-bold bg-[#9ACD32]/40 group-hover:bg-[#9ACD32] text-[#2D3748] px-2 py-1 rounded-full transition">🗓️ Agenda</span>
+        </div>
+        <div id="uxFull" class="hidden mt-2">
+            <div class="flex items-center justify-between">
+                <span class="text-[9px] mono text-[#2D5A27] font-bold bg-[#9ACD32]/25 px-2 py-0.5 rounded-full tracking-wider">ÉCRAN PRINCIPAL</span>
+                <span id="uxDay" class="mono text-[9px] text-slate-400">Jour 00/00</span>
+            </div>
+            <p class="text-[11px] font-bold text-slate-500 capitalize mt-0.5" id="uxDate">…</p>
+            <div class="flex items-center gap-1.5 mt-2 text-[10px] mono font-bold">
+                <span class="bg-[#F4F6F0] border border-[#2D5A27]/15 rounded-lg px-2 py-1" title="Température mesurée dans la cabine">🌡️ <span id="uxCabTemp">22.5°</span></span>
+                <span class="bg-[#2D5A27] text-white rounded-lg px-2 py-1" id="uxCabTarget" title="Température cible">21°C</span>
+                <span class="bg-[#F4F6F0] border border-[#2D5A27]/15 rounded-lg px-2 py-1" title="Dioxyde de carbone">CO₂ <span id="uxCabCo2">420</span>ppm</span>
+            </div>
+            <p class="mono text-[10px] font-black text-[#2D5A27] capitalize mt-2" id="uxCalTitle">…</p>
+            <div id="uxCal" class="mt-1 origin-top"></div>
+        </div>
     </div>
-
 
     <!-- BANDEAU & BOUTON URGENCE (toujours accessibles, sans connexion) -->
     <div id="emergencyBanner" class="hidden fixed top-16 left-1/2 -translate-x-1/2 z-[130] bg-[#9f1239] text-white px-6 py-3 rounded-2xl shadow-2xl border-2 border-white/30 flex items-center gap-4 max-w-[90vw]">
@@ -52,50 +67,50 @@
     </div>
     <button onclick="openEmergency()" class="fixed bottom-5 right-5 z-[135] w-16 h-16 rounded-full bg-[#9f1239] text-white text-2xl shadow-2xl border-4 border-white/40 hover:scale-110 transition flex items-center justify-center" title="Mode Urgence — danger interne/extérieur/catastrophique">🚨</button>
 
-
     <!-- ========================================== -->
     <!-- ÉCRAN 1 : KIOSQUE EXTÉRIEUR & OUVERTURE     -->
     <!-- ========================================== -->
-    <div id="view-kiosque" class="flex-1 flex flex-col justify-between pt-8">
-        <header class="flex justify-between items-center bg-white px-6 py-4 rounded-2xl shadow-sm border border-[#2D5A27]/10">
+    <div id="view-kiosque" class="relative z-10 flex-1 flex flex-col justify-between pt-2">
+        
+        <header class="flex justify-between items-center glass card-lift ux-up px-6 py-4 rounded-2xl" style="animation-delay:.05s">
             <div class="flex items-center space-x-3">
-                <div class="w-4 h-4 rounded-full bg-[#9ACD32] animate-pulse"></div>
+                <div class="w-4 h-4 rounded-full bg-[#9ACD32] ping-on"></div>
                 <h1 class="text-xl font-bold tracking-tight text-[#2D5A27]">ATLAS KIOSK <span class="text-xs text-[#9ACD32] mono font-normal">Gabès / Carthage</span></h1>
             </div>
 <div class="flex items-center space-x-3">
-            <div id="authChip"></div>
+            <button id="langBtn" onclick="ML.cycle(this)" class="text-xs font-bold px-3 py-2 rounded-xl bg-[#2D5A27] text-white hover:bg-[#23451e] transition" title="العربية / Français" style="min-width:34px">العربية</button><div id="authChip"></div>
             <div class="flex items-center space-x-2 bg-[#F4F6F0] px-4 py-2 rounded-xl border border-[#2D5A27]/15">
-                <span id="kioskDot" class="w-3 h-3 rounded-full bg-[#9ACD32]"></span>
+                <span id="kioskDot" class="w-3 h-3 rounded-full bg-[#9ACD32] ping-on"></span>
                 <span id="kioskStatus" class="text-xs font-bold text-[#2D5A27] uppercase">Cabine N°01 - Libre</span>
             </div>
         </div>
     </header>
 
-        <main class="my-auto grid grid-cols-2 gap-8 items-center max-w-5xl mx-auto w-full">
+        <main class="my-auto grid grid-cols-1 lg:grid-cols-2 gap-8 items-center max-w-5xl mx-auto w-full px-2">
             <!-- Carte Scanner QR -->
-            <div class="bg-white border border-[#2D5A27]/15 rounded-3xl p-8 shadow-sm flex flex-col items-center text-center">
+            <div class="card-lift ux-up bg-white border border-[#2D5A27]/15 rounded-3xl p-8 shadow-sm flex flex-col items-center text-center" style="animation-delay:.15s">
                 <h2 class="text-xl font-bold text-[#2D5A27] mb-2">Accès & Réservation</h2>
                 <p class="text-xs text-slate-500 mb-6">Scannez votre QR code mobile ou entrez votre code de session pour ouvrir la cabine.</p>
 
                 <div id="qrCode" class="bg-[#F4F6F0] border border-[#2D5A27]/20 rounded-2xl p-4 mb-6"></div>
 
-                <button onclick="openScanner()" class="w-full py-4 rounded-xl bg-[#9ACD32] hover:bg-[#8bb82d] text-[#2D3748] font-extrabold transition shadow-md">
+                <button onclick="openScanner()" class="btn-glow w-full py-4 rounded-xl bg-[#9ACD32] hover:bg-[#8bb82d] text-[#2D3748] font-extrabold transition shadow-md">
                     📷 Scanner & Ouvrir la Cabine
                 </button>
             </div>
 
             <!-- Compteur d'entrée -->
-            <div class="bg-white border border-[#2D5A27]/15 rounded-3xl p-8 shadow-sm flex flex-col justify-between h-[400px]">
+            <div class="card-lift ux-up bg-white border border-[#2D5A27]/15 rounded-3xl p-8 shadow-sm flex flex-col justify-between lg:h-[400px]" style="animation-delay:.25s">
                 <div>
                     <h2 class="text-xs font-bold text-[#9ACD32] uppercase tracking-wider mb-1">Entrée & Temps</h2>
                     <p class="text-2xl font-bold text-[#2D5A27]">Compteur d'Accès</p>
                 </div>
-                <div class="text-center bg-[#F4F6F0] p-6 rounded-2xl border border-[#2D5A27]/10">
+                <div class="float-slow text-center bg-[#F4F6F0] p-6 rounded-2xl border border-[#2D5A27]/10">
                     <span class="text-xs text-slate-500 block mb-1">Temps avant expiration du déverrouillage</span>
                     <span class="text-5xl font-extrabold text-[#2D5A27] mono" id="entryTimer">02:00</span>
                     <span class="text-xs text-slate-400 block mt-2">Veuillez entrer et fermer la porte</span>
                 </div>
-                <button onclick="openCabinFromKiosk()" class="w-full py-3 rounded-xl bg-[#2D5A27] text-white font-bold hover:bg-[#23451e] transition text-sm">
+                <button onclick="openCabinFromKiosk()" class="btn-glow w-full py-3 rounded-xl bg-[#2D5A27] text-white font-bold hover:bg-[#23451e] transition text-sm">
                     Entrer dans l'interface interne ➔
                 </button>
             </div>
@@ -103,9 +118,20 @@
 
         <footer class="text-center text-xs text-slate-400 pb-2">
             © 2026 · Made in Tunisia 🇹🇳 · Logiciel & R&D : PixelSoftware Design — Design cabine &amp; standard acoustique : Atlas Working (développement / idée)
-        </footer>
+        
+    <div style="width:1200px;max-width:96vw;margin:0 auto;padding:10px 16px;text-align:center;font-size:12px;font-weight:700;color:#2D5A27">Logiciel © 2026 PixelSoftware Design — Tous droits réservés.</div>
+<div style="max-width:1200px;margin:0 auto;padding:14px 16px;text-align:center;font-size:12px;color:#5b6b52;border-top:1px solid rgba(45,90,39,.15);background:rgba(45,90,39,.04)">
+        <a href="mentions-legales.html" style="color:#2D5A27;text-decoration:none;margin:0 8px">Mentions légales</a> ·
+        <a href="cgv.html" style="color:#2D5A27;text-decoration:none;margin:0 8px">CGV / CGU</a> ·
+        <a href="confidentialite.html" style="color:#2D5A27;text-decoration:none;margin:0 8px">Confidentialité</a> ·
+        <a href="cookies.html" style="color:#2D5A27;text-decoration:none;margin:0 8px">Cookies</a> ·
+        <a href="changelog.html" style="color:#2D5A27;text-decoration:none;margin:0 8px">Journal des versions</a>
     </div>
+    </footer>
 
+        <!-- Cabine 3D filaire (mesh) -->
+        
+    </div>
 
     <!-- MODAL LOGIN CLIENT -->
     <div id="loginModal" class="fixed inset-0 z-[115] hidden items-center justify-center bg-[#2D5A27]/40 backdrop-blur-sm p-6">
@@ -124,7 +150,6 @@
         </form>
     </div>
 
-
     <!-- MODAL SCAN CAMÉRA (ouverture porte par QR) -->
     <div id="cameraModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-[#2D5A27]/40 backdrop-blur-sm p-6">
         <div class="w-full max-w-md bg-white rounded-3xl shadow-2xl border border-[#2D5A27]/20 p-6">
@@ -137,7 +162,6 @@
             <button onclick="closeScanner()" class="w-full mt-3 py-3 rounded-xl bg-[#9ACD32] hover:bg-[#8bb82d] text-[#2D3748] font-bold transition">Annuler</button>
         </div>
     </div>
-
 
     <!-- MODAL MODE URGENCE -->
     <div id="emergencyModal" class="fixed inset-0 z-[140] hidden items-center justify-center bg-[#7f1d1d]/50 backdrop-blur-sm p-6">
@@ -170,7 +194,6 @@
             <button onclick="endEmergency()" class="w-full mt-4 py-3.5 rounded-2xl bg-[#9f1239] hover:bg-[#881337] text-white font-extrabold transition">✓ Terminer l'urgence</button>
         </div>
     </div>
-
 
     <!-- MODAL MODE TECHNICIEN (jets d'installation sécurisés) -->
     <div id="techModal" class="fixed inset-0 z-[120] hidden items-center justify-center bg-[#2D5A27]/50 backdrop-blur-sm p-6">
@@ -230,53 +253,71 @@
         </div>
     </div>
 
-
     <!-- ========================================== -->
     <!-- ÉCRAN 2 : APP CLIENT INTERNE DE LA CABINE   -->
     <!-- ========================================== -->
-    <div id="view-client" class="flex-1 flex flex-col justify-between hidden">
-        <header class="flex justify-between items-center bg-white px-6 py-4 rounded-2xl shadow-sm border border-[#2D5A27]/10">
-            <div class="flex items-center space-x-3">
-                <div class="w-4 h-4 rounded-full bg-[#9ACD32] animate-pulse"></div>
-                <h1 class="text-xl font-bold tracking-tight text-[#2D5A27]">ATLAS CABINE <span class="text-xs text-[#9ACD32] mono font-normal">v3.0 Client</span></h1>
+    <div id="view-client" class="relative z-10 flex-1 flex flex-col justify-between hidden">
+        
+        <header class="flex flex-wrap items-center gap-3 justify-between glass card-lift ux-up px-4 sm:px-6 py-3 sm:py-4 rounded-2xl" style="animation-delay:.1s">
+            <div class="flex items-center space-x-2.5">
+                <div class="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full bg-[#9ACD32] ping-on"></div>
+                <h1 class="text-lg sm:text-xl font-bold tracking-tight text-[#2D5A27]">ATLAS CABINE <span class="text-[10px] sm:text-xs text-[#9ACD32] mono font-normal">v3.0 Client</span></h1>
             </div>
-            <div class="flex items-center space-x-2 bg-[#F4F6F0] px-3 py-1.5 rounded-xl border border-[#2D5A27]/15">
-                <span>🌡️ <strong class="mono">22.5°C</strong></span>
-                <span class="text-slate-300">|</span>
-                <span>CO2: <strong class="mono">420 ppm</strong></span>
+            <div class="flex flex-wrap items-center gap-2">
+                <div class="flex items-center gap-2 bg-[#F4F6F0] px-3 py-1.5 rounded-xl border border-[#2D5A27]/15 text-xs">
+                    <span>🌡️ <strong class="mono">22.5°C</strong></span>
+                    <span class="text-slate-300">|</span>
+                    <span class="hidden sm:inline">CO₂: <strong class="mono">420 ppm</strong></span>
+                </div>
+                <div class="mono text-base sm:text-lg font-extrabold text-[#2D5A27] bg-[#9ACD32]/20 px-3 py-1.5 rounded-xl border border-[#2D5A27]/10" id="sessionTimer">30:00</div>
             </div>
-            <div class="mono text-lg font-bold text-[#2D5A27] bg-[#9ACD32]/20 px-3 py-1.5 rounded-xl" id="sessionTimer">30:00</div>
         </header>
 
-        <main class="my-6 flex-1 flex items-center justify-center relative">
+        <nav class="mt-3 mx-auto flex items-center justify-start md:justify-center gap-1.5 w-full md:w-fit max-w-full overflow-x-auto no-scrollbar bg-white/85 backdrop-blur-md rounded-2xl p-1.5 border border-[#2D5A27]/15 shadow-sm ux-up" style="animation-delay:.18s">
+            <button onclick="switchTab('porte')" id="nav-porte" class="px-4 py-2.5 sm:px-5 sm:py-3 rounded-xl text-xs sm:text-sm font-bold transition shrink-0 bg-[#2D5A27] text-white shadow-sm flex items-center space-x-2">
+                <span>🚪</span> <span>Porte</span>
+            </button>
+            <button onclick="switchTab('eclairage')" id="nav-eclairage" class="px-4 py-2.5 sm:px-5 sm:py-3 rounded-xl text-xs sm:text-sm font-bold transition shrink-0 text-[#2D3748] hover:bg-[#F4F6F0] flex items-center space-x-2">
+                <span>💡</span> <span>LED & Éclairage</span>
+            </button>
+            <button onclick="switchTab('climatisation')" id="nav-climatisation" class="px-4 py-2.5 sm:px-5 sm:py-3 rounded-xl text-xs sm:text-sm font-bold transition shrink-0 text-[#2D3748] hover:bg-[#F4F6F0] flex items-center space-x-2">
+                <span>❄️</span> <span>Clim & Air</span>
+            </button>
+            <button onclick="switchTab('audio')" id="nav-audio" class="px-4 py-2.5 sm:px-5 sm:py-3 rounded-xl text-xs sm:text-sm font-bold transition shrink-0 text-[#2D3748] hover:bg-[#F4F6F0] flex items-center space-x-2">
+                <span>🎧</span> <span>Audio & Playlist</span>
+            </button>
+            <button onclick="openVoiceModal()" class="w-10 h-10 sm:w-11 sm:h-11 shrink-0 rounded-xl bg-[#9ACD32] hover:bg-[#8bb82d] text-lg sm:text-xl transition shadow-md flex items-center justify-center" title="Commande vocale" aria-label="Commande vocale">🎤</button>
+        </nav>
+
+        <main class="my-4 flex-1 flex items-center justify-center relative w-full px-2 sm:px-4">
 
             <!-- MODULE 1 : PORTE -->
-            <div id="tab-porte" class="w-full max-w-3xl bg-white border border-[#2D5A27]/15 rounded-3xl p-8 shadow-sm flex flex-col justify-between h-[420px]">
+            <div id="tab-porte" class="card-lift w-full max-w-3xl bg-white border border-[#2D5A27]/15 rounded-3xl p-5 md:p-8 shadow-sm flex flex-col justify-between min-h-[400px] lg:h-[420px]">
                 <div>
                     <h2 class="text-xs font-bold text-[#9ACD32] uppercase tracking-wider mb-1">Accès & Sécurité</h2>
-                    <p class="text-2xl font-bold text-[#2D5A27]">Contrôle de la Porte</p>
+                    <p class="text-xl md:text-2xl font-bold text-[#2D5A27]">Contrôle de la Porte</p>
                 </div>
-                <div class="grid grid-cols-2 gap-6 my-auto">
-                    <button onclick="controlDoor('open')" class="py-8 px-6 rounded-2xl bg-[#9ACD32] text-[#2D3748] font-extrabold text-lg transition hover:bg-[#8bb82d] shadow-md flex flex-col items-center justify-center space-y-2">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 my-auto">
+                    <button onclick="controlDoor('open')" class="btn-glow py-8 px-6 rounded-2xl bg-[#9ACD32] text-[#2D3748] font-extrabold text-lg transition hover:bg-[#8bb82d] shadow-md flex flex-col items-center justify-center space-y-2 hover:-translate-y-1">
                         <span class="text-3xl">🔓</span><span>Ouvrir la Porte</span>
                     </button>
-                    <button onclick="controlDoor('close')" class="py-8 px-6 rounded-2xl bg-[#2D5A27] text-white font-extrabold text-lg transition hover:bg-[#23451e] shadow-md flex flex-col items-center justify-center space-y-2">
+                    <button onclick="controlDoor('close')" class="btn-glow py-8 px-6 rounded-2xl bg-[#2D5A27] text-white font-extrabold text-lg transition hover:bg-[#23451e] shadow-md flex flex-col items-center justify-center space-y-2 hover:-translate-y-1">
                         <span class="text-3xl">🔒</span><span>Fermer & Verrouiller</span>
                     </button>
                 </div>
-                <div class="text-xs text-slate-500 mono flex justify-between items-center bg-[#F4F6F0] p-3 rounded-xl">
+                <div class="text-xs text-slate-500 mono flex flex-wrap justify-between items-center gap-2 bg-[#F4F6F0] p-3 rounded-xl">
                     <span>État : <strong id="doorStatus" class="text-[#2D5A27]">Verrouillé (Sécurisé)</strong></span>
-                    <span class="text-[#9ACD32] font-bold">● Capteur actif</span>
+                    <span class="text-[#9ACD32] font-bold ping-on inline-block px-2 py-1 rounded-lg">● Capteur actif</span>
                 </div>
             </div>
 
             <!-- MODULE 2 : LED & ÉCLAIRAGE -->
-            <div id="tab-eclairage" class="w-full max-w-3xl bg-white border border-[#2D5A27]/15 rounded-3xl p-8 shadow-sm flex flex-col justify-between h-[420px] hidden">
+            <div id="tab-eclairage" class="w-full max-w-3xl bg-white border border-[#2D5A27]/15 rounded-3xl p-5 md:p-8 shadow-sm flex flex-col justify-between min-h-[400px] lg:h-[420px] hidden">
                 <div>
                     <h2 class="text-xs font-bold text-[#9ACD32] uppercase tracking-wider mb-1">Ambiance Visuelle</h2>
-                    <p class="text-2xl font-bold text-[#2D5A27]">Gestion des LEDs & Intensité</p>
+                    <p class="text-xl md:text-2xl font-bold text-[#2D5A27]">Gestion des LEDs & Intensité</p>
                 </div>
-                <div class="grid grid-cols-3 gap-4 items-center my-auto">
+                <div class="grid grid-cols-3 gap-3 md:gap-4 items-center my-auto">
                     <button onclick="adjustLight(-10)" class="py-6 rounded-2xl bg-[#F4F6F0] text-[#2D3748] border border-[#2D5A27]/20 hover:bg-[#e4e9dc] font-extrabold text-xl transition flex flex-col items-center justify-center">
                         <span>➖</span><span class="text-xs font-normal mt-1 text-slate-500">Diminuer</span>
                     </button>
@@ -288,19 +329,19 @@
                         <span>➕</span><span class="text-xs font-normal mt-1 opacity-80">Augmenter</span>
                     </button>
                 </div>
-                <div class="flex gap-3">
+                <div class="flex flex-col sm:flex-row gap-2 sm:gap-3">
                     <button onclick="setPresetLight('focus')" class="flex-1 py-2.5 rounded-xl bg-[#2D5A27] text-white text-xs font-bold">Mode Focus (5000K)</button>
                     <button onclick="setPresetLight('relax')" class="flex-1 py-2.5 rounded-xl bg-[#F4F6F0] text-[#2D3748] border border-[#2D5A27]/20 text-xs font-bold">Mode Relax (3000K)</button>
                 </div>
             </div>
 
             <!-- MODULE 3 : CLIMATISATION -->
-            <div id="tab-climatisation" class="w-full max-w-3xl bg-white border border-[#2D5A27]/15 rounded-3xl p-8 shadow-sm flex flex-col justify-between h-[420px] hidden">
+            <div id="tab-climatisation" class="w-full max-w-3xl bg-white border border-[#2D5A27]/15 rounded-3xl p-5 md:p-8 shadow-sm flex flex-col justify-between min-h-[400px] lg:h-[420px] hidden">
                 <div>
                     <h2 class="text-xs font-bold text-[#9ACD32] uppercase tracking-wider mb-1">Atmosphère</h2>
-                    <p class="text-2xl font-bold text-[#2D5A27]">Ventilation & Climatisation</p>
+                    <p class="text-xl md:text-2xl font-bold text-[#2D5A27]">Ventilation & Climatisation</p>
                 </div>
-                <div class="grid grid-cols-2 gap-6 my-auto">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 my-auto">
                     <div class="bg-[#F4F6F0] p-5 rounded-2xl border border-[#2D5A27]/10 flex flex-col justify-between">
                         <span class="text-sm font-bold text-[#2D5A27]">🍃 Vitesse Ventilation</span>
                         <div class="grid grid-cols-3 gap-2 mt-3">
@@ -318,17 +359,17 @@
                         </div>
                     </div>
                 </div>
-                <div class="text-xs text-slate-500 mono flex justify-between items-center bg-[#F4F6F0] p-3 rounded-xl">
+                <div class="text-xs text-slate-500 mono flex flex-wrap justify-between items-center gap-2 bg-[#F4F6F0] p-3 rounded-xl">
                     <span>Qualité de l'air : <strong class="text-[#2D5A27]">Excellente (420 ppm CO2)</strong></span>
                     <span class="text-[#9ACD32] font-bold">● HEPA actif</span>
                 </div>
             </div>
 
             <!-- MODULE 4 : AUDIO -->
-            <div id="tab-audio" class="w-full max-w-3xl bg-white border border-[#2D5A27]/15 rounded-3xl p-8 shadow-sm flex flex-col justify-between h-[420px] hidden">
+            <div id="tab-audio" class="w-full max-w-3xl bg-white border border-[#2D5A27]/15 rounded-3xl p-5 md:p-8 shadow-sm flex flex-col justify-between min-h-[400px] lg:h-[420px] hidden">
                 <div>
                     <h2 class="text-xs font-bold text-[#9ACD32] uppercase tracking-wider mb-1">Ambiance Sonore</h2>
-                    <p class="text-2xl font-bold text-[#2D5A27]">Audio & Playlist de Concentration</p>
+                    <p class="text-xl md:text-2xl font-bold text-[#2D5A27]">Audio & Playlist de Concentration</p>
                 </div>
                 <div class="space-y-2.5 my-auto overflow-y-auto max-h-[180px] no-scrollbar pr-1">
                     <div onclick="playTrack('Bruit Blanc - Océan Profond')" class="flex items-center justify-between p-3.5 rounded-xl bg-[#2D5A27] text-white cursor-pointer shadow-sm">
@@ -362,31 +403,25 @@
                         <span class="text-xs text-slate-500">Sélectionner</span>
                     </div>
                 </div>
-                <div class="text-xs text-slate-500 mono flex justify-between items-center bg-[#F4F6F0] p-3 rounded-xl">
+                <div class="mt-2 bg-[#F4F6F0] p-3 rounded-2xl border border-[#2D5A27]/10">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-bold text-[#2D5A27]">🔊 Volume Haut-Parleur</span>
+                            <span class="mono text-base font-extrabold text-[#2D5A27]" id="volPct">60%</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <button onclick="adjustVolume(-10)" class="w-10 h-10 shrink-0 bg-white border border-[#2D5A27]/20 rounded-xl font-bold text-[#2D5A27] text-lg hover:bg-[#e4e9dc] transition" title="Diminuer le volume">➖</button>
+                            <div class="flex-1 h-2.5 bg-white rounded-full overflow-hidden border border-[#2D5A27]/15">
+                                <div id="volBar" class="h-full rounded-full transition-all duration-300" style="width:60%"></div>
+                            </div>
+                            <button onclick="adjustVolume(10)" class="w-10 h-10 shrink-0 bg-white border border-[#2D5A27]/20 rounded-xl font-bold text-[#2D5A27] text-lg hover:bg-[#e4e9dc] transition" title="Augmenter le volume">➕</button>
+                        </div>
+                    </div>
+                <div class="text-xs text-slate-500 mono flex flex-wrap justify-between items-center gap-2 bg-[#F4F6F0] p-3 rounded-xl">
                     <span>Piste active : <strong id="currentTrack" class="text-[#2D5A27]">Bruit Blanc - Océan Profond</strong></span>
                     <span class="text-[#9ACD32] font-bold">● Bluetooth Prêt</span>
                 </div>
             </div>
         </main>
-
-        <!-- BARRE DE NAVIGATION FLOTTANTE CENTRÉE -->
-        <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-40">
-            <nav class="flex items-center space-x-2 bg-white/90 backdrop-blur-md p-2 rounded-2xl shadow-xl border border-[#2D5A27]/20">
-                <button onclick="switchTab('porte')" id="nav-porte" class="px-5 py-3 rounded-xl text-sm font-bold transition bg-[#2D5A27] text-white shadow-sm flex items-center space-x-2">
-                    <span>🚪</span> <span>Porte</span>
-                </button>
-                <button onclick="switchTab('eclairage')" id="nav-eclairage" class="px-5 py-3 rounded-xl text-sm font-bold transition text-[#2D3748] hover:bg-[#F4F6F0] flex items-center space-x-2">
-                    <span>💡</span> <span>LED & Éclairage</span>
-                </button>
-                <button onclick="switchTab('climatisation')" id="nav-climatisation" class="px-5 py-3 rounded-xl text-sm font-bold transition text-[#2D3748] hover:bg-[#F4F6F0] flex items-center space-x-2">
-                    <span>❄️</span> <span>Clim & Air</span>
-                </button>
-                <button onclick="switchTab('audio')" id="nav-audio" class="px-5 py-3 rounded-xl text-sm font-bold transition text-[#2D3748] hover:bg-[#F4F6F0] flex items-center space-x-2">
-                    <span>🎧</span> <span>Audio & Playlist</span>
-                </button>
-                <button onclick="openVoiceModal()" class="w-11 h-11 rounded-xl bg-[#9ACD32] hover:bg-[#8bb82d] text-xl transition shadow-md flex items-center justify-center" title="Commande vocale" aria-label="Commande vocale">🎤</button>
-            </nav>
-        </div>
 
         <!-- MODAL COMMANDE VOCALE -->
         <div id="voiceModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-[#2D5A27]/40 backdrop-blur-sm p-6">
@@ -420,14 +455,13 @@
 
         <footer class="flex flex-wrap justify-between items-center gap-2 px-2 py-2 text-xs text-slate-500 border-t border-[#2D5A27]/10">
             <div class="flex items-center gap-3">
-                <button onclick="alert('Assistance prévenue.')" class="hover:text-[#2D5A27] font-semibold">⚠️ Assistance</button>
+                <button onclick="callAssistance()" class="hover:text-[#2D5A27] font-semibold">⚠️ Assistance</button>
                 <button id="footerUser" onclick="logout()" class="hidden items-center gap-1 text-[#2D5A27] font-bold hover:underline"></button>
             </div>
             <span class="mono text-[10px] text-slate-400">🇹🇳 Made in Tunisia · PixelSoftware Design (R&D) · Atlas Working</span>
             <button onclick="leaveCabin()" class="text-rose-600 font-bold hover:underline">Quitter la cabine (Kiosque)</button>
         </footer>
     </div>
-
 
     <script>
         // ============ SCAN QR CODE PAR CAMÉRA ============
@@ -665,21 +699,7 @@
             return arr.some(x => x.token === t.trim().toUpperCase());
         }
         function isTechActive() { return sessionStorage.getItem('atlasTech') === '1'; }
-        function openTechLogin() {
-            const m = document.getElementById('techModal');
-            m.classList.remove('hidden'); m.classList.add('flex');
-            document.getElementById('techError').innerText = '';
-            if (isTechActive()) {
-                document.getElementById('techLockForm').classList.add('hidden');
-                document.getElementById('techPanel').classList.remove('hidden');
-                updateTechPanel();
-            } else {
-                document.getElementById('techLockForm').classList.remove('hidden');
-                document.getElementById('techPanel').classList.add('hidden');
-                setTimeout(() => document.getElementById('techToken').focus(), 50);
-            }
-        }
-        function closeTech() {
+                function closeTech() {
             const m = document.getElementById('techModal');
             m.classList.add('hidden'); m.classList.remove('flex');
             document.getElementById('techError').innerText = '';
@@ -765,18 +785,17 @@
         function switchView(view) {
             const kiosk = document.getElementById('view-kiosque');
             const client = document.getElementById('view-client');
-            const btnK = document.getElementById('btn-kiosque');
-            const btnC = document.getElementById('btn-client');
+            const widget = document.getElementById('uxWidget');
+            const kioskPos = "hidden md:block fixed bottom-5 left-5 z-[80] glass card-lift rounded-2xl px-4 py-3 w-[224px]";
+            const clientPos = "hidden md:block fixed top-[11.5rem] right-5 z-[80] glass card-lift rounded-2xl px-4 py-3 w-[224px]";
             if (view === 'kiosque') {
                 kiosk.classList.remove('hidden');
                 client.classList.add('hidden');
-                btnK.className = "px-3 py-0.5 rounded-full bg-[#9ACD32] text-[#2D3748] font-bold transition";
-                btnC.className = "px-3 py-0.5 rounded-full bg-[#2D3748]/60 text-slate-300 transition";
+                if (widget) { widget.className = kioskPos; widget.style.left = ''; widget.style.top = ''; widget.style.transform = ''; }
             } else {
                 kiosk.classList.add('hidden');
                 client.classList.remove('hidden');
-                btnC.className = "px-3 py-0.5 rounded-full bg-[#9ACD32] text-[#2D3748] font-bold transition";
-                btnK.className = "px-3 py-0.5 rounded-full bg-[#2D3748]/60 text-slate-300 transition";
+                if (widget) { widget.className = clientPos; widget.style.left = ''; widget.style.top = ''; widget.style.transform = ''; }
             }
         }
 
@@ -821,11 +840,7 @@
         function getCabinId() {
             try { return localStorage.getItem('atlasCabinId') || 'Cabine N°01'; } catch (e) { return 'Cabine N°01'; }
         }
-        function refreshCabinLabel() {
-            const st = document.getElementById('kioskStatus');
-            if (st && !document.hasFocus()) st.innerText = getCabinId() + ' - Libre';
-        }
-        function validAccess(text) {
+                function validAccess(text) {
             const m = String(text || '').match(/access=([A-Za-z0-9]+)/);
             const code = m ? m[1].toUpperCase() : null;
             if (!code) return null;
@@ -878,15 +893,17 @@
         // ============ GESTION DES ONGLETS INTERNES ============
         function switchTab(tabName) {
             const tabs = ['porte', 'eclairage', 'climatisation', 'audio'];
+            const active = "px-4 py-2.5 sm:px-5 sm:py-3 rounded-xl text-xs sm:text-sm font-bold transition shrink-0 bg-[#2D5A27] text-white shadow-sm flex items-center space-x-2";
+            const idle = "px-4 py-2.5 sm:px-5 sm:py-3 rounded-xl text-xs sm:text-sm font-bold transition shrink-0 text-[#2D3748] hover:bg-[#F4F6F0] flex items-center space-x-2";
             tabs.forEach(t => {
                 const el = document.getElementById('tab-' + t);
                 const btn = document.getElementById('nav-' + t);
                 if (t === tabName) {
                     el.classList.remove('hidden');
-                    btn.className = "px-5 py-3 rounded-xl text-sm font-bold transition bg-[#2D5A27] text-white shadow-sm flex items-center space-x-2";
+                    btn.className = active;
                 } else {
                     el.classList.add('hidden');
-                    btn.className = "px-5 py-3 rounded-xl text-sm font-bold transition text-[#2D3748] hover:bg-[#F4F6F0] flex items-center space-x-2";
+                    btn.className = idle;
                 }
             });
         }
@@ -896,10 +913,14 @@
         let doorRemote = false;
 
         function connectBackend() {
-            if (location.host === '' || location.protocol === 'file:') return;
+            if (location.protocol === 'file:') return;
+            let hub = '';
+            try { hub = (localStorage.getItem('atlasHub') || '').trim(); } catch (e) {}
+            if (!hub) return;
+            if (!/^[A-Za-z0-9.:\-\[\]]+$/.test(hub)) return;
             const proto = location.protocol === 'https:' ? 'wss://' : 'ws://';
             try {
-                uiWs = new WebSocket(proto + location.host + '/ws');
+                uiWs = new WebSocket(proto + hub + '/ws');
             } catch (e) {
                 return;
             }
@@ -996,6 +1017,44 @@
         function playTrack(trackName) {
             document.getElementById('currentTrack').innerText = trackName;
             alert("Lecture : " + trackName);
+        }
+
+        // ============ APPEL DES SECOURS (Tunisie) ============
+        const EMERGENCY_SERVICES = {
+            ambulance: { name: 'Ambulance / Samu', num: '190', icon: '🚑', note: 'Urgences médicales — Soins immédiats requis.' },
+            protection: { name: 'Protection civile', num: '198', icon: '🧯', note: 'Sapeurs-pompiers · secours & incendie.' },
+            police: { name: 'Police secours', num: '197', icon: '👮', note: 'Sécurité · ordre public.' }
+        };
+        function callEmerg(service) {
+            const s = EMERGENCY_SERVICES[service];
+            if (!s) return;
+            alert(s.icon + ' Appel ' + s.name + ' (« ' + s.num + ' ») simulé — en production, ouverture du canal téléphonique de secours.');
+            if (typeof window.paShow === 'function') {
+                window.paShow(s.icon + ' ' + s.name + ' — appel lancé.\n\nNuméro : ' + s.num + '\n' + s.note + '\n\nLe centre technique Atlas Working est également alerté automatiquement.', '🚨 Appel des secours');
+            }
+            try { document.getElementById('kioskStatus').innerText = 'Cabine N°01 - ' + s.name + ' appelée'; } catch (e) {}
+        }
+
+        // ============ APPEL CENTRE TECHNIQUE / ASSISTANCE ============
+        function callAssistance() {
+            alert("📞 Centre technique appelé — l'équipe Atlas Working S.A.V. est notifiée.");
+            if (typeof window.paShow === 'function') {
+                window.paShow('📞 Centre technique contacté.\n\nL\'équipe Atlas Working (S.A.V. / R&D) est notifiée et interviendra sous peu. En cas d\'urgence immédiate, utilisez le bouton 🚨 ou demandez « urgence » à PixelAssistante.', '📞 Centre technique');
+            }
+            try { document.getElementById('kioskStatus').innerText = 'Cabine N°01 - Centre technique appelé'; } catch (e) {}
+        }
+
+        // ============ VOLUME HAUT-PARLEUR ============
+        let volumeLevel = 60;
+        function adjustVolume(delta) {
+            volumeLevel = Math.max(0, Math.min(100, volumeLevel + delta));
+            const p = document.getElementById('volPct');
+            if (p) p.innerText = volumeLevel + '%';
+            const b = document.getElementById('volBar');
+            if (b) {
+                b.style.width = volumeLevel + '%';
+                b.style.background = volumeLevel <= 0 ? '#9f1239' : 'linear-gradient(90deg,#9ACD32,#2D5A27)';
+            }
         }
 
         // ============ COMMANDE VOCALE ============
@@ -1137,18 +1196,17 @@
 
         function applyModeUI() {
             const pill = document.getElementById('modePill');
+            if (!pill) return;
             let m = 'secure';
             try { m = localStorage.getItem('atlasMode') || 'secure'; } catch (e) {}
             const M = {
-                secure: { badge: '● PROD', color: '#2D5A27', label: 'Interface :' },
-                beta: { badge: '● BÊTA', color: '#9ACD32', label: 'Mode Démo :' },
-                dev: { badge: 'DEV', color: '#2D3748', label: 'Mode Démo :' }
+                secure: { badge: '● PROD', color: '#2D5A27' },
+                beta: { badge: '● BÊTA', color: '#9ACD32' },
+                dev: { badge: 'DEV', color: '#2D3748' }
             };
             const mm = M[m] || M.secure;
             pill.style.cssText = 'color:' + (m === 'dev' ? '#9ACD32' : '#fff') + ';background:' + mm.color + ';';
             pill.innerText = mm.badge;
-            const lbl = document.getElementById('modeLabel');
-            if (lbl) lbl.innerText = mm.label;
         }
 
         renderAuth();
@@ -1160,7 +1218,691 @@
             if (e.key === 'atlasMode') applyModeUI();
             if (e.key === 'atlasHardware') updateTechPanel();
         });
-        if (isTechActive()) document.getElementById('btn-tech').style.color = '#9ACD32';
+        if (isTechActive()) { const t = document.getElementById('btn-tech'); if (t) t.style.color = '#9ACD32'; }
     </script>
+<!-- ================================================================== -->
+    <!-- ✴ PixelAssistante — IA privée intégrée (PixelSoftware Design)     -->
+    <!-- ================================================================== -->
+    <style>@keyframes paPulse{0%,100%{box-shadow:0 0 0 0 rgba(154,205,50,.65)}50%{box-shadow:0 0 0 14px rgba(154,205,50,0)}}.pa-pulse{animation:paPulse 2.2s infinite}@keyframes paIn{from{opacity:0;transform:translateY(16px)scale(.97)}to{opacity:1;transform:none}}.pa-in{animation:paIn .3s cubic-bezier(.22,1,.36,1)forwards}#paPanel{transition:opacity .25s ease,transform .25s cubic-bezier(.22,1,.36,1)}#paPanel.hide{opacity:0;pointer-events:none;transform:translateY(14px)}.pa-msg{animation:paIn .28s ease}</style>
+
+    <button id="paBtn" title="PixelAssistante — IA privée de la cabine"
+        class="pa-pulse fixed bottom-[6.5rem] right-5 z-[135] px-4 py-3 rounded-full bg-gradient-to-r from-[#9ACD32] to-[#2D5A27] text-white shadow-2xl border-2 border-white/40 hover:scale-105 transition flex items-center gap-2">
+        <span class="text-xl">✴️</span>
+        <span class="hidden sm:inline font-extrabold text-sm leading-none">PixelAssistante</span>
+        <span class="hidden sm:inline-flex text-[9px] mono font-bold bg-white/15 text-emerald-50 px-2 py-0.5 rounded-full">IA privée</span>
+    </button>
+
+    <button id="paMicFloat" title="Micro vocal — active/désactive « Hi Pixel »"
+        class="fixed bottom-[6.5rem] right-28 sm:right-[19rem] z-[136] w-11 h-11 rounded-full bg-white text-[#2D5A27] text-lg shadow-xl border border-[#2D5A27]/30 hover:scale-110 transition flex items-center justify-center">🎤</button>
+
+    <div id="paPanel" class="hide fixed bottom-[11.5rem] right-5 z-[140] w-[340px] max-w-[calc(100vw-2.5rem)] max-h-[70vh] flex flex-col rounded-3xl border border-[#2D5A27]/15 bg-white shadow-2xl overflow-hidden">
+        <div class="bg-gradient-to-r from-[#2D5A27] to-[#23451e] text-white px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-2xl bg-[#9ACD32] flex items-center justify-center text-lg">✴️</div>
+                <div>
+                    <p class="font-extrabold text-sm leading-tight">PixelAssistante</p>
+                    <p class="text-[10px] text-emerald-100 mono">IA privée · à bord · PixelSoftware Design</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-1.5">
+                <span id="paVoiceState" class="mono text-[9px] px-2 py-1 rounded-lg bg-white/10 text-emerald-100">🎤 voix off</span>
+                <button onclick="paMic()" id="paMicBtn" title="Conversation vocale — dites « hi Pixel »" class="w-8 h-8 rounded-xl bg-white/10 hover:bg-white/20 font-bold">🎤</button>
+                <button onclick="paToggle()" class="w-8 h-8 rounded-xl bg-white/10 hover:bg-white/20 font-bold">✕</button>
+            </div>
+        </div>
+        <div id="paChat" class="flex-1 overflow-y-auto px-3 py-3 space-y-2.5 no-scrollbar">
+            <div class="pa-msg bg-[#F4F6F0] rounded-2xl p-3 text-xs text-slate-700 leading-relaxed">
+                👋 Je suis <b>PixelAssistante</b>, votre assistante privée intégrée à la cabine.<br>
+                Posez une question — je peux aussi <b>agir</b> : « ouvre la porte », « lumière à 80 % », « température 21 °C »…
+            </div>
+        </div>
+        <div class="flex gap-1.5 px-3 pt-1 overflow-x-auto no-scrollbar" id="paChips"></div>
+        <div class="flex gap-2 p-3 border-t border-[#2D5A27]/10">
+            <input id="paQ" class="flex-1 bg-[#F4F6F0] rounded-xl px-3 py-2.5 text-xs outline-none focus:ring-2 ring-[#9ACD32]" placeholder="Votre demande… (masquer : ⌘E)">
+            <button onclick="paSend()" class="px-4 rounded-xl bg-[#2D5A27] text-white font-extrabold text-xs hover:bg-[#23451e] transition">Envoyer ➤</button>
+        </div>
+    </div>
+    <div id="paHint" class="fixed bottom-[7.5rem] right-[7.75rem] sm:right-[21.5rem] z-[135] bg-[#2D3748] text-white text-[10px] px-3 py-1.5 rounded-full shadow-lg opacity-0 transition-opacity duration-500 pointer-events-none">✴️ PixelAssistante — IA privée</div>
+
+    <script>
+        (function () {
+            'use strict';
+            const $ = (id) => document.getElementById(id);
+            let open = false;
+
+            const norm = (s) => String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+            const val = (id) => { const el = $(id); return el ? ' ' + el.textContent.trim() : ''; };
+
+            function snapshot() {
+                let hw = (localStorage.getItem('atlasHardware') || 'esp32+pi');
+                const S = [
+                    '🚪 Porte : ' + val('doorStatus').replace(/^ /, '') || '—',
+                    '💡 Éclairage : ' + (val('lightLevel') || '—'),
+                    '❄️ Temp. cible : ' + (val('tempDisplay') || '—'),
+                    '🍃 Ventilation : Auto · CO₂ ~420 ppm',
+                    '🌡️ Cabine : ' + (val('sensorTemp') ? val('sensorTemp') : '22.5°C'),
+                    '📶 Réseau privé : ON · MQTT : ' + (hw.includes('pi') ? 'ON' : 'direct'),
+                    '🧠 Matériel : ' + hw.toUpperCase(),
+                ];
+                return S.join('\n');
+            }
+
+            // ---- Base de connaissances + actions ----
+            const KB = [
+                { kw: ['bonjour', 'salut', 'hello', 'coucou'],
+                  a: 'Bonjour 👋 PixelAssistante à votre service. Demandez de l\'aide ou une action : « comment utiliser la cabine ? », « ouvre la porte », « quelle heure ? »' },
+                { kw: ['qui es', 'assistant', 'assistante', 'presente', 'presente toi'],
+                  a: 'Je suis ✴️ PixelAssistante — IA privée intégrée par PixelSoftware Design. Je réponds à bord, sans internet, et je peux piloter la cabine : porte, éclairage, climatisation, urgence, état.' },
+                { kw: ['utiliser', 'comment', 'aide', 'help', 'tuto'],
+                  a: 'Pour utiliser la cabine :\n1. Scannez le QR à l\'écran d\'accueil ou connectez-vous (🔐).\n2. « Entrer dans l\'interface interne ➔ ».\n3. Modules : Porte · Éclairage · Climatisation · Audio · Programme.\n4. Urgence : bouton rouge 🚨 en bas à droite, toujours actif.\nVous pouvez aussi me parler : « quel est l\'état ? », « ouvre la porte ».' },
+                { kw: ['ouvrir', 'ouvre', 'porte', 'gache', 'deverrouill', 'unlock', 'open'],
+                  act: () => { try { controlDoor('open'); } catch (e) {} },
+                  a: () => '🔓 J\'ouvre la porte (gâche déverrouillée 15 s).\nÉtat actuel : ' + val('doorStatus') },
+                { kw: ['ferme', 'fermer', 'verrou', 'lock', 'close'],
+                  act: () => { try { controlDoor('close'); } catch (e) {} },
+                  a: () => '🔒 Je verrouille la porte.\nÉtat actuel : ' + val('doorStatus') },
+                { kw: ['lumiere', 'eclairage', 'lumière', 'led', 'intensite', 'fond'],
+                  a: () => '💡 Éclairage : intensité actuelle ' + (val('lightLevel') || '—') + '.\nModes : Focus 5000K (travail) ou Relax 3000K (détente).\nDites « lumière à 70 % », « mode focus », « lumière plus forte ».' },
+                { kw: ['mode focus', 'focus', '5000'],
+                  act: () => { try { setPresetLight('focus'); } catch (e) {} },
+                  a: '💡 Mode FOCUS (5000 K) activé.' },
+                { kw: ['relax', '3000'],
+                  act: () => { try { setPresetLight('relax'); } catch (e) {} },
+                  a: '💡 Mode RELAX (3000 K) activé.' },
+                { kw: ['plus fort', 'augmenter', 'monter', 'plus de lumiere'],
+                  act: () => { try { adjustLight(10); } catch (e) {} },
+                  a: () => '💡 Intensité augmentée → ' + (val('lightLevel') || '80 %') + '.' },
+                { kw: ['plus faible', 'diminuer', 'baisser', 'moins'],
+                  act: () => { try { adjustLight(-10); } catch (e) {} },
+                  a: () => '💡 Intensité réduite → ' + (val('lightLevel') || '80 %') + '.' },
+                { kw: ['clim', 'climatisation', 'temperature', 'temp', 'degre', 'chaud', 'froid'],
+                  a: () => '❄️ Climatisation : cible actuelle ' + (val('tempDisplay') || '21°C') + '.\nDites « température 24 degrés » (ajustement automatique).' },
+                { kw: ['regle la temperature', 'temperature 1', 'temperature 2', 'temperature 3'],
+                  act: () => {
+                      const m = (document.getElementById('paQ').value || '').match(/(\d{2})/);
+                      if (m) {
+                          const target = parseInt(m[1], 10);
+                          const cur = parseInt((val('tempDisplay') || '21').replace(/[^0-9]/g, ''), 10) || 21;
+                          try { for (let i = 0; i < Math.min(Math.abs(target - cur), 6); i++) adjustTemp(target > cur ? 1 : -1); } catch (e) {}
+                      }
+                  },
+                  a: '❄️ Réglage de la température en cours…' },
+                { kw: ['fan', 'ventilation', 'vitesse', 'eco', 'auto', 'max'],
+                  a: '🍃 Vitesse de ventilation : Eco / Auto / Max. Quelle préférence ?' },
+                { kw: ['eco'],
+                  act: () => { try { setFanSpeed('Eco'); } catch (e) {} }, a: '🍃 Ventilation Eco activée.' },
+                { kw: ['auto'],
+                  act: () => { try { setFanSpeed('Auto'); } catch (e) {} }, a: '🍃 Ventilation Auto activée.' },
+                { kw: ['max'],
+                  act: () => { try { setFanSpeed('Max'); } catch (e) {} }, a: '🍃 Ventilation Max activée.' },
+                { kw: ['volume haut', 'augmente le volume', 'monter le son', 'volume forte', 'monte le son'],
+                  act: () => { try { adjustVolume(10); } catch (e) {} },
+                  a: () => '🔊 Volume haut-parleur → ' + (document.getElementById('volPct') ? document.getElementById('volPct').textContent : '60%') + '.' },
+                { kw: ['volume bas', 'diminue le volume', 'baisser le son', 'volume faible', 'silence'],
+                  act: () => { try { adjustVolume(-10); } catch (e) {} },
+                  a: () => '🔊 Volume haut-parleur → ' + (document.getElementById('volPct') ? document.getElementById('volPct').textContent : '60%') + '.' },
+                { kw: ['volume', 'haut parleur', 'haut-parleur'],
+                  a: () => '🔊 Volume haut-parleur actuel : ' + (document.getElementById('volPct') ? document.getElementById('volPct').textContent : '60%') + '. Dites « volume haut » ou « volume bas ».' },
+                { kw: ['urgence', 'danger', 'secours', 'evac', 'alerte'],
+                  a: '🚨 Urgence — touchez pour ouvrir le panneau :\n• Danger INTERNE → porte s\'ouvre.\n• Danger EXTÉRIEUR → porte se ferme (confinement).\n• Catastrophique → ouverture partielle.\nBouton rouge physique + ouverture manuelle. Toujours actif, sans connexion.' },
+                { kw: ['etat', 'composant', 'capteur', 'diagnostique', 'hardware', 'statut', 'status', 'sante', 'santé'],
+                  a: () => '🧠 État de la cabine :\n' + snapshot() },
+                { kw: ['heure', 'quel heure', 'temps', 'maintenant'],
+                  a: () => '🕐 Il est ' + new Date().toLocaleTimeString('fr-FR') + ' — ' + new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) + '.' },
+                { kw: ['calendrier', 'date', 'jour', 'mois', 'rendez'],
+                  a: () => '🗓️ ' + new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) + '. Chaque présence est comptée en session.' },
+                { kw: ['prix', 'cout', 'tarif', 'commander', 'acheter'],
+                  a: '💶 Prix indicatifs (DT HT) : S 18 500 · M 32 900 · L 58 500. Accessoires : catalogue (/accessoires).' },
+                { kw: ['dimension', 'taille', 'cm'],
+                  a: '📐 Intérieur (L×P×H) : S 90×100×203 · M 240×130×203 · L 350×160×203 cm.' },
+                { kw: ['modele', 'esp32', 'raspberry', 'arduino', 'cerveau'],
+                  a: '🧬 3 modèles selon le matériel : ① ESP32 (S) standalone · ② Raspberry Pi (M/L) hub · ③ Arduino. Détection matérielle au démarrage.' },
+                { kw: ['reseau', 'wifi', 'prive', '802', '1x', 'privé'],
+                  a: '🌐 Réseau privé cabine : WiFi isolé CAB-NET-n, WPA2-Entreprise/802.1X. Commandes locales ; seule la télémétrie usine sort.' },
+                { kw: ['garantie', 'entretien', 'maintenance', 'sav'],
+                  a: '🛡️ Garantie 5 ans structure / 2 ans électronique. Entretien : quotidien surfaces, hebdo grilles, mensuel joints+gâche, annuel visite S.A.V.' },
+                { kw: ['standard', 'norme', 'fabrique', 'tunisien', 'tunisienne'],
+                  a: '🏭 Fabriqué en Tunisie : panneaux acoustiques, verre trempé EN 12150, ISO 3382-1, CE/NFC, contrôle qualité usine.' },
+                { kw: ['merci', 'super', 'parfait', 'top'],
+                  a: 'Avec plaisir 😊 PixelAssistante reste à bord de votre cabine.' },
+                { kw: ['centre technique', 'technique', 'sav', 'support', 'panne', 'repare', 'reparateur', 'assistance', 'aider'],
+                  act: () => { try { callAssistance(); } catch (e) {} },
+                  a: '📞 Centre technique Atlas Working (S.A.V.) contacté. Notre équipe intervient — je surveille la cabine en attendant.' },
+                { kw: ['ambulance', 'samu', 'urgence medicale', 'medicale', 'blesse', 'malade', 'medecin'],
+                  act: () => { try { callEmerg('ambulance'); } catch (e) {} },
+                  a: '🚑 Appel Ambulance / Samu lancé.\nNuméro : 190 — urgences médicales.' },
+                { kw: ['protection civile', 'civile', 'pompie', 'pompiers', 'incendie', 'feu'],
+                  act: () => { try { callEmerg('protection'); } catch (e) {} },
+                  a: '🧯 Protection civile appelée (198).\nSapeurs-pompiers · secours & incendie.' },
+                { kw: ['police', 'gendarmerie', 'voleur', 'agression', 'danger'],
+                  act: () => { try { callEmerg('police'); } catch (e) {} },
+                  a: '👮 Police secours appelée.\nNuméro : 197 — sécurité.' },
+            ];
+
+            function answer(q) {
+                const AI = window.PixelAI;
+                if (AI) {
+                    const pr = AI.prefer(q);
+                    if (pr) return pr;
+                }
+                const tokens = norm(q).split(/[^a-z0-9]+/).filter(Boolean);
+                let best = null, bs = 0;
+                for (const e of KB) {
+                    let s = 0;
+                    for (const t of tokens) if (e.kw.some(k => norm(k).includes(t) || norm(k).split(' ').some(w => w && w === t))) s++;
+                    if (s > bs && s >= 1) { bs = s; best = e; }
+                }
+                return best ? { text: typeof best.a === 'function' ? best.a() : best.a, act: best.act } : {
+                    text: '🤔 Je n\'ai pas trouvé. Essayez : « état des composants », « quelle heure ? », « ouvre la porte », « quelle climatisation ? » ou « comment utiliser la cabine ? ».',
+                };
+            }
+
+            const CHIPS = ['Comment utiliser la cabine ?', 'État des composants', 'Quelle heure ?', 'Ouvre la porte', 'Urgence', 'Température bébé', 'أهلا', 'Baddel el climat', '📞 Centre technique', '🚑 Ambulance', '🧯 Protection civile', '👮 Police'];
+
+            function paMsg(mine, text) {
+                const b = $('paChat');
+                const d = document.createElement('div');
+                d.className = 'pa-msg max-w-[85%] rounded-2xl p-3 text-xs whitespace-pre-line leading-relaxed ' +
+                    (mine ? 'ml-auto bg-[#2D5A27] text-white' : 'bg-[#F4F6F0] text-slate-700');
+                d.textContent = text;
+                b.appendChild(d);
+                b.scrollTop = b.scrollHeight;
+                return d;
+            }
+            function paType(fn) {
+                const b = $('paChat');
+                const d = document.createElement('div');
+                d.className = 'max-w-[85%] bg-white border border-[#2D5A27]/15 rounded-2xl px-3 py-2.5 text-slate-400 text-xs';
+                d.textContent = '✴️ rédige…';
+                b.appendChild(d); b.scrollTop = b.scrollHeight;
+                setTimeout(() => { d.remove(); fn && fn(); }, 420);
+            }
+            function paSend() {
+                const q = $('paQ').value.trim();
+                if (!q) return;
+                $('paQ').value = '';
+                paMsg(true, q);
+                paType(() => {
+                    const r = answer(q);
+                    if (r.act) { try { r.act(); } catch (e) {} }
+                    paMsg(false, r.text);
+                });
+            }
+            function paChips() {
+                $('paChips').innerHTML = CHIPS.map(c =>
+                    '<button class="shrink-0 text-[10px] bg-[#9ACD32]/20 text-[#2D5A27] font-bold px-2.5 py-1 rounded-full hover:bg-[#9ACD32]/40 transition" data-c="' + c + '">' + c + '</button>').join('');
+                document.querySelectorAll('#paChips [data-c]').forEach(b => b.addEventListener('click', () => {
+                    $('paQ').value = b.dataset.c; paSend();
+                }));
+                paVoiceChip();
+            }
+            window.paToggle = function () {
+                open = !open;
+                const p = $('paPanel');
+                p.classList.toggle('hide', !open);
+                $('paHint').style.opacity = '0';
+                if (!open) paChips();
+                else { setTimeout(paChips, 0); $('paQ').focus(); }
+                if (!open && !paVoiceOn) try { paStopVoice(); } catch (e) {}
+            };
+            window.paSend = paSend;
+
+            // ═══════════ Conversation vocale « Hi Pixel » ═══════════
+            const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+            let paVoiceOn = false, paRec = null, paSession = false, paBusy = false;
+
+            function paSay(text, lang) {
+                try {
+                    window.speechSynthesis.cancel();
+                    const u = new SpeechSynthesisUtterance(text.replace(/[\r\n]+/g, ' '));
+                    u.lang = ({ ar: 'ar-SA', en: 'en-GB', tr: 'tr-TR', ru: 'ru-RU', it: 'it-IT', de: 'de-DE', es: 'es-ES' })[lang] || 'fr-FR';
+                    u.rate = 1.05;
+                    u.onstart = () => { paBusy = true; };
+                    u.onend = () => { paBusy = false; };
+                    window.speechSynthesis.speak(u);
+                } catch (e) {}
+            }
+            function paStopVoice() {
+                if (paRec) { try { paRec.stop(); } catch (e) {} paRec = null; }
+                paVoiceOn = false; paSession = false;
+                try { localStorage.setItem('atlasVoice', 'off'); } catch (e) {}
+                const s = $('paVoiceState'); if (s) { s.textContent = '🎤 voix off'; s.className = 'mono text-[9px] px-2 py-1 rounded-lg bg-white/10 text-emerald-100'; }
+                const b = $('paMicBtn'); if (b) b.textContent = '🎤';
+                const mf = $('paMicFloat'); if (mf) { mf.textContent = '🎤'; mf.className = 'fixed bottom-[6.5rem] right-28 sm:right-[19rem] z-[136] w-11 h-11 rounded-full bg-white text-[#2D5A27] text-lg shadow-xl border border-[#2D5A27]/30 hover:scale-110 transition flex items-center justify-center'; }
+                paVoiceChip();
+            }
+            function paVoiceChip() {
+                const q = document.querySelector('#paChips [data-v]');
+                if (!paVoiceOn && SR) {
+                    if (!q) {
+                        const v = document.createElement('button');
+                        v.dataset.v = '1';
+                        v.className = 'shrink-0 text-[10px] bg-[#2D5A27] text-white font-bold px-2.5 py-1 rounded-full hover:bg-[#23451e] transition';
+                        v.textContent = '🎤 Voix — dites « hi pixel »';
+                        document.getElementById('paChips').appendChild(v);
+                        v.addEventListener('click', () => paMic());
+                    }
+                } else if (q) q.remove();
+            }
+            function paVoiceLine(txt) {
+                const b = $('paChat');
+                let d = $('paVLine');
+                if (!d) { d = document.createElement('div'); d.id = 'paVLine'; d.className = 'pa-msg text-[10px] text-[#2D5A27] mono flex items-center gap-2'; b.appendChild(d); }
+                d.innerHTML = '<span class="w-2 h-2 rounded-full bg-[#9ACD32] pa-pulse inline-block"></span> 🎤 ' + txt;
+                b.scrollTop = b.scrollHeight;
+            }
+            window.paMic = function () {
+                if (!SR) {
+                    paMsg(false, 'Votre navigateur ne supporte pas la reconnaissance vocale (essayez Chrome/Edge). La conversation écrite reste active.');
+                    return;
+                }
+                if (paVoiceOn) { paStopVoice(); paMsg(false, '🔇 Conversation vocale désactivée. Réactivez via 🎤 pour que « Hi Pixel » réponde.'); return; }
+                paVoiceOn = true;
+                try { localStorage.setItem('atlasVoice', 'on'); } catch (e) {}
+                const s = $('paVoiceState'); if (s) { s.textContent = '🎙️ « hi pixel »'; s.className = 'mono text-[9px] px-2 py-1 rounded-lg bg-[#9ACD32] text-[#2D3748] font-bold'; }
+                const b = $('paMicBtn'); if (b) b.textContent = '🎙️';
+                const mf = $('paMicFloat'); if (mf) { mf.textContent = '🎙️'; mf.className = 'fixed bottom-[6.5rem] right-28 sm:right-[19rem] z-[136] w-11 h-11 rounded-full bg-gradient-to-br from-[#9ACD32] to-[#2D5A27] text-white text-lg shadow-xl border-2 border-white/40 pa-pulse hover:scale-110 transition flex items-center justify-center'; }
+                paMsg(false, '🎤 Conversation vocale active — je vous écoute.\nDites « Hi Pixel » pour démarrer, puis énoncez votre demande (ex. « quelle heure ? », « ouvre la porte »).').style.border = '1px solid #9ACD32';
+                paListen();
+            };
+            function paListen() {
+                if (!paVoiceOn) return;
+                try { if (paRec) paRec.stop(); } catch (e) {}
+                paRec = new SR();
+                paRec.lang = 'fr-FR'; paRec.continuous = false; paRec.interimResults = true;
+                paRec.onresult = (e) => {
+                    let t = '';
+                    for (let i = e.resultIndex; i < e.results.length; i++) t += e.results[i][0].transcript;
+                    const n = norm(t);
+                    paVoiceLine(t || '…');
+                    if (paBusy) return;
+                    if (!paSession) {
+                        if (/pixel|assistante|atlas/.test(n)) {
+                            paSession = true;
+                            paMsg(false, '(🎤 Réveil vocal détecté → je vous écoute.)');
+                            paSay('Oui ? Je vous écoute.');
+                            setTimeout(paListen, 1500);
+                        } else { setTimeout(paListen, 400); }
+                    } else if (e.results[e.results.length - 1].isFinal) {
+                        paSession = false;
+                        const line = $('paVLine'); if (line) line.remove();
+                        paHandleVoice(t.trim());
+                    }
+                };
+                paRec.onerror = (e) => {
+                    if (e.error === 'not-allowed') { paMsg(false, '🚫 Accès micro refusé — activez-le dans les permissions du navigateur. La saisie écrite fonctionne toujours.'); paStopVoice(); }
+                    else if (paVoiceOn && e.error !== 'aborted') setTimeout(paListen, 400);
+                };
+                paRec.onend = () => { if (paVoiceOn && !paSession) paListen(); };
+                try { paRec.start(); } catch (e2) {}
+            }
+            function paHandleVoice(t) {
+                if (!t) return;
+                paMsg(true, '🎙️ ' + t);
+                paType(() => {
+                    const r = answer(t);
+                    if (r.act) { try { r.act(); } catch (e) {} }
+                    const txt = r.text.split('\n')[0];
+                    paMsg(false, r.text);
+                    paDoSpeak(r.text, r.lang);
+                });
+            }
+            function paDoSpeak(text, lang) {
+                const clean = text.replace(/[🚨🔓🔒💡❄️🍃📶🧠🕐🗓️💶📐🧬🌐🛡️🏭👋😊🔫🔑🚪🎙️💬➤\.]/g, ' ');
+                paSay(clean, lang);
+            }
+
+            // ═══════════ Résultat sur l'écran principal ═══════════
+            let paOvTimer = null;
+            window.paShow = paShow;
+            window.paHideOverlay = function () {
+                const o = $('paOverlay'); if (!o) return;
+                o.classList.add('hide');
+                clearTimeout(paOvTimer);
+            };
+            function paShow(txt, q) {
+                const o = $('paOverlay'); if (!o) return;
+                const t = $('paOvT'), qq = $('paOvQ');
+                t.textContent = txt;
+                if (q) { qq.textContent = '🎙️ ' + q; qq.classList.remove('hide'); } else { qq.classList.add('hide'); }
+                o.classList.remove('hide');
+                clearTimeout(paOvTimer);
+                paOvTimer = setTimeout(() => { o.classList.add('hide'); }, 9000);
+            }
+
+            // ═══════════ Réponse flottante déplaçable (désactivée — gérée plus tard) ═══════════
+            const pd = $('paDrag');
+            if (pd) {
+                let paDrag = null;
+                pd.addEventListener('pointerdown', function (e) {
+                    const o = $('paOverlay');
+                    const r = o.getBoundingClientRect();
+                    o.style.animation = 'none';
+                    paDrag = { dx: e.clientX - r.left, dy: e.clientY - r.top };
+                    try { o.setPointerCapture(e.pointerId); } catch (err) {}
+                });
+                window.addEventListener('pointermove', function (e) {
+                    if (!paDrag) return;
+                    const o = $('paOverlay');
+                    const x = Math.min(Math.max(e.clientX - paDrag.dx, 8), window.innerWidth - o.offsetWidth - 8);
+                    const y = Math.min(Math.max(e.clientY - paDrag.dy, 8), window.innerHeight - o.offsetHeight - 8);
+                    o.style.left = x + 'px';
+                    o.style.top = y + 'px';
+                    o.style.transform = 'none';
+                });
+                window.addEventListener('pointerup', function () { paDrag = null; });
+            }
+            let uxDrag = null;
+            const uxW = $('uxWidget');
+            if (uxW) {
+                uxW.addEventListener('pointerdown', function (e) {
+                    if (e.target.closest('#uxCal')) return;
+                    const r = this.getBoundingClientRect();
+                    this.style.transition = 'none';
+                    uxDrag = { dx: e.clientX - r.left, dy: e.clientY - r.top };
+                    try { this.setPointerCapture(e.pointerId); } catch (err) {}
+                });
+            }
+            window.addEventListener('pointermove', function (e) {
+                if (!uxDrag || !$('uxWidget')) return;
+                const el = $('uxWidget');
+                const x = Math.min(Math.max(e.clientX - uxDrag.dx, 8), window.innerWidth - el.offsetWidth - 8);
+                const y = Math.min(Math.max(e.clientY - uxDrag.dy, 8), window.innerHeight - el.offsetHeight - 8);
+                el.style.left = x + 'px';
+                el.style.top = y + 'px';
+                el.style.transform = 'none';
+            });
+            window.addEventListener('pointerup', function () { uxDrag = null; });
+            window.paExpandCal = function () {
+                const f = $('uxFull');
+                if (!f) return;
+                f.classList.toggle('hidden');
+            };
+
+            $('paBtn').addEventListener('click', paToggle);
+            $('paMicFloat').addEventListener('click', () => {
+                if (!open) { open = true; $('paPanel').classList.remove('hide'); }
+                paMic();
+            });
+            if (SR && localStorage.getItem('atlasVoice') === 'on') {
+                const f = function () {
+                    document.removeEventListener('pointerdown', f);
+                    setTimeout(() => { try { if (!paVoiceOn && SR) { if (!open) { open = true; $('paPanel').classList.remove('hide'); } paMic(); } } catch (e) {} }, 350);
+                };
+                document.addEventListener('pointerdown', f);
+            }
+            document.addEventListener('keydown', (e) => {
+                if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'e') { e.preventDefault(); paToggle(); }
+                if (e.key === 'Enter' && open && document.activeElement === $('paQ')) { e.preventDefault(); paSend(); }
+            });
+            setTimeout(() => { const h = $('paHint'); h.style.opacity = '1'; setTimeout(() => h.style.opacity = '0', 4200); }, 900);
+            paChips();
+        })();
+    </script>
+
+    <script>
+        window.PixelAI = (function () {
+            'use strict';
+            const norm = (s) => String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+            const VAL = (id) => { const el = document.getElementById(id); return el ? el.textContent.trim() : ''; };
+            const store = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+            const load = (k, d) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } };
+
+            function detect(q) {
+                if (/[\u0600-\u06ff]/.test(q)) return 'ar';
+                const m = norm(q);
+                if (/(salam|salem|labes|chneya|3alacbed|brabi|baddel|kifach|n3awnek|sghir|reje3|hamdoullah)/.test(m)) return 'darja';
+                if (/(merhaba|nasilsin|nasıl|selam|klima|sicaklik|teşekkür|teşekkuder|lütfen)/.test(m)) return 'tr';
+                if (/(^|[^a-z])(hello|\bhi\b|how are you|can you|could you|please|thank|thanks|help me|i want|i would|what is|how do|whats|welcome|good (morning|afternoon|evening))\b/.test(m)) return 'en';
+                return 'fr';
+            }
+            function rep(lang, fr, ar, en, tr, dj) { return { ar: ar || fr, en: en || fr, tr: tr || fr, darja: dj || fr }[lang] || fr; }
+
+            function setClimate(profile) {
+                const P = {
+                    neo: { temp: 23, fan: 'Eco', air: rep('x', 'Zéro courant d\'air', 'بدون تيار هواء', 'No draft', 'Cereyan yok') },
+                    enfant: { temp: 22, fan: 'Auto', air: 'doux' },
+                    adulte: { temp: 21.5, fan: 'Auto', air: 'standard' }
+                }[profile] || { temp: 21.5, fan: 'Auto', air: 'standard' };
+                try { if (typeof adjustTemp === 'function') { const t0 = parseInt((VAL('tempDisplay') || '21').replace(/[^0-9.-]/g, ''), 10) || 21; const steps = Math.min(Math.abs(t0 - P.temp), 6); for (let i = 0; i < steps; i++) adjustTemp(P.temp > t0 ? 1 : -1); } } catch (e) {}
+                try { if (typeof setFanSpeed === 'function') setFanSpeed(P.fan); } catch (e) {}
+                try { if (typeof switchTab === 'function') switchTab('climatisation'); } catch (e) {}
+                return P;
+            }
+
+            const clients = load('pixelClients', []);
+            const leads = load('pixelLeads', []);
+            let pend = load('pixelLeadPend', {});
+
+            function saveLead() {
+                if ((pend.email || '') && (pend.name || pend.phone)) {
+                    leads.push({ name: pend.name, email: pend.email, phone: pend.phone, ts: new Date().toISOString() });
+                    store('pixelLeads', leads);
+                    if (!clients.some(c => c.email === pend.email)) { clients.push(pend); store('pixelClients', clients); }
+                    pend = {}; store('pixelLeadPend', pend);
+                    return true;
+                }
+                return false;
+            }
+
+            const tools = {
+                recognize_client: {
+                    description: 'Reconnaît un client connu par son email (prospection vs support).',
+                    inputSchema: { type: 'object', properties: { email: { type: 'string' } } },
+                    execute(a) { const c = clients.find(x => x.email === (a.email || '').toLowerCase()); return { known: !!c, client: c || null }; }
+                },
+                set_climate_profile: {
+                    description: 'Adapte climatisation & ventilation selon le profil occupé (neo, enfant, adulte).',
+                    inputSchema: { type: 'object', properties: { profile: { type: 'string', enum: ['neo', 'enfant', 'adulte'] } } },
+                    execute(a) { return { ok: true, config: setClimate(a.profile) }; }
+                },
+                get_maintenance_guide: {
+                    description: 'Guide de dépannage simple d’une cabine Atlas.',
+                    inputSchema: { type: 'object', properties: { issue: { type: 'string' } } },
+                    execute() {
+                        const guide = '1. Coupez l\'alimentation électrique 10 s. 2. Rallumez : le boîtier IoT s\'initialise. 3. Si le réseau ne répond pas, vérifiez le routeur Wi-Fi / Ethernet. 4. Sinon : centre technique +216 52 675 027.';
+                        return { guide };
+                    }
+                },
+                capture_lead: {
+                    description: 'Enregistre un prospect (nom, email, téléphone) pour reprise commerciale.',
+                    inputSchema: { type: 'object', properties: { name: { type: 'string' }, email: { type: 'string' }, phone: { type: 'string' } } },
+                    execute(a) { pend = { name: a.name || pend.name || '', email: (a.email || pend.email || '').toLowerCase(), phone: a.phone || pend.phone || '' }; store('pixelLeadPend', pend); if (saveLead()) return { ok: true, count: leads.length }; return { ok: false, need: !pend.email ? 'email' : (!pend.name && !pend.phone ? 'name/phone' : '') }; }
+                },
+                translate_pix: {
+                    description: 'Traduction contextuelle PixelTranslate (fr/ar/en/tr).',
+                    inputSchema: { type: 'object', properties: { text: { type: 'string' }, target: { type: 'string' } } },
+                    execute(a) { const d = { bonjour: { ar: 'أهلاً', en: 'Hello', tr: 'Merhaba' }, merci: { ar: 'شكراً', en: 'Thank you', tr: 'Teşekkür' }, 'au revoir': { ar: 'مع السلامة', en: 'Goodbye', tr: 'Hoşça kal' } }; const k = norm(a.text || ''); return { text: d[k] ? (d[k][a.target] || a.text) : a.text }; }
+                },
+                get_state: {
+                    description: 'État courant de la cabine (porte, éclairage, température, réseau).',
+                    inputSchema: { type: 'object', properties: {} },
+                    execute() {
+                        const hw = (localStorage.getItem('atlasHardware') || 'esp32+pi').toUpperCase();
+                        return { state: 'Porte : ' + (VAL('doorStatus') || '—') + ' · Éclairage : ' + (VAL('lightLevel') || '—') + ' · Cible : ' + (VAL('tempDisplay') || '21°C') + ' · Cabine : ' + (VAL('sensorTemp') || '22.5°C') + ' · Ventilation : Auto · Réseau privé : ON · ' + hw };
+                    }
+                }
+            };
+            function runTool(name, args) { const t = tools[name]; if (!t) return { ok: false, error: 'unknown tool: ' + name }; return t.execute(args || {}); }
+
+            function prefer(q) {
+                const lang = detect(q);
+                const t = norm(q);
+                const em = q.match(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i);
+                const nm = q.match(/(?:appelle|nom|isim|اسمي|ismi|smi)[\s:]+([a-zà-ÿ]{2,20})/i);
+                const ph = q.match(/(\+?\d[\d\s.-]{7,}\d)/);
+
+                if (em) {
+                    const known = clients.find(c => c.email === em[0].toLowerCase());
+                    if (known) return { text: rep(lang, '✴️ Content de vous revoir, ' + known.name + ' ! ' + known.company + ' — votre installation nécessite une maintenance, un état des lieux ou une évolution ?', '✴️ سعدت برؤيتك مجدداً ' + known.name + '، هل تحتاج صيانة أم استشارة؟', '✴️ Good to see you again, ' + known.name + '! Maintenance, status or a new project?', '✴️ Tekrar görüşmek güzel, ' + known.name + '! Bakım mı, durum mu?' , '✴️ Marhba bik mrigi ' + known.name + '! Ta3amal maintenance walla tawjihet?'), lang };
+                    pend.email = em[0].toLowerCase(); store('pixelLeadPend', pend);
+                    return { text: rep(lang, 'Merci ! Pour préparer une proposition adaptée, puis-je avoir votre nom et votre numéro de téléphone ?', 'شكراً! لأجهز لكم عرضاً مناسباً، هل يمكنني الحصول على اسمك ورقم هاتفك؟', 'Thank you! To prepare a tailored proposal, may I have your name and phone number?', 'Teşekkürler! Uygun bir teklif hazırlamak için adınızı ve telefon numaranızı alabilir miyim?'), lang };
+                }
+                if (nm || ph) {
+                    if (nm) pend.name = nm[1].trim();
+                    if (ph) pend.phone = ph[1].replace(/\s+/g, ' ').trim();
+                    const who = pend.name || 'Cher client';
+                    store('pixelLeadPend', pend);
+                    if (saveLead()) return { text: rep(lang, '✅ Prospect enregistré, ' + who + ' ! Un expert PixelSoftware Design vous recontacte rapidement. (+216 52 675 027 en attendant)', '✅ تم تسجيل بياناتكم! سيتواصل معكم خبير PixelSoftware Design قريباً.', '✅ Lead captured, ' + who + '! A PixelSoftware Design expert will reach out shortly.', '✅ Müşteri kaydedildi! Bir uzmanımız en kısa sürede sizinle iletişime geçecek.'), lang };
+                    return { text: rep(lang, 'J\'enregistre vos coordonnées. Il me faut un email pour finaliser votre fiche (ou dites « je m\'appelle … » avec votre téléphone).', '', 'One more thing — I need an email to complete your lead.', ''), lang };
+                }
+
+                const occ = { bebe: 'neo', 'bébé': 'neo', nourrisson: 'neo', neo: 'neo', righdha: 'neo', 'رضيع': 'neo', enfant: 'enfant', child: 'enfant', 'طفل': 'enfant', adulte: 'adulte', homme: 'adulte', femme: 'adulte', man: 'adulte', woman: 'adulte', 'رجل': 'adulte' };
+                let prof = null;
+                for (const k in occ) if (t.includes(k)) { prof = occ[k]; break; }
+                if (prof) {
+                    const P = setClimate(prof);
+                    return { text: rep(lang,
+                        '❄️ Profil ' + prof + ' détecté : climatisation vers ' + P.temp + '°C, ventilation ' + P.fan + ' — ' + P.air + '.',
+                        { neo: '❄️ تم ضبط المناخ على 23°م وتهوية لطيفة بدون تيار هواء.', enfant: '❄️ رفعت درجة الحرارة إلى 22°م.', adulte: '❄️ ضبطت المناخ على 21.5°م.' }[prof] || '',
+                        { neo: '❄️ Climate set to 23°C, gentle ventilation, no draft.', enfant: '❄️ Temperature set to 22°C.', adulte: '❄️ Climate set to 21.5°C.' }[prof] || '',
+                        { neo: '❄️ İklim 23°C\'ye ayarlandı, cereyan yok.', enfant: '❄️ Sıcaklık 22°C\'ye ayarlandı.', adulte: '❄️ İklim 21.5°C\'ye ayarlandı.' }[prof] || ''), lang };
+                }
+                if (lang === 'darja') {
+                    if (/baddel|climat/.test(t)) { setClimate('adulte'); return { text: '❄️ Aya, faddaltelkom el climat w ch3alt el ventilation 3la el modo — ahsen wadheb ayadi !', lang }; }
+                    return { text: 'Ahla bik! Najem n3awnek b: état, élément, climatisation, maintenance, prix, wala devis. Chbih shnabghiw?', lang };
+                }
+                if (lang !== 'fr') {
+                    if (/(panne|maintenance|reboot|rasseps|reparer|broken|fix)/.test(t)) {
+                        return { text: rep(lang, '', 'دليل الصيانة السريعة: 1) اقطع التيار 10 ثوانٍ. 2) أعد التشغيل. 3) تحقق من الراوتر. 4) إن لم يُحل: +216 52 675 027.', 'Quick maintenance: 1) Power off 10s. 2) Restart. 3) Check router. 4) If not fixed: +216 52 675 027.', 'Hızlı bakım: 1) Gücü 10sn kesin. 2) Yeniden başlatın. 3) Yönlendiriciyi kontrol edin. 4) Çözülmezse: +216 52 675 027.'), lang };
+                    }
+                    if (/(devis|prix|price|quote|contact|telephone|tarif)/.test(t)) {
+                        return { text: rep(lang, '', 'للحصول على عرض سعر: اسمك ورقم هاتفك؟ أو اتصل بنا: +216 52 675 027 — pixelsoftwaredesign@gmail.com', 'For a quote: your name and phone? Or call +216 52 675 027 — pixelsoftwaredesign@gmail.com', 'Fiyat teklifi için ad ve telefon? Ya da: +216 52 675 027 — pixelsoftwaredesign@gmail.com'), lang };
+                    }
+                    return { text: rep(lang, '', 'أهلاً بكم في Pixel Software Design. أساعدكم في: الحالة، المناخ، الصيانة، الأسعار، والتواصل.', 'Welcome to Pixel Software Design. I can help with: status, climate, maintenance, pricing, contact.', 'Pixel Software Design\'e hoş geldiniz. Yardımcı olabilirim: durum, iklim, bakım, fiyat, iletişim.'), lang };
+                }
+                return null;
+            }
+
+            return {
+                detect: detect,
+                prefer: prefer,
+                runTool: runTool,
+                tools: Object.keys(tools).map(n => ({ name: n, description: tools[n].description, inputSchema: tools[n].inputSchema })),
+                pendingLeads: function () { return leads; },
+                clearPending: function () { leads.length = 0; store('pixelLeads', leads); }
+            };
+        })();
+    </script>
+
+    <script>
+        (function () {
+            'use strict';
+            const $ = (id) => document.getElementById(id);
+            const pad = (n) => String(n).padStart(2, '0');
+            function tick() {
+                const d = new Date();
+                const clk = $('uxClock'); if (clk) clk.textContent = pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+                const dt = $('uxDate'); if (dt) dt.textContent = d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+                const j = $('uxDay'); if (j) j.textContent = 'Jour ' + pad(d.getDate()) + ' / ' + pad(new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate());
+                const tgt = $('uxCabTarget'); if (tgt) { try { tgt.textContent = $('tempDisplay') ? $('tempDisplay').textContent : '21°C'; } catch (e) { tgt.textContent = '21°C'; } }
+            }
+            let calMonth = null;
+            function cal() {
+                const d = new Date();
+                if (calMonth === d.getMonth() && $('uxCal').innerHTML) return;
+                calMonth = d.getMonth();
+                const c = $('uxCal'); if (!c) return;
+                const y = d.getFullYear(), m = d.getMonth();
+                const off = (new Date(y, m, 1).getDay() + 6) % 7;
+                const days = new Date(y, m + 1, 0).getDate();
+                const today = d.getDate();
+                let h = '<div class="grid grid-cols-7 gap-1 text-center mb-1">' + ['L', 'M', 'M', 'J', 'V', 'S', 'D'].map(l => '<span class="text-[#9ACD32] font-black text-[9px]">' + l + '</span>').join('') + '</div><div class="grid grid-cols-7 gap-1 text-center">';
+                for (let i = 0; i < off; i++) h += '<span></span>';
+                for (let i = 1; i <= days; i++) h += '<span class="mono text-[10px] w-6 h-6 leading-6 rounded-md ' + (i === today ? 'bg-[#2D5A27] text-white font-black shadow' : 'text-slate-500' + (i < today ? ' opacity-40' : '')) + '">' + i + '</span>';
+                h += '</div>';
+                c.innerHTML = h;
+                const ml = $('uxCalTitle'); if (ml) ml.textContent = d.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+            }
+            tick(); cal();
+            setInterval(tick, 1000);
+            setInterval(cal, 10000);
+        })();
+    </script>
+
+<script>
+(function () {
+    function R(a, b) { return a + Math.random() * (b - a); }
+    function arcD(cx, cy, S) {
+        return "M " + (cx - S * 1.6).toFixed(0) + " " + (cy + S - 60).toFixed(0) +
+            " Q " + (cx).toFixed(0) + " " + (cy + S + 30).toFixed(0) +
+            ", " + (cx + S * 1.6).toFixed(0) + " " + (cy - S * 0.8).toFixed(0);
+    }
+    function splineD(cx, cy, S) {
+        return "M " + (cx - S * 2.0).toFixed(0) + " " + (cy + R(-90, 90)).toFixed(0) +
+            " C " + (cx - S).toFixed(0) + " " + (cy + R(-160, 160)).toFixed(0) +
+            ", " + (cx + S).toFixed(0) + " " + (cy + R(-160, 160)).toFixed(0) +
+            ", " + (cx + S * 2.0).toFixed(0) + " " + (cy + R(-90, 90)).toFixed(0);
+    }
+    function infiniD(cx, cy, S) {
+        var r = S, v = S * 0.55;
+        return "M " + (cx - r).toFixed(0) + " " + cy + " A " + r.toFixed(0) + " " + v.toFixed(0) + " 0 1 1 " + (cx + r).toFixed(0) + " " + cy +
+            " A " + r.toFixed(0) + " " + v.toFixed(0) + " 0 1 1 " + (cx - r).toFixed(0) + " " + cy;
+    }
+    function ringD(cx, cy, S) {
+        return "M " + (cx - S).toFixed(0) + " " + cy + " A " + S.toFixed(0) + " " + S.toFixed(0) + " 0 1 0 " + (cx + S).toFixed(0) + " " + cy +
+            " A " + S.toFixed(0) + " " + S.toFixed(0) + " 0 1 0 " + (cx - S).toFixed(0) + " " + cy;
+    }
+    function orbitPath(o, r) {
+        return "M " + (o.cx - r).toFixed(0) + " " + o.cy + " A " + r.toFixed(0) + " " + r.toFixed(0) + " 0 1 0 " + (o.cx + r).toFixed(0) + " " + o.cy +
+            " A " + r.toFixed(0) + " " + r.toFixed(0) + " 0 1 0 " + (o.cx - r).toFixed(0) + " " + o.cy;
+    }
+    var makers = [arcD, splineD, infiniD, ringD];
+    var F = ["rgba(45,90,39,", "rgba(154,205,50,"];
+    var shapes = [];
+    for (var i = 0; i < 3; i++) {
+        var S = R(115, 300);
+        var cx = R(130, 1070), cy = R(80, 560);
+        var t = Math.floor(R(0, 4));
+        shapes.push({ d: makers[t](cx, cy, S), cx: cx, cy: cy, r: S,
+            stroke: F[Math.floor(R(0, 2))] + R(0.5, 0.95).toFixed(2) + ")",
+            sw: R(2, 11).toFixed(1) });
+    }
+    var ns = "http://www.w3.org/2000/svg";
+    var svg = document.createElementNS(ns, "svg");
+    svg.setAttribute("class", "uxSplineFx");
+    svg.setAttribute("viewBox", "0 0 1200 700");
+    svg.setAttribute("preserveAspectRatio", "xMidYMid slice");
+    svg.setAttribute("aria-hidden", "true");
+    svg.style.cssText="--sd:"+R(14,26).toFixed(1)+"s;--rx1:"+R(-22,22).toFixed(0)+"deg;--ry1:"+R(-22,22).toFixed(0)+"deg;--rx2:"+R(-20,20).toFixed(0)+"deg;--ry2:"+R(-20,20).toFixed(0)+"deg;--tz1:"+R(40,150).toFixed(0)+"px;--tz2:"+R(20,100).toFixed(0)+"px;--s1:"+R(1.03,1.12).toFixed(3)+";--s2:"+R(1.02,1.09).toFixed(3)+";";
+    shapes.forEach(function (s) {
+        var p = document.createElementNS(ns, "path");
+        p.setAttribute("class", "splinePath");
+        p.setAttribute("d", s.d);
+        p.setAttribute("stroke", s.stroke);
+        p.setAttribute("stroke-width", s.sw);
+        svg.appendChild(p);
+    });
+    function dot(fill, dur, begin, path) {
+        var c = document.createElementNS(ns, "circle");
+        c.setAttribute("class", "uxDotHalo");
+        c.setAttribute("r", "3");
+        c.setAttribute("fill", fill);
+        var am = document.createElementNS(ns, "animateMotion");
+        am.setAttribute("dur", dur + "s");
+        am.setAttribute("begin", begin + "s");
+        am.setAttribute("repeatCount", "indefinite");
+        am.setAttribute("path", path);
+        c.appendChild(am);
+        svg.appendChild(c);
+    }
+    var o0 = orbitPath({ cx: shapes[0].cx, cy: shapes[0].cy }, shapes[0].r + 8);
+    var o1 = orbitPath({ cx: shapes[1].cx, cy: shapes[1].cy }, shapes[1].r + 8);
+    var d0 = R(10, 18);
+    dot("#d9ff8c", d0, 0, o0);
+    dot("#9ACD32", d0, 0, o0);
+    dot("#d9ff8c", R(14, 23), R(2, 7), o1);
+    var wrap = document.createElement("div");
+    wrap.setAttribute("class", "uxSplineBg");
+    wrap.appendChild(svg);
+    var bk = document.getElementById("uxBack");
+    if (bk && bk.nextSibling) { bk.parentNode.insertBefore(wrap, bk.nextSibling); }
+    else { document.body.insertBefore(wrap, document.body.firstChild); }
+})();
+</script>
+
+<script>"serviceWorker"in navigator&&location.protocol==="https:"&&navigator.serviceWorker.register("/sw.js").catch(function(){})</script>
+
+
 </body>
 </html>

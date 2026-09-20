@@ -77,6 +77,23 @@ hardware/
 4. **③ Arduino** : `door-arduino.ino` (`ARDUINO_LINK=1` Ethernet ou `=2` pont Pi).
 5. **Brancher Android** (optionnel) : `hardware/android/AtlasCabine` → app télécommande.
 
+## Générer le firmware PAR CABINE (AT-S90 / AT-M240 / AT-L350)
+
+Un générateur natif produit un **projet Arduino complet par cabine**
+(config + firmware, prêt à flasher) :
+
+```bash
+node hardware/generate-cabines.mjs
+# → hardware/generated/AT-S90/{esp32,arduino}/…  (Cabine S · 18 500 DT)
+# → hardware/generated/AT-M240/{esp32,arduino}/…  (Cabine M · 32 900 DT · + clim, CO₂)
+# → hardware/generated/AT-L350/{esp32,arduino}/…  (Cabine L · 58 500 DT · + caméra)
+```
+
+- Source de vérité : `hardware/profiles/cabines.json`
+- MANIFEST : `hardware/generated/MANIFEST.json`
+- Chaque `CABINE_*` embarque : identité, rôle (standalone/esclave), broches,
+  capacités natives et dimensions – signatures copyright PixelSoftware Design incluses.
+
 > Le kiosque web (`index.html`, `exterieur.html`) est **déjà** orienté cabine : il parle à
 > `ws://<hub>/ws` quand il est servi par le Pi ou le serveur local (`server/`), sinon il
 > fonctionne en simulation (data uniquement locale).

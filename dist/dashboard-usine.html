@@ -1,20 +1,30 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+    <style data-rsp="1">html,body{overflow-x:hidden}body{word-wrap:break-word;overflow-wrap:break-word}img,svg,canvas,iframe,video,embed{max-width:100%;height:auto}h1,h2,h3,h4,p,a,button,label,td,th,legend{overflow-wrap:break-word}.min-w-\[180px\],.min-w-\[220px\],.min-w-\[640px\],.min-w-\[720px\]{min-width:0!important}@media (max-width:420px){input,select,textarea{min-width:0;max-width:100%}}</style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ATLAS USINE — Dashboard Temps Réel</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        * { font-family: 'Plus Jakarta Sans', sans-serif; }
-        .mono { font-family: 'JetBrains Mono', monospace; }
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-thumb { background: #2D5A27; border-radius: 8px; }
-        ::-webkit-scrollbar-track { background: #F4F6F0; }
-    </style>
-</head>
+    <style>*{font-family:'Plus Jakarta Sans',sans-serif}.mono{font-family:'JetBrains Mono',monospace}::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-thumb{background:#2D5A27;border-radius:8px}::-webkit-scrollbar-track{background:#F4F6F0}.uxSplineBg{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;perspective:1100px}.uxSplineFx{position:absolute;inset:0;width:100%;height:100%;transform-style:preserve-3d;transform-origin:center center;animation:spline3d var(--sd,28s) ease-in-out infinite}.splinePath{fill:none;stroke-linecap:round;stroke-linejoin:round}.uxDotHalo{transform-box:fill-box;transform-origin:center;animation:uxPulse 3.4s ease-in-out infinite}@keyframes spline3d{0%,100%{transform:rotateX(0deg)rotateY(0deg)translateZ(0)scale(1)}25%{transform:rotateX(var(--rx1,0deg))rotateY(var(--ry1,0deg))translateZ(var(--tz1,40px))scale(var(--s1,1.06))}50%{transform:rotateX(0deg)rotateY(0deg)translateZ(0)scale(1)}75%{transform:rotateX(var(--rx2,0deg))rotateY(var(--ry2,0deg))translateZ(var(--tz2,30px))scale(var(--s2,1.05))}}@keyframes uxPulse{0%,100%{opacity:.22;transform:scale(1)}50%{opacity:.6;transform:scale(1.65)}}</style>
+
+<meta name="description" content="Dashboard usine en temps réel Atlas : flux, registre des urgences, ventes par modèle et par site.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ATLAS CABINE">
+<meta property="og:title" content="ATLAS CABINE">
+<meta property="og:description" content="Dashboard usine en temps réel Atlas : flux, registre des urgences, ventes par modèle et par site.">
+<meta property="og:url" content="https://atlascabine.pages.dev/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#2D5A27">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Organization","name":"ATLAS CABINE","legalName":"PixelSoftware Design","foundingLocation":{"@type":"Place","name":"Tunisie"},"slogan":"L'espace de concentration","description":"Cabines acoustiques Atlas et leur écosystème numérique (kiosque, application, portails).","sameAs":[]}
+</script>
+<script src="/lang.js"></script></head>
 <body class="bg-[#F4F6F0] text-[#2D3748]">
+
+    
 
     <header class="bg-[#2D3748] px-6 py-4 flex flex-wrap items-center justify-between gap-3 sticky top-0 z-40 shadow-lg">
         <div class="flex items-center gap-3">
@@ -112,11 +122,11 @@
             <h2 class="font-bold text-[#2D5A27] mb-4">🛒 Dernières ventes</h2>
             <div id="salesList" class="overflow-x-auto">
                 <p class="text-xs text-slate-400 text-center py-6">Aucune vente dans le portail.</p>
-                <div class="min-w-[640px]"><table class="w-full text-sm">
+                <div class="min-w-[640px]"><div style="overflow-x:auto;max-width:100%;-webkit-overflow-scrolling:touch"><table class="w-full text-sm">
                     <thead><tr class="text-left text-[10px] mono uppercase text-slate-400 border-b border-[#2D5A27]/10">
                         <th class="py-2 px-3">Client</th><th class="py-2 px-3">Modèle</th><th class="py-2 px-3">Qté</th><th class="py-2 px-3">Site</th><th class="py-2 px-3">Code d'accès</th><th class="py-2 px-3">Total</th><th class="py-2 px-3">Date</th>
                     </tr></thead><tbody id="salesBody"></tbody>
-                </table></div>
+                </table></div></div>
             </div>
         </section>
 
@@ -124,11 +134,11 @@
         <section class="bg-white border border-[#2D5A27]/15 rounded-3xl p-6 shadow-sm">
             <h2 class="font-bold text-[#2D5A27] mb-4">🕐 Sessions utilisateurs</h2>
             <div class="overflow-x-auto">
-                <table class="w-full text-sm min-w-[640px]">
+                <div style="overflow-x:auto;max-width:100%;-webkit-overflow-scrolling:touch"><table class="w-full text-sm min-w-[640px]">
                     <thead><tr class="text-left text-[10px] mono uppercase text-slate-400 border-b border-[#2D5A27]/10">
                         <th class="py-2 px-3">Utilisateur</th><th class="py-2 px-3">Cabine</th><th class="py-2 px-3">Début</th><th class="py-2 px-3">Fin</th><th class="py-2 px-3">Durée</th><th class="py-2 px-3">Statut</th>
                     </tr></thead><tbody id="sessionsBody"></tbody>
-                </table>
+                </table></div>
                 <p id="sessionsEmpty" class="text-xs text-slate-400 text-center py-6">Aucune session enregistrée.</p>
             </div>
         </section>
@@ -137,17 +147,26 @@
         <section class="bg-white border border-[#2D5A27]/15 rounded-3xl p-6 shadow-sm">
             <h2 class="font-bold text-[#2D5A27] mb-4">🏭 Registre des cabines livrées (ID & tokens usine)</h2>
             <div class="overflow-x-auto">
-                <table class="w-full text-sm min-w-[720px]">
+                <div style="overflow-x:auto;max-width:100%;-webkit-overflow-scrolling:touch"><table class="w-full text-sm min-w-[720px]">
                     <thead><tr class="text-left text-[10px] mono uppercase text-slate-400 border-b border-[#2D5A27]/10">
                         <th class="py-2 px-3">ID cabine</th><th class="py-2 px-3">Token d'accès</th><th class="py-2 px-3">Mot de passe</th><th class="py-2 px-3">Client</th><th class="py-2 px-3">Modèle</th><th class="py-2 px-3">Site</th><th class="py-2 px-3">Kiosque</th>
                     </tr></thead><tbody id="cabinsBody"></tbody>
-                </table>
+                </table></div>
                 <p id="cabinsEmpty" class="text-xs text-slate-400 text-center py-6">Aucune cabine livrée (générez une commande dans le Portail Usine).</p>
             </div>
         </section>
     </main>
 
-    <footer class="text-center text-xs text-slate-400 mono pb-6">© 2026 · Made in Tunisia 🇹🇳 · Logiciel & R&D : PixelSoftware Design — Design cabine &amp; standard acoustique : Atlas Working (développement / idée)</footer>
+    <footer class="text-center text-xs text-slate-400 mono pb-6">© 2026 · Made in Tunisia 🇹🇳 · Logiciel & R&D : PixelSoftware Design — Design cabine &amp; standard acoustique : Atlas Working (développement / idée)
+    <div style="width:1200px;max-width:96vw;margin:0 auto;padding:10px 16px;text-align:center;font-size:12px;font-weight:700;color:#2D5A27">Logiciel © 2026 PixelSoftware Design — Tous droits réservés.</div>
+<div style="max-width:1200px;margin:0 auto;padding:14px 16px;text-align:center;font-size:12px;color:#5b6b52;border-top:1px solid rgba(45,90,39,.15);background:rgba(45,90,39,.04)">
+        <a href="mentions-legales.html" style="color:#2D5A27;text-decoration:none;margin:0 8px">Mentions légales</a> ·
+        <a href="cgv.html" style="color:#2D5A27;text-decoration:none;margin:0 8px">CGV / CGU</a> ·
+        <a href="confidentialite.html" style="color:#2D5A27;text-decoration:none;margin:0 8px">Confidentialité</a> ·
+        <a href="cookies.html" style="color:#2D5A27;text-decoration:none;margin:0 8px">Cookies</a> ·
+        <a href="changelog.html" style="color:#2D5A27;text-decoration:none;margin:0 8px">Journal des versions</a>
+    </div>
+    </footer>
 
     <script>
         const MODELS = { 'AT-S90': 'Small', 'AT-M240': 'Medium', 'AT-L350': 'Large' };
@@ -378,5 +397,90 @@
         setInterval(() => pushFeed('sale', 'Synchronisation OK — écoute active'), 30000);
         refresh();
     </script>
+
+<script>
+(function () {
+    function R(a, b) { return a + Math.random() * (b - a); }
+    function arcD(cx, cy, S) {
+        return "M " + (cx - S * 1.6).toFixed(0) + " " + (cy + S - 60).toFixed(0) +
+            " Q " + (cx).toFixed(0) + " " + (cy + S + 30).toFixed(0) +
+            ", " + (cx + S * 1.6).toFixed(0) + " " + (cy - S * 0.8).toFixed(0);
+    }
+    function splineD(cx, cy, S) {
+        return "M " + (cx - S * 2.0).toFixed(0) + " " + (cy + R(-90, 90)).toFixed(0) +
+            " C " + (cx - S).toFixed(0) + " " + (cy + R(-160, 160)).toFixed(0) +
+            ", " + (cx + S).toFixed(0) + " " + (cy + R(-160, 160)).toFixed(0) +
+            ", " + (cx + S * 2.0).toFixed(0) + " " + (cy + R(-90, 90)).toFixed(0);
+    }
+    function infiniD(cx, cy, S) {
+        var r = S, v = S * 0.55;
+        return "M " + (cx - r).toFixed(0) + " " + cy + " A " + r.toFixed(0) + " " + v.toFixed(0) + " 0 1 1 " + (cx + r).toFixed(0) + " " + cy +
+            " A " + r.toFixed(0) + " " + v.toFixed(0) + " 0 1 1 " + (cx - r).toFixed(0) + " " + cy;
+    }
+    function ringD(cx, cy, S) {
+        return "M " + (cx - S).toFixed(0) + " " + cy + " A " + S.toFixed(0) + " " + S.toFixed(0) + " 0 1 0 " + (cx + S).toFixed(0) + " " + cy +
+            " A " + S.toFixed(0) + " " + S.toFixed(0) + " 0 1 0 " + (cx - S).toFixed(0) + " " + cy;
+    }
+    function orbitPath(o, r) {
+        return "M " + (o.cx - r).toFixed(0) + " " + o.cy + " A " + r.toFixed(0) + " " + r.toFixed(0) + " 0 1 0 " + (o.cx + r).toFixed(0) + " " + o.cy +
+            " A " + r.toFixed(0) + " " + r.toFixed(0) + " 0 1 0 " + (o.cx - r).toFixed(0) + " " + o.cy;
+    }
+    var makers = [arcD, splineD, infiniD, ringD];
+    var F = ["rgba(45,90,39,", "rgba(154,205,50,"];
+    var shapes = [];
+    for (var i = 0; i < 3; i++) {
+        var S = R(115, 300);
+        var cx = R(130, 1070), cy = R(80, 560);
+        var t = Math.floor(R(0, 4));
+        shapes.push({ d: makers[t](cx, cy, S), cx: cx, cy: cy, r: S,
+            stroke: F[Math.floor(R(0, 2))] + R(0.5, 0.95).toFixed(2) + ")",
+            sw: R(2, 11).toFixed(1) });
+    }
+    var ns = "http://www.w3.org/2000/svg";
+    var svg = document.createElementNS(ns, "svg");
+    svg.setAttribute("class", "uxSplineFx");
+    svg.setAttribute("viewBox", "0 0 1200 700");
+    svg.setAttribute("preserveAspectRatio", "xMidYMid slice");
+    svg.setAttribute("aria-hidden", "true");
+    svg.style.cssText="--sd:"+R(14,26).toFixed(1)+"s;--rx1:"+R(-22,22).toFixed(0)+"deg;--ry1:"+R(-22,22).toFixed(0)+"deg;--rx2:"+R(-20,20).toFixed(0)+"deg;--ry2:"+R(-20,20).toFixed(0)+"deg;--tz1:"+R(40,150).toFixed(0)+"px;--tz2:"+R(20,100).toFixed(0)+"px;--s1:"+R(1.03,1.12).toFixed(3)+";--s2:"+R(1.02,1.09).toFixed(3)+";";
+    shapes.forEach(function (s) {
+        var p = document.createElementNS(ns, "path");
+        p.setAttribute("class", "splinePath");
+        p.setAttribute("d", s.d);
+        p.setAttribute("stroke", s.stroke);
+        p.setAttribute("stroke-width", s.sw);
+        svg.appendChild(p);
+    });
+    function dot(fill, dur, begin, path) {
+        var c = document.createElementNS(ns, "circle");
+        c.setAttribute("class", "uxDotHalo");
+        c.setAttribute("r", "3");
+        c.setAttribute("fill", fill);
+        var am = document.createElementNS(ns, "animateMotion");
+        am.setAttribute("dur", dur + "s");
+        am.setAttribute("begin", begin + "s");
+        am.setAttribute("repeatCount", "indefinite");
+        am.setAttribute("path", path);
+        c.appendChild(am);
+        svg.appendChild(c);
+    }
+    var o0 = orbitPath({ cx: shapes[0].cx, cy: shapes[0].cy }, shapes[0].r + 8);
+    var o1 = orbitPath({ cx: shapes[1].cx, cy: shapes[1].cy }, shapes[1].r + 8);
+    var d0 = R(10, 18);
+    dot("#d9ff8c", d0, 0, o0);
+    dot("#9ACD32", d0, 0, o0);
+    dot("#d9ff8c", R(14, 23), R(2, 7), o1);
+    var wrap = document.createElement("div");
+    wrap.setAttribute("class", "uxSplineBg");
+    wrap.appendChild(svg);
+    var bk = document.getElementById("uxBack");
+    if (bk && bk.nextSibling) { bk.parentNode.insertBefore(wrap, bk.nextSibling); }
+    else { document.body.insertBefore(wrap, document.body.firstChild); }
+})();
+</script>
+
+<script>"serviceWorker"in navigator&&location.protocol==="https:"&&navigator.serviceWorker.register("/sw.js").catch(function(){})</script>
+
+<button id="langBtnX" onclick="ML.cycle(this)" style="position:fixed;top:12px;right:12px;z-index:99999;font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:800;padding:7px 12px;border:none;border-radius:12px;background:#2D5A27;color:#fff;cursor:pointer;box-shadow:0 6px 18px rgba(45,90,39,.35)">Français</button>
 </body>
 </html>

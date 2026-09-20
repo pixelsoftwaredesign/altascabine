@@ -1,5 +1,8 @@
 // ============================================================================
 // ATLAS CABINE — ArduinoCabineConfig.h
+// © 2026 Atlas Working — Made in Tunisia 🇹🇳
+// Logiciel & R&D : PixelSoftware Design
+// Design cabine & standard acoustique : Atlas Working (développement / idée)
 // Modèle ARDUINO (ATmega328/2560) : contrôleur cabine sur plateforme Arduino.
 //
 // L'Arduino n'a PAS de WiFi natif → deux branches (selon le matériel) :

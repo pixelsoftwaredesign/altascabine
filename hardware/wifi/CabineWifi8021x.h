@@ -1,5 +1,8 @@
 // ============================================================================
 // ATLAS CABINE — CabineWifi8021x.h
+// © 2026 Atlas Working — Made in Tunisia 🇹🇳
+// Logiciel & R&D : PixelSoftware Design
+// Design cabine & standard acoustique : Atlas Working (développement / idée)
 // Cabine AVANCÉE : WiFi entreprise (WPA2-Enterprise / 802.1X) sur le réseau
 // WiFi PRIVÉ de la cabine.
 //

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <style data-rsp="1">html,body{overflow-x:hidden}body{word-wrap:break-word;overflow-wrap:break-word}img,svg,canvas,iframe,video,embed{max-width:100%;height:auto}h1,h2,h3,h4,p,a,button,label,td,th,legend{overflow-wrap:break-word}.min-w-\[180px\],.min-w-\[220px\],.min-w-\[640px\],.min-w-\[720px\]{min-width:0!important}@media (max-width:420px){input,select,textarea{min-width:0;max-width:100%}}</style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Journal des versions · ATLAS CABINE</title>
+<meta name="description" content="Historique des versions et améliorations de la plateforme ATLAS CABINE.">
+<meta name="robots" content="index,follow">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#2D5A27">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:#F4F6F0;color:#2D3748;line-height:1.7}
+nav{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:1rem;padding:.8rem 1.5rem;background:rgba(45,90,39,.95);color:#fff}
+nav a{color:#fff;text-decoration:none;font-size:.85rem;font-weight:600;margin-right:1rem}
+nav a:hover{color:#d9ff8c}
+nav .brand{font-weight:800;color:#d9ff8c}
+main{max-width:820px;margin:0 auto;padding:3rem 1.5rem 4rem}
+h1{color:#2D5A27;font-size:1.9rem;margin-bottom:.4rem}
+.lead{color:#5b6b52;font-size:.95rem;margin-bottom:2rem}
+.release{background:#fff;border:1px solid rgba(45,90,39,.15);border-left:5px solid #9ACD32;border-radius:14px;padding:1.2rem 1.5rem;margin-bottom:1.2rem}
+.release h2{color:#2D5A27;font-size:1.05rem;margin-bottom:.35rem;display:flex;align-items:center;gap:.5rem}
+.tag{font:600 .62rem 'JetBrains Mono',monospace;background:#2D5A27;color:#d9ff8c;padding:.15rem .5rem;border-radius:999px}
+.tag.wip{background:#9ACD32;color:#2D3748}
+ul{margin:.3rem 0 .4rem 1.2rem;font-size:.9rem}
+li{margin-bottom:.3rem}
+small{color:#64748b}
+footer{text-align:center;padding:1.4rem;font-size:.78rem;color:#5b6b52;background:#e9eee1}
+footer a{color:#2D5A27;margin:0 .4rem}
+</style>
+<script src="/lang.js"></script></head>
+<body>
+<nav>
+  <a class="brand" href="index.html">ATLAS CABINE</a>
+  <a href="boutique.html">🛒 Boutique</a>
+  <a href="catalogue.html">📚 Catalogue</a>
+  <a href="system.html">🔧 Système</a>
+  <a href="home.html">🧭 Plateforme</a>
+</nav>
+<main>
+  <h1>📅 Journal des versions</h1>
+  <p class="lead">Historique des évolutions de la plateforme, du kiosque et des portails.</p>
+
+  <div class="release">
+    <h2>v1.4 <span class="tag wip">en cours</span></h2>
+    <ul>
+      <li>Backend &amp; firmware : connexion à un hub réel (ESP32 / Raspberry Pi « cabin-hub ») prévue pour remplacer les données de démo.</li>
+      <li>Paiement en ligne (D17 / Orange Money), facture PDF, suivi de livraison.</li>
+      <li>Contact &amp; devis branchés sur services réels (messagerie, WhatsApp).</li>
+    </ul>
+  </div>
+
+  <div class="release">
+    <h2>v1.3 <span class="tag">2026-09-19</span></h2>
+    <ul>
+      <li>Pages légales : mentions légales, CGV/CGU, politique de confidentialité (RGPD), politique cookies.</li>
+      <li>SEO : meta description, Open Graph, JSON-LD (Organization), sitemap.xml, robots.txt.</li>
+      <li>PWA : manifest + service worker (hors-ligne), thème de marque, corrige les polices/Tailwind en cache.</li>
+      <li>i18n : langue arabe (RTL) sur le kiosque puis l’ensemble du site, choix mémorisé.</li>
+      <li>Optimisation générale du code : styles fusionnés/minifiés, code mort supprimé (18/18 pages validées).</li>
+    </ul>
+  </div>
+
+  <div class="release">
+    <h2>v1.2 <span class="tag">2026-08</span></h2>
+    <ul>
+      <li>Kiosque : scan QR d’ouverture, mode urgence, mode technicien (jetons), compteur d’accès.</li>
+      <li>PixelAssistante : micro vocal « Hi Pixel », commandes cabine (porte, lumière, température).</li>
+      <li>Appel d’assistance centre technique et urgences (SAMU 190, protection civile 198, police 197).</li>
+      <li>Portails usine &amp; commercial + dashboard temps réel.</li>
+    </ul>
+  </div>
+
+  <div class="release">
+    <h2>v1.1 <span class="tag">2026-07</span></h2>
+    <ul>
+      <li>Fond animé aléatoire (splines 3D) sur l’ensemble des pages.</li>
+      <li>Boutique en 3 clics, catalogue 3 modèles, présentation, manuels, tutoriel, visite 360°.</li>
+    </ul>
+  </div>
+
+  <div style="width:1200px;max-width:96vw;margin:0 auto;padding:10px 16px;text-align:center;font-size:12px;font-weight:700;color:#2D5A27">Logiciel © 2026 PixelSoftware Design — Tous droits réservés.</div>
+<div class="release">
+    <h2>v1.0 <span class="tag">2026-06</span></h2>
+    <ul>
+      <li>Première version publique du site vitrine ATLAS CABINE.</li>
+      <li>Palette de marque, identité « Made in Tunisia » 🇹🇳.</li>
+    </ul>
+  </div>
+</main>
+<footer>
+  <a href="mentions-legales.html">Mentions légales</a> ·
+  <a href="cgv.html">CGV/CGU</a> ·
+  <a href="confidentialite.html">Confidentialité</a> ·
+  <a href="cookies.html">Cookies</a> ·
+        <a href="changelog.html" style="color:#2D5A27;text-decoration:none;margin:0 8px">Journal des versions</a>
+  <br><small>© 2026 ATLAS CABINE · Made in Tunisia 🇹🇳 · PixelSoftware Design &amp; Atlas Working</small>
+</footer>
+</body>
+</html>

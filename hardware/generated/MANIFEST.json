@@ -1,0 +1,53 @@
+{
+  "generateur": "hardware/generate-cabines.mjs",
+  "cree_le": "2026-09-19T00:22:32.594Z",
+  "cabines": [
+    {
+      "cabine": "AT-S90",
+      "nom": "Cabine S",
+      "prix_ht_dt": 18500,
+      "modele": "esp32",
+      "caps": [
+        "door",
+        "reed",
+        "sensor",
+        "light"
+      ],
+      "esp32": "hardware/generated/AT-S90/esp32/",
+      "arduino": "hardware/generated/AT-S90/arduino/"
+    },
+    {
+      "cabine": "AT-M240",
+      "nom": "Cabine M",
+      "prix_ht_dt": 32900,
+      "modele": "pi",
+      "caps": [
+        "door",
+        "reed",
+        "sensor",
+        "light",
+        "ac",
+        "co2"
+      ],
+      "esp32": "hardware/generated/AT-M240/esp32/",
+      "arduino": "hardware/generated/AT-M240/arduino/"
+    },
+    {
+      "cabine": "AT-L350",
+      "nom": "Cabine L",
+      "prix_ht_dt": 58500,
+      "modele": "pi",
+      "caps": [
+        "door",
+        "reed",
+        "sensor",
+        "light",
+        "ac",
+        "co2",
+        "cam"
+      ],
+      "esp32": "hardware/generated/AT-L350/esp32/",
+      "arduino": "hardware/generated/AT-L350/arduino/"
+    }
+  ]
+}

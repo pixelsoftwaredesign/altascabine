@@ -38,6 +38,16 @@
     "detection": {
       "mechanisme": "ESP32/Arduino : scanHardware() au boot + rescan (cmd MQTT 'scan' / HTTP /api/scan)",
       "rapport_mqtt": "atlas/<cab>/material (retained, mode + modules ok/off)"
+    },
+    "generateur_cabines": {
+      "script": "hardware/generate-cabines.mjs",
+      "source": "hardware/profiles/cabines.json",
+      "sortie": "hardware/generated/<CABINE>/{esp32,arduino}/",
+      "cabines": [
+        { "id": "AT-S90",  "nom": "Cabine S", "prix_ht_dt": 18500, "modele": "esp32", "caps": ["door","reed","sensor","light"] },
+        { "id": "AT-M240", "nom": "Cabine M", "prix_ht_dt": 32900, "modele": "pi",    "caps": ["door","reed","sensor","light","ac","co2"] },
+        { "id": "AT-L350", "nom": "Cabine L", "prix_ht_dt": 58500, "modele": "pi",    "caps": ["door","reed","sensor","light","ac","co2","cam"] }
+      ]
     }
   }
 }

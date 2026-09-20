@@ -11,6 +11,34 @@ const fs = require('fs');
 const mqtt = require('mqtt');
 const { WebSocketServer } = require('ws');
 
+// ---- Assistante Atlas : IA privée ON-BOARD (aucune requête externe) ----
+let ASSISTANT_KB = { intents: [], suggestions: [] };
+try {
+  ASSISTANT_KB = JSON.parse(fs.readFileSync(path.join(__dirname, 'assistant-kb.json'), 'utf8'));
+  log('[IA]', 'Assistante privée prête :', ASSISTANT_KB.intents.length, 'intents');
+} catch (e) { log('[IA]', 'base de connaissances absente', e.message); }
+
+function normText(s) { return String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
+function assistantReply(q) {
+  const tokens = normText(q).split(/[^a-z0-9]+/).filter(Boolean);
+  let best = null, bs = 0;
+  for (const e of ASSISTANT_KB.intents) {
+    let s = 0;
+    for (const t of tokens) if (e.kw.some(k => normText(k).includes(t))) s++;
+    if (s > bs && s >= 1) { bs = s; best = e; }
+  }
+  const now = new Date();
+  const fmt = (v) => (v || '').replace('{time}', now.toLocaleTimeString('fr-FR'))
+    .replace('{dateF}', now.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }))
+    .replace('{ok}', state.caps.filter(() => true).length).replace('{total}', 10)
+    .replace('{hw}', state.hardware || 'PI').replace('{mode}', state.mode || 'prod');
+  return {
+    ok: !!best,
+    reponse: best ? fmt(best.a) : 'Désolé, je n\'ai pas trouvé dans ma base privée. Essayez : « ' + (ASSISTANT_KB.suggestions || []).slice(0, 2).join(' » ou « ') + ' ».',
+    suggestions: best ? [] : (ASSISTANT_KB.suggestions || [])
+  };
+}
+
 // ---- configuration (voir .env) ----
 const MQTT_URL    = process.env.MQTT_URL || 'mqtt://localhost:1883';
 const PORT        = process.env.PORT || 3000;
@@ -98,6 +126,16 @@ app.get('/api/door/state', (req, res) => res.json(state));
 app.post('/api/scan', (req, res) => { publishDoor('scan'); res.json({ ok: true }); });
 
 app.get('/api/health', (req, res) => res.json({ ok: true, unit: UNIT, online: state.online, hardware: state.hardware, caps: state.caps, uptime: process.uptime() }));
+
+// ---- Assistante Atlas privée (réponses à bord, sans cloud) ----
+app.get('/api/assistant', (req, res) => res.json({ ok: true, nom: ASSISTANT_KB.nom || 'Assistante Atlas', intents: (ASSISTANT_KB.intents || []).length, privé: true }));
+app.post('/api/assistant', (req, res) => {
+  const q = (req.body && req.body.q) || '';
+  if (!q.trim()) return res.status(400).json({ ok: false, reponse: 'Posez une question.' });
+  const r = assistantReply(q);
+  telemetry('assistant:q=' + normText(q).slice(0, 40));
+  res.json(r);
+});
 
 app.use(express.static(SITE_ROOT));
 

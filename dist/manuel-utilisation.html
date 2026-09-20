@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <style data-rsp="1">html,body{overflow-x:hidden}body{word-wrap:break-word;overflow-wrap:break-word}img,svg,canvas,iframe,video,embed{max-width:100%;height:auto}h1,h2,h3,h4,p,a,button,label,td,th,legend{overflow-wrap:break-word}.min-w-\[180px\],.min-w-\[220px\],.min-w-\[640px\],.min-w-\[720px\]{min-width:0!important}@media (max-width:420px){input,select,textarea{min-width:0;max-width:100%}}</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manuel d'utilisation · Atlas Cabine</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>*{font-family:'Plus Jakarta Sans',sans-serif}.mono{font-family:'JetBrains Mono',monospace}.chip{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;padding:5px 10px;border-radius:10px}@media print{header,nav,.no-print{display:none !important}body{background:white !important}}.uxSplineBg{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;perspective:1100px}.uxSplineFx{position:absolute;inset:0;width:100%;height:100%;transform-style:preserve-3d;transform-origin:center center;animation:spline3d var(--sd,28s) ease-in-out infinite}.splinePath{fill:none;stroke-linecap:round;stroke-linejoin:round}.uxDotHalo{transform-box:fill-box;transform-origin:center;animation:uxPulse 3.4s ease-in-out infinite}@keyframes spline3d{0%,100%{transform:rotateX(0deg)rotateY(0deg)translateZ(0)scale(1)}25%{transform:rotateX(var(--rx1,0deg))rotateY(var(--ry1,0deg))translateZ(var(--tz1,40px))scale(var(--s1,1.06))}50%{transform:rotateX(0deg)rotateY(0deg)translateZ(0)scale(1)}75%{transform:rotateX(var(--rx2,0deg))rotateY(var(--ry2,0deg))translateZ(var(--tz2,30px))scale(var(--s2,1.05))}}@keyframes uxPulse{0%,100%{opacity:.22;transform:scale(1)}50%{opacity:.6;transform:scale(1.65)}}</style>
+
+<meta name="description" content="Mode d'emploi de votre cabine Atlas : accès, confort, sécurité et entretien.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ATLAS CABINE">
+<meta property="og:title" content="ATLAS CABINE">
+<meta property="og:description" content="Mode d'emploi de votre cabine Atlas : accès, confort, sécurité et entretien.">
+<meta property="og:url" content="https://atlascabine.pages.dev/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#2D5A27">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Organization","name":"ATLAS CABINE","legalName":"PixelSoftware Design","foundingLocation":{"@type":"Place","name":"Tunisie"},"slogan":"L'espace de concentration","description":"Cabines acoustiques Atlas et leur écosystème numérique (kiosque, application, portails).","sameAs":[]}
+</script>
+<script src="/lang.js"></script></head>
+<body class="bg-[#F4F6F0] text-[#2D3748]">
+
+    
+
+    <header class="bg-[#2D3748] px-6 py-4 flex items-center justify-between gap-3 sticky top-0 z-50 shadow-lg">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-[#9ACD32] rounded-2xl flex items-center justify-center font-extrabold text-[#2D3748]">📕</div>
+            <div>
+                <h1 class="font-extrabold text-white text-lg leading-tight">Manuel d'utilisation <span class="text-[#9ACD32]">Atlas Cabine</span></h1>
+                <p class="text-[10px] text-slate-300 mono">Document utilisateur officiel · fabriqué en Tunisie</p>
+            </div>
+        </div>
+        <nav class="flex items-center gap-2 text-xs font-bold no-print">
+            <a href="home.html" class="px-3 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition">🏠 Accueil</a>
+            <a href="manuel.html" class="px-3 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition">🏭 Standard</a>
+            <a href="catalogue.html" class="px-3 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition">📦 Catalogue</a>
+            <button onclick="window.print()" class="px-3 py-1.5 rounded-xl bg-[#9ACD32] text-[#2D3748] font-bold hover:bg-[#8bb82d] transition">🖨️ Imprimer</button>
+        </nav>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-6 py-10 space-y-8">
+
+        <!-- PAGE DE GARDE -->
+        <div class="bg-gradient-to-br from-[#2D5A27] to-[#23451E] text-white rounded-3xl p-10 text-center">
+            <p class="mono text-[10px] font-bold text-[#9ACD32] uppercase tracking-[0.3em]">Atlas Working · Tunisie</p>
+            <h2 class="text-3xl font-extrabold mt-3">Mode d'emploi de votre cabine<br>acoustique numérique</h2>
+            <p class="text-sm text-emerald-50/85 mt-4 max-w-lg mx-auto">Ce manuel décrit l'utilisation quotidienne de la cabine : ouverture, confort, sécurité, urgence, entretien et garantie. Utilisez-le avec le QR code collaborateur affiché sur la porte.</p>
+            <div class="flex flex-wrap justify-center gap-2 mt-6">
+                <span class="chip bg-white/10 border border-white/20 text-[#9ACD32]">Édition v2.1 · 2026</span>
+                <span class="chip bg-white/10 border border-white/20 text-[#9ACD32]">Réf. cabine : CAB-…-…</span>
+            </div>
+        </div>
+
+        <!-- SOMMAIRE -->
+        <div class="bg-white rounded-3xl border border-[#2D5A27]/15 p-7">
+            <h3 class="font-extrabold text-[#2D5A27] text-lg">Sommaire</h3>
+            <ol class="mt-3 space-y-1.5 text-sm text-slate-600">
+                <li><a href="#ch1" class="hover:text-[#2D5A27] font-bold">1 · Accès &amp; début de session</a></li>
+                <li><a href="#ch2" class="hover:text-[#2D5A27] font-bold">2 · L'écran de la cabine (kiosque)</a></li>
+                <li><a href="#ch3" class="hover:text-[#2D5A27] font-bold">3 · Confort &amp; réglages</a></li>
+                <li><a href="#ch4" class="hover:text-[#2D5A27] font-bold">4 · Sécurité &amp; urgence</a></li>
+                <li><a href="#ch5" class="hover:text-[#2D5A27] font-bold">5 · Entretien</a></li>
+                <li><a href="#ch6" class="hover:text-[#2D5A27] font-bold">6 · Dépannage rapide</a></li>
+                <li><a href="#ch7" class="hover:text-[#2D5A27] font-bold">7 · Garantie &amp; S.A.V.</a></li>
+            </ol>
+        </div>
+
+        <!-- CH 1 -->
+        <div id="ch1" class="bg-white rounded-3xl border border-[#2D5A27]/15 p-7">
+            <h3 class="text-xl font-extrabold text-[#2D5A27]">1 · Accès &amp; début de session</h3>
+            <div class="bg-[#F4F6F0] rounded-2xl p-5 mt-4 text-sm">
+                <b>Ouvrir la cabine</b>
+                <ol class="list-decimal ml-5 mt-2 text-slate-600 space-y-1.5">
+                    <li>Scannez le <b>QR code</b> sur la porte avec votre téléphone (ou utilisez l'écran tactile).</li>
+                    <li>Connectez-vous avec votre compte client ou le <b>code d'accès</b> associé à la cabine.</li>
+                    <li>L'écran affiche l'état « libre ». Appuyez <b>Ouvrir</b> → la gâche se déverrouille.</li>
+                    <li>Entrez : la porte se referme automatiquement après <b>15 secondes</b>.</li>
+                    <li>Votre session démarre automatiquement (heure de début enregistrée).</li>
+                </ol>
+            </div>
+            <div class="bg-rose-50 border border-[#9f1239]/25 rounded-2xl p-4 mt-3 text-sm">
+                <b>Important</b> — La cabine reste réservée à son utilisateur. À la fin de l'utilisation, quittez-la : la détection de présence clôt la session et libère la cabine.
+            </div>
+        </div>
+
+        <!-- CH 2 -->
+        <div id="ch2" class="bg-white rounded-3xl border border-[#2D5A27]/15 p-7">
+            <h3 class="text-xl font-extrabold text-[#2D5A27]">2 · L'écran de la cabine (kiosque)</h3>
+            <div style="overflow-x:auto;max-width:100%;-webkit-overflow-scrolling:touch"><table class="w-full text-xs mt-4">
+                <thead><tr class="bg-[#2D5A27] text-white text-left"><th class="px-4 py-3 rounded-tl-2xl">Zone</th><th class="px-4 py-3 rounded-tr-2xl">Fonction</th></tr></thead>
+                <tbody class="text-slate-600">
+                    <tr class="border-t border-[#2D5A27]/10"><td class="px-4 py-3 font-bold">🟢 Statut</td><td class="px-4 py-3">Libre / occupée / maintenance (+ alerte urgence)</td></tr>
+                    <tr class="border-t border-[#2D5A27]/10"><td class="px-4 py-3 font-bold">🔑 Connexion</td><td class="px-4 py-3">Compte client ou code d'accès écrit ou scanné</td></tr>
+                    <tr class="border-t border-[#2D5A27]/10"><td class="px-4 py-3 font-bold">🚪 Contrôle porte</td><td class="px-4 py-3">Ouvrir · Fermer · état réel (reed)</td></tr>
+                    <tr class="border-t border-[#2D5A27]/10"><td class="px-4 py-3 font-bold">💡 Réglages</td><td class="px-4 py-3">Éclairage (intensité + température), climatisation, ventilations</td></tr>
+                    <tr class="border-t border-[#2D5A27]/10"><td class="px-4 py-3 font-bold">👤 Session</td><td class="px-4 py-3">Début/fin, durée consommée, occupation</td></tr>
+                    <tr class="border-t border-[#2D5A27]/10"><td class="px-4 py-3 font-bold">🔧 Technique</td><td class="px-4 py-3">Réservé au technicien (jeton d'installation) — masqué en usage normal</td></tr>
+                </tbody>
+            </table></div>
+        </div>
+
+        <!-- CH 3 -->
+        <div id="ch3" class="bg-white rounded-3xl border border-[#2D5A27]/15 p-7">
+            <h3 class="text-xl font-extrabold text-[#2D5A27]">3 · Confort &amp; réglages</h3>
+            <div class="grid md:grid-cols-3 gap-3 mt-4 text-sm">
+                <div class="bg-[#F4F6F0] rounded-2xl p-4"><b>💡 Éclairage RGBW</b><p class="text-slate-600 mt-1 text-xs">Intensité de 0–100 % et température 2500–6500 K. Utilisez « lumière chaude » en fin de journée pour limiter la fatigue.</p></div>
+                <div class="bg-[#F4F6F0] rounded-2xl p-4"><b>🌬️ Ventilation</b><p class="text-slate-600 mt-1 text-xs">Mise en route automatique à l'ouverture de la porte. Débit ≥ 200 m³/h. Nettoyage des grilles recommandée.</p></div>
+                <div class="bg-[#F4F6F0] rounded-2xl p-4"><b>❄️ Climatisation (option)</b><p class="text-slate-600 mt-1 text-xs">2,7 kW gainable. Réglez la température souhaitée ; elle se maintient seule pendant la session.</p></div>
+            </div>
+        </div>
+
+        <!-- CH 4 -->
+        <div id="ch4" class="bg-white rounded-3xl border border-[#9f1239]/40 p-7">
+            <h3 class="text-xl font-extrabold text-[#9f1239]">4 · Sécurité &amp; urgence</h3>
+            <div class="grid md:grid-cols-3 gap-3 mt-4 text-sm">
+                <div class="bg-rose-50 rounded-2xl p-4"><b>Danger interne</b><p class="text-slate-600 mt-1 text-xs">Malaise, blocage, danger à l'intérieur → la porte s'<b>ouvre</b> immédiatement + buzzer.</p></div>
+                <div class="bg-rose-50 rounded-2xl p-4"><b>Danger extérieur</b><p class="text-slate-600 mt-1 text-xs">Incident à l'extérieur → la porte se <b>ferme</b> et la cabine confinée jusqu'à la levée d'alerte.</p></div>
+                <div class="bg-rose-50 rounded-2xl p-4"><b>Catastrophique / partielle</b><p class="text-slate-600 mt-1 text-xs">Ouverture <b>partielle</b> (entre-ouverte) pour éviter le blocage en toutes circonstances.</p></div>
+            </div>
+            <ul class="text-sm text-slate-600 mt-4 space-y-1.5 list-disc ml-5">
+                <li>L'urgence fonctionne <b>toujours</b>, sans connexion ni authentification.</li>
+                <li>Bouton physique rouge dans la cabine + commande sur l'écran.</li>
+                <li>Ouverture <b>manuelle de secours</b> depuis l'intérieur (mécanique).</li>
+                <li>Chaque urgence est <b>enregistrée</b> (date, type, cabine).</li>
+            </ul>
+        </div>
+
+        <!-- CH 5 -->
+        <div id="ch5" class="bg-white rounded-3xl border border-[#2D5A27]/15 p-7">
+            <h3 class="text-xl font-extrabold text-[#2D5A27]">5 · Entretien</h3>
+            <div style="overflow-x:auto;max-width:100%;-webkit-overflow-scrolling:touch"><table class="w-full text-xs mt-4">
+                <thead><tr class="bg-[#2D5A27] text-white text-left"><th class="px-4 py-3 rounded-tl-2xl">Fréquence</th><th class="px-4 py-3 rounded-tr-2xl">Opération</th></tr></thead>
+                <tbody class="text-slate-600">
+                    <tr class="border-t border-[#2D5A27]/10"><td class="px-4 py-3 font-bold">Quotidien</td><td class="px-4 py-3">Nettoyage des surfaces, vérif. du voyant vert « libre »</td></tr>
+                    <tr class="border-t border-[#2D5A27]/10"><td class="px-4 py-3 font-bold">Hebdomadaire</td><td class="px-4 py-3">Dépoussiérage des grilles, test de l'ouverture manuelle</td></tr>
+                    <tr class="border-t border-[#2D5A27]/10"><td class="px-4 py-3 font-bold">Mensuel</td><td class="px-4 py-3">Contrôle joints acoustiques + gâche électrique</td></tr>
+                    <tr class="border-t border-[#2D5A27]/10"><td class="px-4 py-3 font-bold">Annuel</td><td class="px-4 py-3">Visite S.A.V. Atlas : acoustique, électricité, ventilation, serrurerie</td></tr>
+                </tbody>
+            </table></div>
+            <p class="text-xs text-slate-500 mt-3">Utilisez uniquement des produits non abrasifs. Ne modifiez jamais l'installation électrique.</p>
+        </div>
+
+        <!-- CH 6 -->
+        <div id="ch6" class="bg-white rounded-3xl border border-[#2D5A27]/15 p-7">
+            <h3 class="text-xl font-extrabold text-[#2D5A27]">6 · Dépannage rapide</h3>
+            <div style="overflow-x:auto;max-width:100%;-webkit-overflow-scrolling:touch"><table class="w-full text-xs mt-4">
+                <thead><tr class="bg-[#2D5A27] text-white text-left"><th class="px-4 py-3 rounded-tl-2xl">Problème</th><th class="px-4 py-3 rounded-tr-2xl">Que faire ?</th></tr></thead>
+                <tbody class="text-slate-600">
+                    <tr class="border-t border-[#2D5A27]/10"><td class="px-4 py-3">La porte ne s'ouvre pas</td><td class="px-4 py-3">Testez l'écran tactile ; si l'échec persiste, utilisez le bouton d'urgence ou l'ouverture manuelle, puis appelez le S.A.V.</td></tr>
+                    <tr class="border-t border-[#2D5A27]/10"><td class="px-4 py-3">Écran éteint</td><td class="px-4 py-3">Vérifiez le disjoncteur 230 V de la cabine. Redémarrage automatique après rétablissement.</td></tr>
+                    <tr class="border-t border-[#2D5A27]/10"><td class="px-4 py-3">Code d'accès refusé</td><td class="px-4 py-3">Contrôlez la cabine sur le QR ; le portail usine peut régénérer l'accès.</td></tr>
+                    <tr class="border-t border-[#2D5A27]/10"><td class="px-4 py-3">Ventilation faible</td><td class="px-4 py-3">Nettoyez les grilles ; si rien ne change, signalez au S.A.V.</td></tr>
+                    <tr class="border-t border-[#2D5A27]/10"><td class="px-4 py-3">Alarme persistante</td><td class="px-4 py-3">« Fin d'urgence » à l'écran ; sortez de la cabine si l'alerte continue.</td></tr>
+                </tbody>
+            </table></div>
+        </div>
+
+        <!-- CH 7 -->
+        <div id="ch7" class="bg-white rounded-3xl border border-[#2D5A27]/15 p-7">
+            <h3 class="text-xl font-extrabold text-[#2D5A27]">7 · Garantie &amp; S.A.V.</h3>
+            <div class="grid md:grid-cols-2 gap-4 mt-4 text-sm">
+                <div class="bg-[#F4F6F0] rounded-2xl p-5">
+                    <b>Couverture</b>
+                    <ul class="text-slate-600 mt-2 space-y-1 text-xs">
+                        <li>· 5 ans : structure acoustique</li>
+                        <li>· 2 ans : composants électriques et électroniques</li>
+                        <li>· Installation et mise en service incluses pour les clients pro</li>
+                    </ul>
+                </div>
+                <div class="bg-[#F4F6F0] rounded-2xl p-5">
+                    <b>Nous contacter (Tunisie)</b>
+                    <p class="mono text-[11px] text-[#2D5A27] mt-2">Atlas Working — S.A.V.</p>
+                    <p class="text-xs text-slate-600 mt-1">Munissez-vous du <b>numéro de cabine</b> (CAB-…-…) situé sur la plaque et le QR d'accès avant de nous appeler.</p>
+                </div>
+            </div>
+            <p class="text-xs text-slate-500 mt-4">Garantie subordonnée au respect des consignes d'entretien et de la visite annuelle S.A.V.</p>
+        </div>
+
+        <!-- PAGE FINALE -->
+        <div class="text-center text-xs text-slate-400 mono pt-2">
+            <p>© 2026 Atlas Working — Document officiel utilisateur, fabriqué en Tunisie.</p>
+            <p>Logiciel &amp; R&D : PixelSoftware Design · Design cabine &amp; standard acoustique : Atlas Working (développement / idée)</p>
+        </div>
+    </main>
+
+    <footer class="text-center text-xs text-slate-400 mono pb-6 px-4">© 2026 · Made in Tunisia 🇹🇳 · Logiciel & R&D : PixelSoftware Design — Design cabine &amp; standard acoustique : Atlas Working (développement / idée)
+    <div style="width:1200px;max-width:96vw;margin:0 auto;padding:10px 16px;text-align:center;font-size:12px;font-weight:700;color:#2D5A27">Logiciel © 2026 PixelSoftware Design — Tous droits réservés.</div>
+<div style="max-width:1200px;margin:0 auto;padding:14px 16px;text-align:center;font-size:12px;color:#5b6b52;border-top:1px solid rgba(45,90,39,.15);background:rgba(45,90,39,.04)">
+        <a href="mentions-legales.html" style="color:#2D5A27;text-decoration:none;margin:0 8px">Mentions légales</a> ·
+        <a href="cgv.html" style="color:#2D5A27;text-decoration:none;margin:0 8px">CGV / CGU</a> ·
+        <a href="confidentialite.html" style="color:#2D5A27;text-decoration:none;margin:0 8px">Confidentialité</a> ·
+        <a href="cookies.html" style="color:#2D5A27;text-decoration:none;margin:0 8px">Cookies</a> ·
+        <a href="changelog.html" style="color:#2D5A27;text-decoration:none;margin:0 8px">Journal des versions</a>
+    </div>
+    </footer>
+
+    <script>
+        document.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
+            const t = document.querySelector(a.getAttribute('href'));
+            if (t) e.preventDefault(), t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }));
+    </script>
+
+<script>
+(function () {
+    function R(a, b) { return a + Math.random() * (b - a); }
+    function arcD(cx, cy, S) {
+        return "M " + (cx - S * 1.6).toFixed(0) + " " + (cy + S - 60).toFixed(0) +
+            " Q " + (cx).toFixed(0) + " " + (cy + S + 30).toFixed(0) +
+            ", " + (cx + S * 1.6).toFixed(0) + " " + (cy - S * 0.8).toFixed(0);
+    }
+    function splineD(cx, cy, S) {
+        return "M " + (cx - S * 2.0).toFixed(0) + " " + (cy + R(-90, 90)).toFixed(0) +
+            " C " + (cx - S).toFixed(0) + " " + (cy + R(-160, 160)).toFixed(0) +
+            ", " + (cx + S).toFixed(0) + " " + (cy + R(-160, 160)).toFixed(0) +
+            ", " + (cx + S * 2.0).toFixed(0) + " " + (cy + R(-90, 90)).toFixed(0);
+    }
+    function infiniD(cx, cy, S) {
+        var r = S, v = S * 0.55;
+        return "M " + (cx - r).toFixed(0) + " " + cy + " A " + r.toFixed(0) + " " + v.toFixed(0) + " 0 1 1 " + (cx + r).toFixed(0) + " " + cy +
+            " A " + r.toFixed(0) + " " + v.toFixed(0) + " 0 1 1 " + (cx - r).toFixed(0) + " " + cy;
+    }
+    function ringD(cx, cy, S) {
+        return "M " + (cx - S).toFixed(0) + " " + cy + " A " + S.toFixed(0) + " " + S.toFixed(0) + " 0 1 0 " + (cx + S).toFixed(0) + " " + cy +
+            " A " + S.toFixed(0) + " " + S.toFixed(0) + " 0 1 0 " + (cx - S).toFixed(0) + " " + cy;
+    }
+    function orbitPath(o, r) {
+        return "M " + (o.cx - r).toFixed(0) + " " + o.cy + " A " + r.toFixed(0) + " " + r.toFixed(0) + " 0 1 0 " + (o.cx + r).toFixed(0) + " " + o.cy +
+            " A " + r.toFixed(0) + " " + r.toFixed(0) + " 0 1 0 " + (o.cx - r).toFixed(0) + " " + o.cy;
+    }
+    var makers = [arcD, splineD, infiniD, ringD];
+    var F = ["rgba(45,90,39,", "rgba(154,205,50,"];
+    var shapes = [];
+    for (var i = 0; i < 3; i++) {
+        var S = R(115, 300);
+        var cx = R(130, 1070), cy = R(80, 560);
+        var t = Math.floor(R(0, 4));
+        shapes.push({ d: makers[t](cx, cy, S), cx: cx, cy: cy, r: S,
+            stroke: F[Math.floor(R(0, 2))] + R(0.5, 0.95).toFixed(2) + ")",
+            sw: R(2, 11).toFixed(1) });
+    }
+    var ns = "http://www.w3.org/2000/svg";
+    var svg = document.createElementNS(ns, "svg");
+    svg.setAttribute("class", "uxSplineFx");
+    svg.setAttribute("viewBox", "0 0 1200 700");
+    svg.setAttribute("preserveAspectRatio", "xMidYMid slice");
+    svg.setAttribute("aria-hidden", "true");
+    svg.style.cssText="--sd:"+R(14,26).toFixed(1)+"s;--rx1:"+R(-22,22).toFixed(0)+"deg;--ry1:"+R(-22,22).toFixed(0)+"deg;--rx2:"+R(-20,20).toFixed(0)+"deg;--ry2:"+R(-20,20).toFixed(0)+"deg;--tz1:"+R(40,150).toFixed(0)+"px;--tz2:"+R(20,100).toFixed(0)+"px;--s1:"+R(1.03,1.12).toFixed(3)+";--s2:"+R(1.02,1.09).toFixed(3)+";";
+    shapes.forEach(function (s) {
+        var p = document.createElementNS(ns, "path");
+        p.setAttribute("class", "splinePath");
+        p.setAttribute("d", s.d);
+        p.setAttribute("stroke", s.stroke);
+        p.setAttribute("stroke-width", s.sw);
+        svg.appendChild(p);
+    });
+    function dot(fill, dur, begin, path) {
+        var c = document.createElementNS(ns, "circle");
+        c.setAttribute("class", "uxDotHalo");
+        c.setAttribute("r", "3");
+        c.setAttribute("fill", fill);
+        var am = document.createElementNS(ns, "animateMotion");
+        am.setAttribute("dur", dur + "s");
+        am.setAttribute("begin", begin + "s");
+        am.setAttribute("repeatCount", "indefinite");
+        am.setAttribute("path", path);
+        c.appendChild(am);
+        svg.appendChild(c);
+    }
+    var o0 = orbitPath({ cx: shapes[0].cx, cy: shapes[0].cy }, shapes[0].r + 8);
+    var o1 = orbitPath({ cx: shapes[1].cx, cy: shapes[1].cy }, shapes[1].r + 8);
+    var d0 = R(10, 18);
+    dot("#d9ff8c", d0, 0, o0);
+    dot("#9ACD32", d0, 0, o0);
+    dot("#d9ff8c", R(14, 23), R(2, 7), o1);
+    var wrap = document.createElement("div");
+    wrap.setAttribute("class", "uxSplineBg");
+    wrap.appendChild(svg);
+    var bk = document.getElementById("uxBack");
+    if (bk && bk.nextSibling) { bk.parentNode.insertBefore(wrap, bk.nextSibling); }
+    else { document.body.insertBefore(wrap, document.body.firstChild); }
+})();
+</script>
+
+<script>"serviceWorker"in navigator&&location.protocol==="https:"&&navigator.serviceWorker.register("/sw.js").catch(function(){})</script>
+
+<button id="langBtnX" onclick="ML.cycle(this)" style="position:fixed;top:12px;right:12px;z-index:99999;font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:800;padding:7px 12px;border:none;border-radius:12px;background:#2D5A27;color:#fff;cursor:pointer;box-shadow:0 6px 18px rgba(45,90,39,.35)">Français</button>
+</body>
+</html>

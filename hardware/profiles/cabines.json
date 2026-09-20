@@ -1,0 +1,46 @@
+{
+  "header": "Généré et maintenu par PixelSoftware Design — source de vérité des 3 cabines (générateur : hardware/generate-cabines.mjs)",
+  "generateur": "hardware/generate-cabines.mjs",
+  "sortie": "hardware/generated/<CABINE>/esp32|arduino",
+  "cabines": [
+    {
+      "id": "AT-S90",
+      "nom": "Cabine S",
+      "usage": "Isolation courte indépendante (call, focus, hygiène).",
+      "prix_ht_dt": 18500,
+      "dims": { "interieur": { "L": 90, "P": 100, "H": 203 }, "exterieur": { "L": 100, "P": 110, "H": 213 } },
+      "modele": "esp32",
+      "recommandation_hardware": "Modèle ESP32 (standalone)",
+      "caps": ["door", "reed", "sensor", "light"],
+      "pins_esp32": { "RELAY": 23, "DOOR": 4, "PIR": 18, "LED": { "kind": 1, "pin": 2, "r": 16, "g": 17, "b": 21, "neo": 13, "pixels": 30 }, "AC": -1, "AC_FB": -1, "CO2_A": -1, "URG": 36 },
+      "pins_arduino": { "RELAY": 4, "DOOR": 2, "PIR": 3, "URG": 5, "BUZZER": 6, "AC": -1, "CO2_A": -1 },
+      "accessoires_defaut": []
+    },
+    {
+      "id": "AT-M240",
+      "nom": "Cabine M",
+      "usage": "Salle de réunion ou télétravail jusqu'à 2 personnes, climatisation.",
+      "prix_ht_dt": 32900,
+      "dims": { "interieur": { "L": 240, "P": 130, "H": 203 }, "exterieur": { "L": 250, "P": 140, "H": 213 } },
+      "modele": "pi",
+      "recommandation_hardware": "Modèle Raspberry Pi + ESP32 (rôle 2)",
+      "caps": ["door", "reed", "sensor", "light", "ac", "co2"],
+      "pins_esp32": { "RELAY": 23, "DOOR": 4, "PIR": 18, "LED": { "kind": 1, "pin": 2, "r": 16, "g": 17, "b": 21, "neo": 13, "pixels": 40 }, "AC": 25, "AC_FB": 34, "CO2_A": 35, "URG": 36 },
+      "pins_arduino": { "RELAY": 4, "DOOR": 2, "PIR": 3, "URG": 5, "BUZZER": 6, "AC": "A1", "CO2_A": "A0" },
+      "accessoires_defaut": ["climatisation"]
+    },
+    {
+      "id": "AT-L350",
+      "nom": "Cabine L",
+      "usage": "Petite salle 2–4 personnes, mobilier et IoT complet, caméra optionnelle.",
+      "prix_ht_dt": 58500,
+      "dims": { "interieur": { "L": 350, "P": 160, "H": 203 }, "exterieur": { "L": 360, "P": 170, "H": 213 } },
+      "modele": "pi",
+      "recommandation_hardware": "Modèle Raspberry Pi + ESP32 (rôle 2) + caméra",
+      "caps": ["door", "reed", "sensor", "light", "ac", "co2", "cam"],
+      "pins_esp32": { "RELAY": 23, "DOOR": 4, "PIR": 18, "LED": { "kind": 1, "pin": 2, "r": 16, "g": 17, "b": 21, "neo": 13, "pixels": 50 }, "AC": 25, "AC_FB": 34, "CO2_A": 35, "URG": 36 },
+      "pins_arduino": { "RELAY": 4, "DOOR": 2, "PIR": 3, "URG": 5, "BUZZER": 6, "AC": "A1", "CO2_A": "A0" },
+      "accessoires_defaut": ["climatisation", "mobilier", "caméra"]
+    }
+  ]
+}

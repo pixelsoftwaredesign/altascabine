@@ -1,5 +1,8 @@
 // ============================================================================
 // ATLAS CABINE — CabineConfig.h
+// © 2026 Atlas Working — Made in Tunisia 🇹🇳
+// Logiciel & R&D : PixelSoftware Design
+// Design cabine & standard acoustique : Atlas Working (développement / idée)
 // TOUTE la configuration matérielle de la cabine est ici.
 // « L'app s'adapte au matériel réellement branché » :
 //  - PIN = -1  → module absent, fonction désactivée automatiquement
