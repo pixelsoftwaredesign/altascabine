@@ -1,0 +1,8 @@
+{
+  "moduleId": "hotel-hotel",
+  "name": "Pixel Hotel Concierge",
+  "version": "1.0.0",
+  "targetIndustry": "Hôtellerie / Tourisme",
+  "author": "Pixel Software Design",
+  "entryPoint": "skill.js"
+}

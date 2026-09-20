@@ -1,0 +1,8 @@
+{
+  "moduleId": "legal-lawyer",
+  "name": "Pixel Legal Assistant",
+  "version": "1.0.0",
+  "targetIndustry": "Cabinets d'avocats & Juridique",
+  "author": "Pixel Software Design",
+  "entryPoint": "skill.js"
+}

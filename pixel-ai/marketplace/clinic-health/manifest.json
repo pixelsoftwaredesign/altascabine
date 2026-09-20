@@ -1,0 +1,8 @@
+{
+  "moduleId": "clinic-health",
+  "name": "Pixel Clinic Assistant",
+  "version": "1.0.0",
+  "targetIndustry": "Clinique / Santé",
+  "author": "Pixel Software Design",
+  "entryPoint": "skill.js"
+}

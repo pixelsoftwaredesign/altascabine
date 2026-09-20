@@ -1,0 +1,21 @@
+{
+  "name": "pixel-ai",
+  "version": "1.0.0",
+  "description": "Pixel AI — assistant multilingue MCP : Skills modulaires (climat, maintenance, PixelTranslate, conformité, comptabilité, data science, export, coding) + marketplace de modules métiers téléchargeables.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "mcp": "node mcp-server.js",
+    "test": "node test.js"
+  },
+  "keywords": ["pixel-ai", "mcp", "assistant", "cabine-atlas", "tunisie", "skills"],
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.14.0",
+    "docx": "^8.5.0",
+    "express": "^4.19.2",
+    "pdfkit": "^0.14.0",
+    "zod": "^3.23.8"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "moduleId": "driving-school",
+  "name": "Pixel Driving Assistant (GestiActiv)",
+  "version": "1.0.0",
+  "targetIndustry": "Auto-école / Permis",
+  "author": "Pixel Software Design",
+  "entryPoint": "skill.js"
+}

@@ -1,0 +1,8 @@
+{
+  "moduleId": "cabin-atlas",
+  "name": "Pixel Atlas Cabin Manager",
+  "version": "1.0.0",
+  "targetIndustry": "Gestion de cabine Atlas / IoT",
+  "author": "Pixel Software Design",
+  "entryPoint": "skill.js"
+}

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pixel AI — Console Skills &amp; Modules</title>
+<style>
+    :root { --p: #007bff; --d: #111; --m: #666; }
+    * { box-sizing: border-box; }
+    body { font-family: -apple-system, 'Segoe UI', Roboto, sans-serif; margin: 0; background: #f4f6fb; color: #222; }
+    header { background: var(--d); color: #fff; padding: 16px 24px; display: flex; align-items: baseline; gap: 16px; }
+    header h1 { font-size: 18px; margin: 0; }
+    header span { font-size: 12px; color: #9aa; }
+    main { max-width: 980px; margin: 24px auto; padding: 0 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 760px) { main { grid-template-columns: 1fr; } }
+    .card { background: #fff; border: 1px solid #e3e8f0; border-radius: 10px; padding: 16px; }
+    .card h2 { font-size: 15px; margin: 0 0 12px; color: var(--p); }
+    select, button, input { font: inherit; padding: 8px 10px; border: 1px solid #ccd4e0; border-radius: 8px; background: #fff; }
+    button { background: var(--p); color: #fff; border: none; cursor: pointer; }
+    button:hover { opacity: .9; }
+    .row { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+    textarea { width: 100%; min-height: 84px; font: 12px/1.4 ui-monospace, Menlo, monospace; border: 1px solid #ccd4e0; border-radius: 8px; padding: 8px; }
+    pre { background: #0d1117; color: #9ecbff; padding: 12px; border-radius: 8px; overflow: auto; font-size: 12px; line-height: 1.45; }
+    .mono { font-family: ui-monospace, Menlo, monospace; }
+    .tag { display: inline-block; background: #eef4ff; color: #0056c4; border-radius: 20px; padding: 2px 10px; font-size: 12px; margin: 2px; }
+    footer { text-align: center; color: #888; font-size: 12px; padding: 20px; }
+</style>
+</head>
+<body>
+<header>
+    <h1>Pixel AI — Console</h1>
+    <span>Skills modulaires (MCP-ready) · Marketplace métiers · Pixel Software Design</span>
+</header>
+<main>
+    <div class="card">
+        <h2>Skill en direct</h2>
+        <div class="row">
+            <select id="skill">
+                <option value="climate">climate</option>
+                <option value="maintenance">maintenance</option>
+                <option value="translate">translate</option>
+                <option value="compliance">compliance</option>
+                <option value="accounting">accounting</option>
+                <option value="coding">coding</option>
+                <option value="data_science">data_science</option>
+                <option value="chart">chart</option>
+                <option value="export">export</option>
+            </select>
+            <button onclick="runSkill()">Exécuter</button>
+        </div>
+        <label class="row">Paramètres JSON : <textarea id="params">{"occupant":"neo"}</textarea></label>
+        <pre id="skillOut">—</pre>
+    </div>
+
+    <div class="card">
+        <h2>Rapport document (Canvas · Data Science · Charte)</h2>
+        <div class="row">
+            <input id="rTitle" value="Rapport Atlas — Q3" placeholder="Titre du rapport">
+            <select id="rFormat"><option value="pdf">PDF</option><option value="word">Word</option></select>
+            <button onclick="genReport()">Générer</button>
+        </div>
+        <label class="row">Dataset JSON : <input id="rData" value="[10,25,30,45,60]" class="mono"></label>
+        <pre id="reportOut">—</pre>
+    </div>
+
+    <div class="card">
+        <h2>Module métier (Marketplace)</h2>
+        <div class="row">
+            <select id="mod">
+                <option value="legal-lawyer">legal-lawyer</option>
+                <option value="clinic-health">clinic-health</option>
+                <option value="driving-school">driving-school</option>
+                <option value="hotel-hotel">hotel-hotel</option>
+                <option value="retail-shop">retail-shop</option>
+                <option value="cabin-atlas">cabin-atlas</option>
+            </select>
+            <button onclick="runModule()">Exécuter</button>
+        </div>
+        <label class="row">Paramètres JSON : <textarea id="modParams">{"action":"climat","occupant":"enfant"}</textarea></label>
+        <pre id="modOut">—</pre>
+    </div>
+
+    <div class="card">
+        <h2>Système / Synchronisation</h2>
+        <div class="row">
+            <button onclick="fetch('/api/system/status').then(r=>r.json()).then(j=>show('sysOut',j))">Statut système</button>
+            <button onclick="fetch('/api/modules').then(r=>r.json()).then(j=>show('sysOut',j))">Modules installés</button>
+            <button onclick="fetch('/api/skills').then(r=>r.json()).then(j=>show('sysOut',j))">Skills</button>
+            <button onclick="fetch('/api/leads').then(r=>r.json()).then(j=>show('sysOut',j))">Leads</button>
+        </div>
+        <pre id="sysOut">—</pre>
+    </div>
+</main>
+<footer>Pixel Software Design — Gabès, Tunisie · Matricule fiscal 1969711pam000 · +216 52 675 027</footer>
+<script>
+    const show = (id, o) => { document.getElementById(id).textContent = JSON.stringify(o, null, 2); };
+    const post = async (url, body) => {
+        const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+        const t = await r.text(); try { return JSON.parse(t); } catch (e) { return t; }
+    };
+    async function runSkill() {
+        const skillName = document.getElementById('skill').value;
+        let parameters = {};
+        try { parameters = JSON.parse(document.getElementById('params').value || '{}'); } catch (e) { show('skillOut', { error: 'JSON invalide' }); return; }
+        show('skillOut', await post('/api/pixel-ai/execute', { skillName, parameters }));
+    }
+    async function genReport() {
+        const title = document.getElementById('rTitle').value;
+        const format = document.getElementById('rFormat').value;
+        let dataset = [];
+        try { dataset = JSON.parse(document.getElementById('rData').value || '[]'); } catch (e) { show('reportOut', { error: 'Dataset JSON invalide' }); return; }
+        const out = await post('/api/generate-report', { title, dataset, format });
+        show('reportOut', out);
+    }
+    async function runModule() {
+        const moduleId = document.getElementById('mod').value;
+        let parameters = {};
+        try { parameters = JSON.parse(document.getElementById('modParams').value || '{}'); } catch (e) { show('modOut', { error: 'JSON invalide' }); return; }
+        show('modOut', await post('/api/modules/execute', { moduleId, parameters }));
+    }
+</script>
+</body>
+</html>

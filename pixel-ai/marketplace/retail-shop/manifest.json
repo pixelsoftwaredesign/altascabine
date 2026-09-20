@@ -1,0 +1,8 @@
+{
+  "moduleId": "retail-shop",
+  "name": "Pixel Retail Compta",
+  "version": "1.0.0",
+  "targetIndustry": "Commerce / Gestion de caisse",
+  "author": "Pixel Software Design",
+  "entryPoint": "skill.js"
+}
