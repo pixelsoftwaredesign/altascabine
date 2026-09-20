@@ -1673,12 +1673,36 @@
             const clients = load('pixelClients', []);
             const leads = load('pixelLeads', []);
             let pend = load('pixelLeadPend', {});
+            const QKEY = 'pixelLeadQueue';
+            const queue = () => load(QKEY, []);
+            const queueSave = (a) => store(QKEY, a);
+            function serverUrl() { const s = (localStorage.getItem('atlasPixelServer') || '').trim().replace(/\/+$/, ''); return s || null; }
+            async function syncLeads() {
+                const s = serverUrl();
+                if (!s) return { ok: false, reason: 'no-server' };
+                const qq = queue();
+                if (!qq.length) return { ok: true, synced: 0 };
+                if (typeof fetch !== 'function') return { ok: false, reason: 'no-fetch' };
+                try {
+                    const r = await fetch(s + '/api/sync', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(qq.map(l => ({ name: l.name, email: l.email, phone: l.phone, ts: l.ts })))
+                    });
+                    const j = await r.json();
+                    if (r.ok && j.status === 'success') { queueSave([]); return { ok: true, synced: j.stored }; }
+                    return { ok: false, status: r.status };
+                } catch (e) { return { ok: false, error: e.message }; }
+            }
 
             function saveLead() {
                 if ((pend.email || '') && (pend.name || pend.phone)) {
-                    leads.push({ name: pend.name, email: pend.email, phone: pend.phone, ts: new Date().toISOString() });
+                    const rec = { name: pend.name, email: pend.email, phone: pend.phone, ts: new Date().toISOString() };
+                    leads.push(rec);
                     store('pixelLeads', leads);
                     if (!clients.some(c => c.email === pend.email)) { clients.push(pend); store('pixelClients', clients); }
+                    const qq = queue(); qq.push(rec); queueSave(qq);
+                    syncLeads();
                     pend = {}; store('pixelLeadPend', pend);
                     return true;
                 }
@@ -1774,13 +1798,21 @@
                 return null;
             }
 
+            if (typeof window.addEventListener === 'function') {
+                window.addEventListener('online', syncLeads);
+                window.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') syncLeads(); });
+            }
+
             return {
                 detect: detect,
                 prefer: prefer,
                 runTool: runTool,
                 tools: Object.keys(tools).map(n => ({ name: n, description: tools[n].description, inputSchema: tools[n].inputSchema })),
                 pendingLeads: function () { return leads; },
-                clearPending: function () { leads.length = 0; store('pixelLeads', leads); }
+                clearPending: function () { leads.length = 0; store('pixelLeads', leads); },
+                syncLeads: syncLeads,
+                setServer: function (url) { try { localStorage.setItem('atlasPixelServer', url || ''); } catch (e) {} return serverUrl(); },
+                getServer: serverUrl
             };
         })();
     </script>
