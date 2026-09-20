@@ -19,7 +19,7 @@ try {
 } catch (e) { log('[IA]', 'base de connaissances absente', e.message); }
 
 function normText(s) { return String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
-function assistantReply(q) {
+async function assistantReply(q) {
   const tokens = normText(q).split(/[^a-z0-9]+/).filter(Boolean);
   let best = null, bs = 0;
   for (const e of ASSISTANT_KB.intents) {
@@ -32,10 +32,29 @@ function assistantReply(q) {
     .replace('{dateF}', now.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }))
     .replace('{ok}', state.caps.filter(() => true).length).replace('{total}', 10)
     .replace('{hw}', state.hardware || 'PI').replace('{mode}', state.mode || 'prod');
+  if (best) return { ok: true, reponse: fmt(best.a), suggestions: [] };
+
+  if (PAI) {
+    try {
+      const m = normText(q);
+      if (/(bebe|bébé|nourrisson|neo|رضيع|enfant|طفل|adulte|baddel|climat)/.test(m)) {
+        const prof = /(bebe|bébé|nourrisson|neo|رضيع)/.test(m) ? 'neo' : /(enfant|طفل)/.test(m) ? 'enfant' : 'adulte';
+        const r = await PAI.execute('climate', { occupant: prof });
+        telemetry('pixelai climate ' + prof);
+        return { ok: true, reponse: r.message + ' | config : ' + JSON.stringify(r.hardwareAction), suggestions: [] };
+      }
+      const lang = await PAI.execute('translate', { text: q });
+      if (lang && lang.response && lang.response !== "Bonjour ! Comment puis-je vous assister ?") {
+        telemetry('pixelai translate :' + q.slice(0, 24));
+        return { ok: true, reponse: lang.response, suggestions: [] };
+      }
+    } catch {}
+  }
+
   return {
-    ok: !!best,
-    reponse: best ? fmt(best.a) : 'Désolé, je n\'ai pas trouvé dans ma base privée. Essayez : « ' + (ASSISTANT_KB.suggestions || []).slice(0, 2).join(' » ou « ') + ' ».',
-    suggestions: best ? [] : (ASSISTANT_KB.suggestions || [])
+    ok: false,
+    reponse: 'Désolé, je n\'ai pas trouvé dans ma base privée. Essayez : « ' + (ASSISTANT_KB.suggestions || []).slice(0, 2).join(' » ou « ') + ' ».',
+    suggestions: (ASSISTANT_KB.suggestions || [])
   };
 }
 
@@ -70,6 +89,13 @@ const TOPIC_MAT    = `${BASE}/${UNIT}/material`;
 const TOPIC_LWT    = `${BASE}/${UNIT}/status`;
 
 function log(...a) { const t = new Date().toISOString().replace('T', ' ').slice(0, 19); console.log(`[${t}]`, ...a); }
+
+// ---- Pixel AI (Skills) : chargement optionnel depuis le dépôt (si présent sur site) ----
+let PAI = null;
+try {
+  PAI = require(path.join(SITE_ROOT, 'pixel-ai', 'skills'));
+  log('[IA] Pixel AI skills embarqués :', PAI.list().length);
+} catch { PAI = null; }
 
 // ---- télémétrie locale (compteur d'activité pour l'usine) ----
 function telemetry(evt) {
@@ -125,16 +151,43 @@ app.get('/api/door/state', (req, res) => res.json(state));
 // scan → relance la détection matériel sur l'ESP32 (mode dev)
 app.post('/api/scan', (req, res) => { publishDoor('scan'); res.json({ ok: true }); });
 
-app.get('/api/health', (req, res) => res.json({ ok: true, unit: UNIT, online: state.online, hardware: state.hardware, caps: state.caps, uptime: process.uptime() }));
+app.get('/api/health', (req, res) => res.json({ ok: true, unit: UNIT, online: state.online, hardware: state.hardware, caps: state.caps, pixelai: !!PAI, uptime: process.uptime() }));
+
+// ---- capacité (liste) : supprime la route assistant greffée après, restaure les leads ----
 
 // ---- Assistante Atlas privée (réponses à bord, sans cloud) ----
-app.get('/api/assistant', (req, res) => res.json({ ok: true, nom: ASSISTANT_KB.nom || 'Assistante Atlas', intents: (ASSISTANT_KB.intents || []).length, privé: true }));
-app.post('/api/assistant', (req, res) => {
+app.get('/api/assistant', (req, res) => res.json({ ok: true, nom: ASSISTANT_KB.nom || 'Assistante Atlas', intents: (ASSISTANT_KB.intents || []).length, privé: true, pixelai: !!PAI }));
+app.post('/api/assistant', async (req, res) => {
   const q = (req.body && req.body.q) || '';
   if (!q.trim()) return res.status(400).json({ ok: false, reponse: 'Posez une question.' });
-  const r = assistantReply(q);
-  telemetry('assistant:q=' + normText(q).slice(0, 40));
+  try {
+    const r = await assistantReply(q);
+    telemetry('assistant:q=' + normText(q).slice(0, 40));
+    res.json(r);
+  } catch (e) { res.status(500).json({ ok: false, reponse: 'Erreur interne.', err: e.message }); }
+});
+
+// ---- Pixel AI : Skills embarqués en bord de cabine ----
+app.post('/api/pixel-ai/execute', async (req, res) => {
+  if (!PAI) return res.status(503).json({ ok: false, message: 'pixel-ai non embarqué sur ce hub.' });
+  const { skillName, parameters } = req.body || {};
+  const r = await PAI.execute(skillName, parameters);
+  telemetry('pixelai:' + skillName);
   res.json(r);
+});
+
+// ---- Leads : stockage local offline (kiosque → hub) ----
+function leadsLoad() { try { return JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'leads.json'), 'utf8')); } catch { return []; } }
+function leadsSave(list) { fs.writeFileSync(path.join(DATA_DIR, 'leads.json'), JSON.stringify(list, null, 2)); telemetry('leads:' + list.length); }
+app.get('/api/leads', (req, res) => res.json({ ok: true, leads: leadsLoad() }));
+app.post('/api/sync', (req, res) => {
+  try {
+    const incoming = Array.isArray(req.body) ? req.body : (req.body && req.body.leads) || [];
+    const list = leadsLoad().concat(incoming.map(l => ({ name: l.name, email: l.email, phone: l.phone, ts: l.ts || new Date().toISOString() })));
+    const dedup = [...new Map(list.map(l => [l.email + '|' + l.phone, l])).values()];
+    leadsSave(dedup);
+    res.json({ ok: true, status: 'success', stored: dedup.length });
+  } catch (e) { res.status(500).json({ ok: false, message: e.message }); }
 });
 
 app.use(express.static(SITE_ROOT));
@@ -161,6 +214,7 @@ wss.on('connection', (ws) => {
 server.listen(PORT, () => {
   log(`[HTTP] kiosque        : http://<ip>:${PORT}/`);
   log(`[HTTP] REST           : http://<ip>:${PORT}/api/door/state`);
-  log(`[WS]   temps réel     : ws://<ip>:${PORT}/ws`);
+  log(`[HTTP] Pixel AI       : ${PAI ? 'sécurité:Skills actifs' : 'pixel-ai absent'} — /api/pixel-ai/execute`);
+  log('[WS]   temps réel     : ws://<ip>:${PORT}/ws');
   log('[HARDWARE] profil :', state.hardware || require('os').arch());
 });

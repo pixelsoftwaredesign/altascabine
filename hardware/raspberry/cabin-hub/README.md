@@ -33,13 +33,20 @@ journalctl -u cabine-hub -f     # suivi en direct
 
 ## Route REST exposée au kiosque (Web / Android)
 
-| Méthode | Route | Effet |
+| Method | Route | Effect |
 |---|---|---|
 | GET | `/api/door/state` | état consolidé (locked/open/presence/caps) |
 | POST | `/api/door/open` | déverrouille (commande MQTT) |
 | POST | `/api/door/close` | verrouille |
 | POST | `/api/scan` | relance le scan matériel ESP32 (dev) |
-| GET | `/api/health` | santé du hub + matériel détecté |
+| GET | `/api/health` | santé du hub + matériel détecté + `pixelai` |
+| GET | `/api/assistant` | infos de l'assistante embarquée (intents, Pixel AI) |
+| POST | `/api/assistant` | `{"q":"…"}` → réponse privée (KB + **PixelTranslate** FR/Darja/AR/TR/EN, climat par occupant) |
+| POST | `/api/pixel-ai/execute` | `{"skillName","parameters"}` → **Skills** Pixel AI embarqués (climate, maintenance, translate, compliance, accounting, coding, data_science, chart, export) |
+| GET | `/api/leads` | leads stockées en local (offline-first) |
+| POST | `/api/sync` | synchronisation kiosque → hub (dédoublonnage email+tél) |
+
+> **Pixel AI embarqué** : si le dépôt `pixel-ai/` est présent à la racine sur le site, le hub charge ses Skills en bord de cabine (cerveau de bord sans cloud).
 
 ## WebSocket
 
