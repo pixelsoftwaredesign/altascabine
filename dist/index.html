@@ -1806,7 +1806,16 @@
                 };
                 return g[lang] || g.fr;
             }
-            function serverUrl() { const s = (localStorage.getItem('atlasPixelServer') || '').trim().replace(/\/+$/, ''); return s || null; }
+            function serverUrl() {
+                const s = (localStorage.getItem('atlasPixelServer') || '').trim().replace(/\/+$/, '');
+                if (s) return s;
+                try {
+                    const host = String(location.hostname || '');
+                    const isPrivate = /^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.|127\.|localhost$)/.test(host) || host.endsWith('.local');
+                    if (isPrivate && location.origin && /^https?:/.test(location.origin)) return location.origin;
+                } catch (e) {}
+                return null;
+            }
             async function syncLeads() {
                 const s = serverUrl();
                 if (!s) return { ok: false, reason: 'no-server' };
@@ -2158,7 +2167,18 @@
         var md=$('setMode'); if(md) md.value=get('atlasMode','secure');
         var cb=$('setCabin'); if(cb) cb.value=get('atlasCabinId','');
         var hb=$('setHub'); if(hb) hb.value=get('atlasHub','');
-        var px=$('setPixel'); if(px) px.value=get('atlasPixelServer','');
+        var px=$('setPixel');
+        if(px){
+            var manual=get('atlasPixelServer','').trim().replace(/\/+$/,'');
+            px.value=manual;
+            var auto=null; try{ if(window.PixelAI&&window.PixelAI.getServer) auto=window.PixelAI.getServer(); }catch(e){}
+            px.placeholder=auto?('Auto : '+auto):'http://192.168.1.50:3000';
+            var ps=$('setPixelState');
+            if(!manual&&auto&&ps){
+                ps.textContent='🌐 Auto : '+auto+' — le kiosque est servi par le hub (sync leads + skills via ce serveur).';
+                ps.style.color='#2D5A27';
+            }
+        }
         var v=$('setVoiceBtn'); if(v){
             var on=get('atlasVoice','off')==='on';
             v.textContent=on?'🔇 Voix active — désactiver':'🎤 Activer la voix';
@@ -2179,7 +2199,8 @@
     window.testPixelS=function(){
         var p=$('setPixelState'); if(!p)return;
         var u=get('atlasPixelServer','').trim().replace(/\/+$/,'');
-        if(!u){ p.textContent='⚠️ Renseignez d’abord l’URL du serveur (ex. http://192.168.1.50:3000).'; p.style.color='#b45309'; return; }
+        if(!u){ try{ if(window.PixelAI&&window.PixelAI.getServer) u=window.PixelAI.getServer()||''; }catch(e){} }
+        if(!u){ p.textContent='⚠️ Renseignez d’abord l’URL du serveur (ex. http://192.168.1.50:3000) — aucune détection automatique.'; p.style.color='#b45309'; return; }
         p.textContent='🔄 Test en cours…'; p.style.color='#2D3748';
         var probes=[u+'/api/health', u+'/api/system/status'];
         var i=0;
