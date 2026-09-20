@@ -2181,14 +2181,32 @@
         var u=get('atlasPixelServer','').trim().replace(/\/+$/,'');
         if(!u){ p.textContent='⚠️ Renseignez d’abord l’URL du serveur (ex. http://192.168.1.50:3000).'; p.style.color='#b45309'; return; }
         p.textContent='🔄 Test en cours…'; p.style.color='#2D3748';
-        fetch(u+'/api/system/status',{method:'GET'})
-            .then(function(r){ return r.ok?r.json():Promise.reject(new Error('HTTP '+r.status)); })
-            .then(function(d){ p.textContent='✅ Pixel AI en ligne — '+(d.name||'serveur')+(d.version?' v'+d.version:''); p.style.color='#2D5A27'; })
-            .catch(function(){
-                p.textContent='⚠️ Serveur injoignable ('+u+'). Leads mis en file locale.';
+        var probes=[u+'/api/health', u+'/api/system/status'];
+        var i=0;
+        (function next(){
+            if(i>=probes.length){
+                p.textContent='⚠️ Serveur injoignable ('+u+'). Leads placés en file locale.';
                 p.style.color='#b45309';
                 try{ if(window.PixelAI&&window.PixelAI.syncLeads) PixelAI.syncLeads(); }catch(e){}
-            });
+                return;
+            }
+            fetch(probes[i++],{method:'GET'})
+                .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+                .then(function(d){
+                    if(d && d.pixelai!==undefined){
+                        p.textContent='✅ Hub cabine en ligne — '+(d.unit||'unité')+(d.pixelai?' · Pixel AI embarqué':'');
+                    } else {
+                        p.textContent='✅ Pixel AI en ligne — '+(d.name||'serveur')+(d.version?' v'+d.version:'');
+                    }
+                    p.style.color='#2D5A27';
+                    try{
+                        if(window.PixelAI&&window.PixelAI.syncLeads){
+                            window.PixelAI.syncLeads().then(function(r){ if(r && p && r.stored!==undefined) p.textContent+= (r.synced>0?' — '+r.synced+' lead(s) synchronisé(s)':''); });
+                        }
+                    }catch(e){}
+                })
+                .catch(next);
+        })();
     };
     window.resetSettingsS=function(){
         if(!confirm('Réinitialiser les réglages du kiosque ?')) return;
