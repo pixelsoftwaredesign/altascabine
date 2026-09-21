@@ -19,7 +19,8 @@ try {
 } catch (e) { log('[IA]', 'base de connaissances absente', e.message); }
 
 function normText(s) { return String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
-async function assistantReply(q) {
+async function assistantReply(q, ctx) {
+  ctx = ctx || {};
   const tokens = normText(q).split(/[^a-z0-9]+/).filter(Boolean);
   let best = null, bs = 0;
   for (const e of ASSISTANT_KB.intents) {
@@ -51,6 +52,39 @@ async function assistantReply(q) {
     } catch {}
   }
 
+  // ---- PixelNeural : détection d'intent à bord (pour le contexte + la relance LLM) ----
+  let intent = null;
+  if (PNEURAL && PMODEL) {
+    try {
+      const p = PNEURAL.predict(PMODEL, q);
+      const top = p && p.top && p.top[0];
+      if (top && top.s >= 0.45) intent = top.intent + ' (' + top.s.toFixed(2) + ')';
+    } catch {}
+  }
+
+  // ---- LLM libre (génération libre), si configuré ----
+  if (LLM_BASE) {
+    const langLabel = (ctx.lang || 'fr') === 'fr' ? 'français' : ctx.lang === 'ar' ? 'arabe' : ctx.lang === 'en' ? 'anglais' : ctx.lang === 'tr' ? 'turc' : ctx.lang === 'darja' ? 'darija tunisienne' : ctx.lang;
+    const sys = {
+      role: 'system',
+      content: 'Tu es ✴️ Pixel, l\'assistante neuronale privée de la cabine ATLAS de PixelSoftware Design (Gabès, Tunisie).' +
+        (ctx.name ? ' Tu t\'adresses à ' + ctx.name + '.' : '') +
+        ' Réponds en ' + langLabel + ', de façon concise et chaleureuse (moins de 3 phrases, émojis sobres).' +
+        (intent ? ' Intent détecté à bord : ' + intent + '.' : '') +
+        ' Faits à respecter : cabine fabriquée en Tunisie (matricule 1969711pam000) ; prix indicatifs DT HT : S 18 500, M 32 900, L 58 500 ;' +
+        ' TVA 19 % ; contact +216 52 675 027, pixelsoftwaredesign@gmail.com ; données des invités 100 % privées, tout tourne en local.' +
+        ' Si l\'utilisateur veut un devis/achat, demande un email puis un nom et un téléphone. Ne donne jamais d\'informations de sécurité fausses :' +
+        ' si tu ne connais pas un paramètre de la cabine, propose de contacter le centre technique.'
+    };
+    const hist = (ctx.history || []).slice(-8).map(h => ({ role: 'user', content: '[' + (h.intent || '?') + '] ' + String(h.q || '').slice(0, 120) }));
+    const messages = [sys, ...hist, { role: 'user', content: String(q).slice(0, 400) }];
+    const reponse = await llmReply(messages);
+    if (reponse) {
+      telemetry('assistant:llm:' + q.slice(0, 24).replace(/\s+/g, '_'));
+      return { ok: true, reponse, suggestions: [] };
+    }
+  }
+
   return {
     ok: false,
     reponse: 'Désolé, je n\'ai pas trouvé dans ma base privée. Essayez : « ' + (ASSISTANT_KB.suggestions || []).slice(0, 2).join(' » ou « ') + ' ».',
@@ -68,6 +102,46 @@ const BASE        = 'atlas';
 const UNIT        = CABINE_ID;
 
 fs.mkdirSync(DATA_DIR, { recursive: true });
+
+// ---- PixelNeural : algorithme Pixel embarqué (inference on-board, partagé avec le kiosque) ----
+let PNEURAL = null, PMODEL = null;
+try { PNEURAL = require(path.join(SITE_ROOT, 'pixel-ai', 'neural', 'pixelNeural.js')); } catch {}
+try { PMODEL = JSON.parse(fs.readFileSync(path.join(SITE_ROOT, 'pixel-ai', 'neural', 'model.json'), 'utf8')); } catch {}
+if (PNEURAL && PMODEL) log('[IA]', 'PixelNeural prêt :', PMODEL.intents.length, 'intents');
+
+// ---- LLM libre (optionnel) : Ollama ou API compatible OpenAI (voir .env) ----
+const LLM_BASE  = process.env.LLM_BASE  || process.env.OLLAMA_BASE  || '';
+const LLM_KEY   = process.env.LLM_KEY   || '';
+const LLM_MODEL = process.env.LLM_MODEL || (process.env.OLLAMA_BASE ? process.env.OLLAMA_MODEL || 'llama3.1' : '');
+const LLM_STYLE = process.env.LLM_STYLE || (process.env.OLLAMA_BASE ? 'ollama' : 'openai');
+const LLM_TIMEOUT = (process.env.LLM_TIMEOUT || 25) * 1000;
+if (LLM_BASE) log('[IA]', 'LLM libre :', LLM_STYLE, '/', LLM_MODEL || '(défaut du serveur)');
+
+async function llmReply(messages) {
+  try {
+    let url, payload;
+    if (LLM_STYLE === 'ollama') {
+      url = LLM_BASE.replace(/\/+$/, '') + '/api/chat';
+      payload = { model: LLM_MODEL, messages, stream: false };
+    } else {
+      const base = LLM_BASE.replace(/\/+$/, '');
+      url = base + (base.endsWith('/v1') ? '' : '/v1') + '/chat/completions';
+      payload = { model: LLM_MODEL, messages, temperature: 0.3 };
+    }
+    const headers = { 'Content-Type': 'application/json' };
+    if (LLM_KEY) headers.Authorization = 'Bearer ' + LLM_KEY;
+    const ctrl = new AbortController();
+    const to = setTimeout(() => ctrl.abort(), LLM_TIMEOUT);
+    const resp = await fetch(url, { method: 'POST', headers, body: JSON.stringify(payload), signal: ctrl.signal });
+    clearTimeout(to);
+    if (!resp.ok) { log('[LLM]', 'status', resp.status); return null; }
+    const j = await resp.json();
+    const txt = LLM_STYLE === 'ollama'
+      ? (j.message && j.message.content)
+      : (j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content);
+    return txt ? String(txt).trim() : null;
+  } catch (e) { log('[LLM]', 'échec :', e.message); return null; }
+}
 
 // ---- état consolidé (dépend du matériel détecté) ----
 const state = {
@@ -156,12 +230,13 @@ app.get('/api/health', (req, res) => res.json({ ok: true, unit: UNIT, online: st
 // ---- capacité (liste) : supprime la route assistant greffée après, restaure les leads ----
 
 // ---- Assistante Atlas privée (réponses à bord, sans cloud) ----
-app.get('/api/assistant', (req, res) => res.json({ ok: true, nom: ASSISTANT_KB.nom || 'Assistante Atlas', intents: (ASSISTANT_KB.intents || []).length, privé: true, pixelai: !!PAI }));
+app.get('/api/assistant', (req, res) => res.json({ ok: true, nom: ASSISTANT_KB.nom || 'Assistante Atlas', intents: (ASSISTANT_KB.intents || []).length, privé: true, pixelai: !!PAI, neural: !!(PNEURAL && PMODEL), llm: !!LLM_BASE }));
 app.post('/api/assistant', async (req, res) => {
   const q = (req.body && req.body.q) || '';
+  const ctx = { name: (req.body && req.body.name) || null, lang: (req.body && req.body.lang) || null, history: (req.body && req.body.history) || [] };
   if (!q.trim()) return res.status(400).json({ ok: false, reponse: 'Posez une question.' });
   try {
-    const r = await assistantReply(q);
+    const r = await assistantReply(q, ctx);
     telemetry('assistant:q=' + normText(q).slice(0, 40));
     res.json(r);
   } catch (e) { res.status(500).json({ ok: false, reponse: 'Erreur interne.', err: e.message }); }

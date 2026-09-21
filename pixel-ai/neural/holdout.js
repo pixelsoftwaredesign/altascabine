@@ -1,0 +1,30 @@
+// Phrases tenues HORS entraînement — évaluation de la généralisation.
+// (Vague 2 : formulations fraîches, distinctes des graines du corpus.)
+module.exports = {
+    greeting: ['bonjour à vous tous', 'hey salut', 'bonne journée à vous', 'hello la cabine'],
+    smalltalk: ['ça gaze ?', 'tout va pour le mieux', 'comment se passe la journée', 'la vie est bonne'],
+    status_ok: ['tout est impeccable', 'je me sens très bien', 'ça baigne', 'on est en pleine forme'],
+    thanks: ['mille mercis', 'je vous suis très reconnaissant', 'génial merci', 'parfait merci'],
+    goodbye: ['à tout à l\'heure', 'bonne continuation', 'on se dit à demain', 'à la revoyure'],
+    who_are_you: ['tu peux te présenter', 'je veux savoir qui tu es', 'parle moi de toi', 'c\'est toi l\'assistant ?'],
+    capabilities: ['à quoi tu peux m\'être utile', 'tu résous quoi', 'quelles questions tu comprends', 'tu assures quoi'],
+    door_open: ['s\'il te plaît ouvre la cabine', 'tu m\'ouvres', 'je suis pressé ouvre', 'laisse moi entrer'],
+    door_close: ['tu peux refermer', 'ferme derrière moi stp', 'verrouille s\'il te plaît', 'referme le sas'],
+    door_state: ['la cabine est ouverte ou pas', 'qu\'est-ce que la porte', 'porte ouverte ?', 'elle est fermée là ?'],
+    lights_on: ['enclenche la lumière stp', 'il fait sombre allume', 'de la lumière', 'éclaire'],
+    lights_off: ['coupe tout l\'éclairage', 'pas besoin de lumière', 'on éteint', 'plus de clarté'],
+    climate_neo: ['il y a un bébé dans la cabine', 'bébé à bord', 'réglage bébé', 'le petit bout est arrivé'],
+    climate_child: ['mon petit a chaud', 'les enfants ont chaud', 'climat pour mes enfants', 'la petite a besoin de fraîcheur'],
+    climate_adult: ['pour un grand', 'réglage pour adulte s\'il vous plaît', 'confort standard', 'mode adulte'],
+    maintenance_power: ['elle ne s\'allume vraiment pas', 'problème de démarrage', 'l\'écran reste noir', 'le boîtier est muet'],
+    maintenance_network: ['le réseau est très faible', 'pas de connexion internet', 'la liaison avec le routeur est morte', 'wifi en panne'],
+    lead: ['je voudrais être rappelé', 'un appel commercial', 'parlons de mon projet', 'faites moi une offre'],
+    compliance: ['quels sont vos agréments', 'vous êtes aux normes', 'certifié selon quoi', 'conformité documentée ?'],
+    tva: ['combien de taxe sur 200', 'tva à payer', 'calcul de la tva s\'il te plaît', 'taxe sur la facture'],
+    schedule: ['je veux un rdv', 'un créneau demain', 'caler une installation', 'je passe l\'après-midi'],
+    time: ['il est quelle heure là', 'l\'heure maintenant', 'dis moi l\'heure', 'c\'est l\'heure de quoi'],
+    date: ['quelle date on est', 'c\'est le combien aujourd\'hui', 'la date d\'aujourd\'hui', 'on est le quel jour'],
+    price: ['le tarif le plus bas', 'combien coute la solution', 'prix de la cabine', 'budget rapide'],
+    contact: ['je veux le numéro', 'l\'email pour vous joindre', 'coordonnées s\'il vous plaît', 'un contact humain'],
+    security: ['on est en sécurité ici', 'données protégées ou pas', 'privacy bien gérée', 'vos données restent en Tunisie ?']
+};

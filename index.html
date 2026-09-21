@@ -24,7 +24,8 @@
 {"@context":"https://schema.org","@type":"Organization","name":"ATLAS CABINE","legalName":"PixelSoftware Design","foundingLocation":{"@type":"Place","name":"Tunisie"},"slogan":"L'espace de concentration","description":"Cabines acoustiques Atlas et leur écosystème numérique (kiosque, application, portails).","sameAs":[]}
 </script>
 <style>@media (max-width:639px){header.flex.justify-between{flex-wrap:wrap;row-gap:.4rem}header h1{font-size:.95rem!important}.glass .flex.items-center.space-x-3{gap:.35rem}.space-x-3{column-gap:.35rem}}</style>
-<script src="/lang.js"></script></head>
+<script src="/pixelneural.js"></script>
+</head>
 <body class="min-h-screen w-full flex flex-col justify-between p-3 sm:p-6 select-none bg-[#F4F6F0] overflow-y-auto lg:overflow-hidden">
 
     
@@ -1476,9 +1477,9 @@
                     for (const t of tokens) if (e.kw.some(k => norm(k).includes(t) || norm(k).split(' ').some(w => w && w === t))) s++;
                     if (s > bs && s >= 1) { bs = s; best = e; }
                 }
-                return best ? { text: typeof best.a === 'function' ? best.a() : best.a, act: best.act } : {
+                return best ? { text: typeof best.a === 'function' ? best.a() : best.a, act: best.act } : (AI && AI.ask && (AI.getServer ? AI.getServer() : null) ? AI.ask(q, AI.knownName ? AI.knownName() : null, AI.detect ? AI.detect(q) : null) : {
                     text: '🤔 Je n\'ai pas trouvé. Essayez : « état des composants », « quelle heure ? », « ouvre la porte », « quelle climatisation ? » ou « comment utiliser la cabine ? ».',
-                };
+                });
             }
 
             const CHIPS = ['Comment utiliser la cabine ?', 'État des composants', 'Quelle heure ?', 'Ouvre la porte', 'Urgence', 'Température bébé', 'أهلا', 'Baddel el climat', '📞 Centre technique', '🚑 Ambulance', '🧯 Protection civile', '👮 Police'];
@@ -1508,8 +1509,11 @@
                 paMsg(true, q);
                 paType(() => {
                     const r = answer(q);
-                    if (r.act) { try { r.act(); } catch (e) {} }
-                    paMsg(false, r.text);
+                    Promise.resolve(r).then((res) => {
+                        if (!res) return;
+                        if (res.act) { try { res.act(); } catch (e) {} }
+                        paMsg(false, res.text);
+                    });
                 });
             }
             function paChips() {
@@ -1625,10 +1629,13 @@
                 paMsg(true, '🎙️ ' + t);
                 paType(() => {
                     const r = answer(t);
-                    if (r.act) { try { r.act(); } catch (e) {} }
-                    const txt = r.text.split('\n')[0];
-                    paMsg(false, r.text);
-                    paDoSpeak(r.text, r.lang);
+                    Promise.resolve(r).then((res) => {
+                        if (!res) return;
+                        if (res.act) { try { res.act(); } catch (e) {} }
+                        const txt = res.text.split('\n')[0];
+                        paMsg(false, res.text);
+                        paDoSpeak(res.text, res.lang);
+                    });
                 });
             }
             function paDoSpeak(text, lang) {
@@ -1778,7 +1785,7 @@
                 return null;
             }
             function extractName(q) {
-                const qs = String(q || '').trim();
+                const qs = String(q || '').trim().replace(/[\u2018\u2019\u201A\u2032\u00B4`]/g, "'");
                 const pats = [
                     /(?:je m'appelle|je m'apelle|mon nom est|prénom|c'est|moi c'est|je suis)\s+([a-zà-ÿ]{2,20})/i,
                     /(?:mi chiamo)\s+([a-zà-ÿ]{2,20})/i,
@@ -1848,6 +1855,167 @@
                 return false;
             }
 
+            // ═══════════ Dialogue naturel : courtoisie, relances, multi-tours, PixelNeural ═══════════
+            const conv = { lastIntent: null, asked: null, name: null, lang: null, turns: [] };
+            const UI = {
+                door: function (a) { try { if (typeof controlDoor === 'function') { controlDoor(a); if (typeof switchTab === 'function') switchTab('porte'); } } catch (e) {} },
+                light: function (m) { try { if (typeof setPresetLight === 'function') setPresetLight(m); if (typeof switchTab === 'function') switchTab('eclairage'); } catch (e) {} },
+                fan: function (f) { try { if (typeof setFanSpeed === 'function') setFanSpeed(f); if (typeof switchTab === 'function') switchTab('climatisation'); } catch (e) {} }
+            };
+            function cap(s) { s = String(s || ''); return s.charAt(0).toUpperCase() + s.slice(1); }
+            function pendState() { try { const p = JSON.parse(localStorage.getItem('pixelLeadPend') || 'null') || {}; return p; } catch (e) { return {}; } }
+            function push(idx, tt, it) { try { conv.turns.push({ q: tt, intent: it, lang: idx }); if (conv.turns.length > 16) conv.turns.shift(); } catch (e) {} }
+            function hang() {
+                return rep(conv.lang || 'fr',
+                    '🤔 Je n’ai pas trouvé dans ma base. Essayez : « état de la cabine », « climatisation », « ouvre la porte », « prix », « devis », « maintenance », « quelle heure ? ».',
+                    '🤔 لم أجد. اسأل عن الحالة أو المناخ أو السعر أو الصيانة.', '🤔 Not found. Try status, climate, door, pricing, maintenance or time.', '🤔 Bulamadım. Durum, iklim, kapı, fiyat, bakım ya da saat deneyin.', '🤔 3lach menjawnich. Es2al 3la état, climat, prix, maintenance wala heure.');
+            }
+            const SUG = {
+                greeting: ['État de la cabine', 'Quelle heure ?', 'Ouvre la porte', 'Prix'],
+                capabilities: ['Porte', 'Éclairage', 'Climatisation', 'Devis'],
+                door_open: ['Ferme la porte', 'État des composants', 'Prix'],
+                door_close: ['Ouvre la porte', 'État des composants'],
+                door_state: ['Ouvre la porte', 'État des composants'],
+                lights_on: ['Éteins la lumière', 'Prix', 'État'],
+                lights_off: ['Allume la lumière', 'Prix'],
+                climate_neo: ['Prix', 'État de la cabine', 'Devis'],
+                climate_child: ['Prix', 'État de la cabine'],
+                climate_adult: ['Prix', 'État de la cabine'],
+                maintenance_power: ['Centre technique', 'Devis', 'État'],
+                maintenance_network: ['Centre technique', 'État'],
+                lead: ['+216 52 675 027', 'Prix', 'TVA'],
+                compliance: ['Prix', 'Contact', 'TVA'],
+                tva: ['Prix', 'Devis', 'Contact'],
+                schedule: ['Contact', 'Devis', 'Prix'],
+                price: ['Devis', 'Contact', 'TVA'],
+                contact: ['Devis', 'Prix', 'État'],
+                security: ['Prix', 'Contact', 'État'],
+                time: ['Date', 'État de la cabine', 'Prix'],
+                date: ['Heure', 'État de la cabine'],
+                who_are_you: ['Que peux-tu faire ?', 'Prix', 'Devis'],
+                smalltalk: ['État', 'Quelle heure ?', 'Devis'],
+                status_ok: ['Prix', 'État', 'Devis'],
+                thanks: ['Comment utiliser la cabine ?', 'État', 'Prix'],
+                goodbye: ['Bonjour', 'État', 'Prix']
+            };
+            function actIntent(intent) {
+                switch (intent) {
+                    case 'door_open': UI.door('open'); break;
+                    case 'door_close': UI.door('close'); break;
+                    case 'lights_on': UI.light('focus'); break;
+                    case 'lights_off': try { const el = document.getElementById('lightLevel'); let cur = el ? (parseInt(el.textContent, 10) || 100) : 100; for (let i = 0; i < 12 && cur > 0; i++) { adjustLight(-10); cur -= 10; } } catch (e) {} break;
+                    case 'climate_neo': setClimate('neo'); break;
+                    case 'climate_child': setClimate('enfant'); break;
+                    case 'climate_adult': setClimate('adulte'); break;
+                    case 'vent_eco': UI.fan('Eco'); break;
+                    case 'vent_max': UI.fan('Max'); break;
+                }
+            }
+            function intentText(intent, q0) {
+                const lang = conv.lang || 'fr';
+                const N = conv.name ? cap(conv.name) : null;
+                const res = (text) => { const r = { text, lang, intent, sug: SUG[intent] || [] }; return r; };
+                switch (intent) {
+                    case 'door_open': return res(rep(lang, 'Bien sûr' + (N ? ', ' + N : '') + ' ! J’ouvre la porte (gâche déverrouillée 15 s).', 'بالتأكيد! أفتح الباب الآن.', 'Of course! Opening the door now.', 'Tabii ki! Kapıyı açıyorum.', 'Yais, na7ki el porte!').split('|')[0]);
+                    case 'door_close': return res(rep(lang, 'Compris' + (N ? ', ' + N : '') + ' ! Je verrouille la porte.', 'حسناً، أغلق الباب.', 'Got it! Locking the door.', 'Anlaşıldı! Kapıyı kilitliyorum.'));
+                    case 'door_state': return res('🚪 Porte : ' + (function () { try { return document.getElementById('doorStatus') ? document.getElementById('doorStatus').textContent : '—'; } catch (e) { return '—'; } })() + '.');
+                    case 'lights_on': return res(rep(lang, '💡 J’allume l’éclairage — mode Focus 5000 K pour travailler.', 'سأضيء الإضاءة.', 'Lighting on — Focus 5000 K.', 'Işığı açıyorum — Focus 5000 K.'));
+                    case 'lights_off': return res(rep(lang, '💡 J’éteins l’éclairage.', 'أطفئ الإضاءة.', 'Lights off.', 'Işığı kapatıyorum.'));
+                    case 'climate_neo': return res(rep(lang, '❄️ Profil « bébé » : 23 °C, ventilation douce, zéro courant d’air.', 'تم ضبط مناخ الرضيع.', 'Baby climate: 23 °C, gentle flow.', 'Bebek iklimi: 23°C, cereyan yok.'));
+                    case 'climate_child': return res(rep(lang, '❄️ Profil enfant : 22 °C, ventilation Auto.', 'مناخ الطفل مضبوط.', 'Child climate: 22 °C.', 'Çocuk iklimi: 22°C.'));
+                    case 'climate_adult': return res(rep(lang, '❄️ Profil adulte : 21,5 °C, ventilation Auto.', 'مناخ البالغ مضبوط.', 'Adult climate: 21.5 °C.', 'Yetişkin iklimi: 21.5°C.'));
+                    case 'maintenance_power':
+                    case 'maintenance_network': return res('🛠️ ' + runTool('get_maintenance_guide', {}).guide);
+                    case 'lead': return res(rep(lang, 'Avec plaisir' + (N ? ', ' + N : '') + ' ! Je prépare une proposition personnalisée — commencez par votre email, puis votre nom et téléphone.', 'بكل سرور! ابدأوا ببريدكم الإلكتروني.', 'With pleasure! Start with your email, then name and phone.', 'Memnuniyetle! Önce e-postanız, sonra ad ve telefonunuz.'));
+                    case 'compliance': return res('🏭 Fabriqué en Tunisie (PixelSoftware Design — Gabès), matricule fiscal 1969711pam000, CERT/ANCE, INPDP, facturation électronique TEJ, verre trempé EN 12150, acoustique ISO 3382-1.');
+                    case 'tva': return res(tvaReply(q0));
+                    case 'schedule': return res(rep(lang, '📅 Je réserve un créneau technique : laissez-moi un email et un téléphone pour que l’équipe confirme. Centre technique : +216 52 675 027.', 'احجز لكم موعداً تقنياً — أرسلوا بريدكم ورقمكم.', 'I will book a technical slot — leave email and phone. +216 52 675 027.', 'Teknik randevu alıyorum — e-posta ve telefon bırakın.'));
+                    case 'price': return res('💶 Prix indicatifs (DT HT) : S 18 500 · M 32 900 · L 58 500. Un devis précis sur mesure ? Je prépare une proposition.');
+                    case 'contact': return res('📞 PixelSoftware Design — Gabès, Tunisie · +216 52 675 027 · pixelsoftwaredesign@gmail.com');
+                    case 'security': return res('🛡️ Vos échanges restent privés : l’assistant tourne à bord de la cabine, réseau WiFi isolé, télémétrie minimale. Rien ne part vers le cloud.');
+                    case 'time': return res('🕐 ' + new Date().toLocaleTimeString('fr-FR') + ' — ' + new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }));
+                    case 'date': return res('🗓️ ' + new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }));
+                    case 'who_are_you': return res(rep(lang, 'Je suis ✴️ Pixel, l’algorithme neuronal de la cabine ATLAS, conçu par PixelSoftware Design. Je comprends plusieurs langues et je peux piloter porte, lumière et climat, répondre prix/maintenance.', 'أنا بيكسل، مساعد كابينة أطلس العصبي.', 'I am Pixel, the ATLAS cabin neural assistant by PixelSoftware Design.', 'Ben Pixel, ATLAS kabin nöral asistanıyım.'));
+                    case 'capabilities': return res(rep(lang, 'Je peux : 🚪 ouvrir/fermer la porte · 💡 piloter l’éclairage · ❄️ régler le climat (bébé/enfant/adulte) · 🛠️ maintenance · 💶 prix & devis · 🗓️ heure, date, créneaux.', 'أستطيع فتح الباب وإدارة الضوء والمناخ والأسعار.', 'I can: door, lighting, climate, maintenance, pricing, schedule.', 'Kapı, ışık, iklim, bakım, fiyat, randevu.'));
+                    case 'greeting': return res(rep(lang, '👋 Bonjour' + (N ? ', ' + N : '') + ' ! Je suis Pixel, votre assistante de cabine. Comment puis-je vous aider ? (état, climat, porte, prix…)', 'أهلاً! كيف أساعدك؟', 'Hello! How can I help?', 'Merhaba! Nasıl yardımcı olabilirim?'));
+                    case 'smalltalk': return res(rep(lang, 'Très bien, merci' + (N ? ', ' + N : '') + ' ! Toujours au service de la cabine. Et vous, tout se passe bien ici ?', 'بخير، وأنت؟', 'All good, thank you! And you?', 'İyiyim, teşekkürler! Ya siz?'));
+                    case 'status_ok': return res(rep(lang, 'Ravi de l’entendre' + (N ? ', ' + N : '') + ' ! Je reste à disposition.', 'سعيد بسماع ذلك!', 'Glad to hear it!', 'Sevindim!'));
+                    case 'thanks': return res(rep(lang, 'Je vous en prie' + (N ? ', ' + N : '') + ' 😊 N’hésitez pas si vous avez besoin de quoi que ce soit.', 'عفواً!', 'You are welcome!', 'Rica ederim!'));
+                    case 'goodbye': return res(rep(lang, 'Au revoir' + (N ? ', ' + N : '') + ' ! Belle journée 👋 C’était un plaisir.', 'إلى اللقاء!', 'Goodbye!', 'Görüşürüz!'));
+                    case 'vent_eco': return res('🍃 Ventilation Eco activée.');
+                    case 'vent_max': return res('🍃 Ventilation Max activée.');
+                    default: return null;
+                }
+            }
+            function tvaReply(q0) {
+                const m = String(q0 || '').match(/(\d[\d\s.,]*)/);
+                const amt = m ? parseFloat(m[1].replace(/[ ,.']/g, (c) => c === ',' ? '.' : '')) : 0;
+                if (amt > 0) { const t = amt * 0.19; return '🧮 TVA (19 %) sur ' + amt.toFixed(2) + ' DT HT : ' + t.toFixed(2) + ' DT, soit ' + (amt * 1.19).toFixed(2) + ' DT TTC.'; }
+                return '🧮 TVA tunisienne : 19 % + timbre 1 TND. Donnez un montant HT, ex. « TVA sur 150 DT ».';
+            }
+            function natural(q) {
+                const lang = detect(q); conv.lang = lang;
+                const t = norm(q);
+                const name = conv.name || (function () { try { return knownName(); } catch (e) { return null; } })();
+                if (name) conv.name = name;
+                const N = name ? cap(name) : null;
+
+                // Réponses courtes OUI / NON (multi-tours)
+                const yes = /^\s*(oui|ouai|ouais|ok|okay|d accord|daccord|super|vas y|yalla|aywa|evet|yes|نعم|بالطبع|carrément)\b/.test(t);
+                const no = /^\s*(non|no|hayır|hayir|laa|لا|pas maintenant|plus tard|apres|après)\b/.test(t);
+                if (yes || no) {
+                    if (conv.asked) { const prev = conv.asked; conv.asked = null; if (no) return { text: 'Pas de souci' + (N ? ', ' + N : '') + ', je n’agis pas. Autre chose ?', lang, intent: 'greeting' }; conv.lastIntent = prev; const rr = intentText(prev, q); if (rr && /door_|lights_|climate_|vent_/.test(prev)) actIntent(prev); if (rr) { rr.lang = lang; push(lang, q, prev); return rr; } }
+                    if (conv.lastIntent && /door_|lights_|climate_|vent_/.test(conv.lastIntent)) { const rr2 = intentText(conv.lastIntent, q); if (/door_open|lights_on|climate_|vent_/.test(conv.lastIntent)) actIntent(conv.lastIntent); if (rr2) { rr2.lang = lang; push(lang, q, conv.lastIntent); return rr2; } }
+                }
+
+                // Courtoisie — décidée par des ancres lexicales (précision)
+                if (/(je vais bien|ça va bien|ça va merci|très bien|tres bien|impeccable|nickel|au top|formidable|ipiyim|iyiyim|بخير|بخير الحمد|tout va bien)/.test(t)) { conv.lastIntent = 'status_ok'; const r = intentText('status_ok'); r.lang = lang; push(lang, q, 'status_ok'); return r; }
+                if (/(merci|mercii|y3aychek|choukran|shukran|شكرا|شكراً|teşekkür|sa ol|şükür|thank you|thanks|grazie|muchas gracias)/.test(t)) { conv.lastIntent = 'thanks'; const r = intentText('thanks'); r.lang = lang; push(lang, q, 'thanks'); return r; }
+                if (/(au revoir|a bientot|a plus tard|a la prochaine|bonne journee|bonne soiree|bon week|bye|goodbye|see you|beslema|مع السلامة|إلى اللقاء|görüşürüz|hoşça kal|addio|ciao)/.test(t)) { conv.lastIntent = 'goodbye'; const r = intentText('goodbye'); r.lang = lang; push(lang, q, 'goodbye'); return r; }
+                if (/(comment ca va|comment allez|comment vous allez|comment tu vas|how are you|nasılsın|كيف حالك|كيفك|kifach|kifk|chnowa ahwalek|come stai)/.test(t)) { conv.lastIntent = 'smalltalk'; const r = intentText('smalltalk'); r.lang = lang; push(lang, q, 'smalltalk'); return r; }
+                if (/(et toi|et vous|and you|peki sen|وأنت\b|وأنتي|w nta|w nti)/.test(t)) { conv.lastIntent = 'smalltalk'; const r = intentText('smalltalk'); r.lang = lang; r.text = (N ? cap(N) + ', ' : '') + (lang === 'ar' ? 'أنا بخير، ماذا عنك؟' : lang === 'tr' ? 'İyiyim, ya siz?' : lang === 'en' ? 'Fine, thanks! And you?' : 'Très bien, merci ! Et vous, comment se passe votre séjour ?'); push(lang, q, 'smalltalk'); return r; }
+                if (/(qui es tu|qui es-tu|qui etes|tu es qui|you are who|who are you|presente toi|presente|presente-toi|chkounek|من أنت|kimsin|come ti chiami|qui etes vous)/.test(t)) { conv.lastIntent = 'who_are_you'; const r = intentText('who_are_you'); r.lang = lang; push(lang, q, 'who_are_you'); return r; }
+                if (/(que peux tu faire|que sais tu faire|tes capacites|tes capacités|tu fais quoi|ce que tu fais|what can you do|neler yapabilirsin|chneya tnejem|ماذا تستطيع)/.test(t)) { conv.lastIntent = 'capabilities'; const r = intentText('capabilities'); r.lang = lang; push(lang, q, 'capabilities'); return r; }
+
+                // Relance d'une fiche en cours (lead en attente)
+                const pend = pendState();
+                if (pend && pend.email && !pend.name && !pend.phone) {
+                    if (!/(mon nom|je m appelle|je m'appelle|mon tel|mon numero|appelle moi|ferry|oslovie|téléphone|tel:)/.test(t)) {
+                        const r = { text: rep(lang, 'Merci pour votre email ! Pour finaliser votre fiche, précisez votre nom et votre numéro de téléphone. Vous pouvez aussi me laisser juste un nom.', '', 'Thanks! To finish your file, add your name and phone number.', 'Teşekkürler! Dosyayı tamamlamak için ad ve telefonunuzu bırakın.'), lang, intent: 'lead' }; conv.lastIntent = 'lead'; push(lang, q, 'lead'); return r;
+                    }
+                }
+
+                // Réseau neuronal Pixel — intents flous (seuils stricts + marge anti-hallucination)
+                if (window.PixelNeural && window.PixelNeuralModel && t.length >= 3) {
+                    const pred = window.PixelNeural.predict(window.PixelNeuralModel, q);
+                    const top = pred.top[0], sec = pred.top[1] || { s: 0 };
+                    const isAct = /door_|lights_|climate_|maintenance_|schedule/.test(top.intent);
+                    const th = isAct ? 0.78 : 0.65;
+                    if (top && top.intent && top.s >= th && (top.s - sec.s) >= 0.12) {
+                        conv.lastIntent = top.intent;
+                        conv.asked = top.intent;
+                        const rr = intentText(top.intent, q);
+                        if (rr) { rr.lang = lang; rr.neural = true; push(lang, q, top.intent); return rr; }
+                    }
+                }
+                return null;
+            }
+            function dialog(q) { return natural(q); }
+            function ask(q, name, lang) {
+                const s = serverUrl();
+                if (!s || typeof fetch !== 'function') return Promise.resolve({ text: hang(), lang: lang || conv.lang || null, local: true });
+                return fetch(s + '/api/assistant', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ q: q, name: name || conv.name || null, lang: lang || conv.lang || null, history: conv.turns.slice(-10).map(x => ({ q: x.q, intent: x.intent })) })
+                }).then(r => r.json()).then(j => {
+                    const txt = (j && (j.reponse || j.text || j.reply)) || hang();
+                    push(lang || conv.lang, q, 'hub');
+                    return { text: txt, lang: lang || conv.lang || null, neural: true, sug: (j && j.suggestions) || [] };
+                }).catch(() => ({ text: hang(), lang: lang || conv.lang || null, local: true }));
+            }
+            function history() { return conv.turns.slice(); }
+            function resetConv() { conv.lastIntent = null; conv.asked = null; conv.turns = []; }
+
             const tools = {
                 recognize_client: {
                     description: 'Reconnaît un client connu par son email (prospection vs support).',
@@ -1911,6 +2079,7 @@
                 }
                 if (nm) {
                     pend.name = nm; store('pixelLeadPend', pend);
+                    conv.name = nm;
                     try { localStorage.setItem('pixelVisitorName', JSON.stringify(nm)); } catch (e) {}
                     return { text: greetName(lang, nm), lang };
                 }
@@ -1953,7 +2122,7 @@
                     const optr = n ? 'Merhaba ' + n + '! Pixel Software Design\'e hoş geldiniz.' : 'Pixel Software Design\'e hoş geldiniz.';
                     return { text: optr + ' Yardımcı olabilirim: durum, iklim, bakım, fiyat, iletişim.', lang };
                 }
-                return null;
+                return natural(q);
             }
 
             if (typeof window.addEventListener === 'function') {
@@ -1970,7 +2139,13 @@
                 clearPending: function () { leads.length = 0; store('pixelLeads', leads); },
                 syncLeads: syncLeads,
                 setServer: function (url) { try { localStorage.setItem('atlasPixelServer', url || ''); } catch (e) {} return serverUrl(); },
-                getServer: serverUrl
+                getServer: serverUrl,
+                serverUrl: serverUrl,
+                dialog: dialog,
+                natural: natural,
+                ask: ask,
+                history: history,
+                resetConv: resetConv
             };
         })();
     </script>
@@ -2117,9 +2292,12 @@
         msg(true,v);
         typing(function(){
             var r=window.paAnswer?window.paAnswer(v):{text:'🤔 Assistant non disponible.'};
-            if(r.act){ try{ r.act(); }catch(e){} }
-            msg(false,r.text);
-            try{ window.paSpeakG&&window.paSpeakG(r.text,r.lang); }catch(e){}
+            Promise.resolve(r).then(function(res){
+                if(!res) return;
+                if(res.act){ try{ res.act(); }catch(e){} }
+                msg(false,res.text);
+                try{ window.paSpeakG&&window.paSpeakG(res.text,res.lang); }catch(e){}
+            });
         });
     };
     window.tabMic=function(){
