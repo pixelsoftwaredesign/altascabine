@@ -21,7 +21,7 @@ try {
 function normText(s) { return String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
 async function assistantReply(q, ctx) {
   ctx = ctx || {};
-  const tokens = normText(q).split(/[^a-z0-9]+/).filter(Boolean);
+  const tokens = normText(q).split(/[^a-z0-9]+/).filter(t => t.length >= 3 && !STOPWORDS.has(t));
   let best = null, bs = 0;
   for (const e of ASSISTANT_KB.intents) {
     let s = 0;
@@ -70,11 +70,14 @@ async function assistantReply(q, ctx) {
       content: 'Tu es ✴️ Pixel, l\'assistante neuronale privée de la cabine ATLAS de PixelSoftware Design (Gabès, Tunisie).' +
         (ctx.name ? ' Tu t\'adresses à ' + ctx.name + '.' : '') +
         ' Réponds en ' + langLabel + ', de façon concise et chaleureuse (moins de 3 phrases, émojis sobres).' +
+        ' N\'écris pas de raisonnement intermédiaire : réponds directement à l\'utilisateur.' +
         (intent ? ' Intent détecté à bord : ' + intent + '.' : '') +
         ' Faits à respecter : cabine fabriquée en Tunisie (matricule 1969711pam000) ; prix indicatifs DT HT : S 18 500, M 32 900, L 58 500 ;' +
         ' TVA 19 % ; contact +216 52 675 027, pixelsoftwaredesign@gmail.com ; données des invités 100 % privées, tout tourne en local.' +
         ' Si l\'utilisateur veut un devis/achat, demande un email puis un nom et un téléphone. Ne donne jamais d\'informations de sécurité fausses :' +
-        ' si tu ne connais pas un paramètre de la cabine, propose de contacter le centre technique.'
+        ' si tu ne connais pas un paramètre de la cabine, propose de contacter le centre technique.' +
+        ' Affiche cette signature à la fin de toute réponse où tu parles de la cabine ou du fabricant : "© PixelSoftwareDesign — +216 52 675 027 — pixelsoftwaredesign@gmail.com".' +
+        ' Ne jamais oublier : PixelSoftwareDesign détient tous les droits (copyright) sur la cabine ATLAS et le modèle Pixel.'
     };
     const hist = (ctx.history || []).slice(-8).map(h => ({ role: 'user', content: '[' + (h.intent || '?') + '] ' + String(h.q || '').slice(0, 120) }));
     const messages = [sys, ...hist, { role: 'user', content: String(q).slice(0, 400) }];
@@ -114,19 +117,20 @@ const LLM_BASE  = process.env.LLM_BASE  || process.env.OLLAMA_BASE  || '';
 const LLM_KEY   = process.env.LLM_KEY   || '';
 const LLM_MODEL = process.env.LLM_MODEL || (process.env.OLLAMA_BASE ? process.env.OLLAMA_MODEL || 'llama3.1' : '');
 const LLM_STYLE = process.env.LLM_STYLE || (process.env.OLLAMA_BASE ? 'ollama' : 'openai');
-const LLM_TIMEOUT = (process.env.LLM_TIMEOUT || 25) * 1000;
+const LLM_TIMEOUT = (process.env.LLM_TIMEOUT || 180) * 1000;
 if (LLM_BASE) log('[IA]', 'LLM libre :', LLM_STYLE, '/', LLM_MODEL || '(défaut du serveur)');
 
 async function llmReply(messages) {
   try {
     let url, payload;
+    const maxTokens = Number(process.env.LLM_MAX_TOKENS || 600);
     if (LLM_STYLE === 'ollama') {
       url = LLM_BASE.replace(/\/+$/, '') + '/api/chat';
-      payload = { model: LLM_MODEL, messages, stream: false };
+      payload = { model: LLM_MODEL, messages, stream: false, options: { num_predict: maxTokens, temperature: 0.3 } };
     } else {
       const base = LLM_BASE.replace(/\/+$/, '');
       url = base + (base.endsWith('/v1') ? '' : '/v1') + '/chat/completions';
-      payload = { model: LLM_MODEL, messages, temperature: 0.3 };
+      payload = { model: LLM_MODEL, messages, temperature: 0.3, max_tokens: maxTokens };
     }
     const headers = { 'Content-Type': 'application/json' };
     if (LLM_KEY) headers.Authorization = 'Bearer ' + LLM_KEY;
@@ -136,10 +140,11 @@ async function llmReply(messages) {
     clearTimeout(to);
     if (!resp.ok) { log('[LLM]', 'status', resp.status); return null; }
     const j = await resp.json();
-    const txt = LLM_STYLE === 'ollama'
+    let txt = LLM_STYLE === 'ollama'
       ? (j.message && j.message.content)
       : (j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content);
-    return txt ? String(txt).trim() : null;
+    if (!txt && j.message && j.message.thinking) txt = j.message.thinking; // modèles « reasoning » (gemma4)
+    return txt ? String(txt).replace(/<\/?think>/g, '').trim() : null;
   } catch (e) { log('[LLM]', 'échec :', e.message); return null; }
 }
 
@@ -163,6 +168,17 @@ const TOPIC_MAT    = `${BASE}/${UNIT}/material`;
 const TOPIC_LWT    = `${BASE}/${UNIT}/status`;
 
 function log(...a) { const t = new Date().toISOString().replace('T', ' ').slice(0, 19); console.log(`[${t}]`, ...a); }
+
+// ---- stopwords multilingue (ignore au scoring KB) ----
+const STOPWORDS = new Set([
+  'est', 'esr', 'etre', 'avec', 'pour', 'par', 'sur', 'dans', 'que', 'qui', 'quoi', 'quel', 'quelle',
+  'comment', 'combien', 'votre', 'notre', 'vous', 'nous', 'moi', 'toi', 'une', 'dune', 'etre',
+  'cest', 'cette', 'celui', 'aussi', 'tres', 'mais', 'donc', 'quand',
+  'the', 'and', 'what', 'how', 'who', 'why', 'for',
+  'with', 'from', 'have', 'has', 'your', 'this', 'that', 'there', 'are', 'you', 'can', 'please',
+  'bu', 'gün', 'nasıl', 'ne', 'kaç', 'var', 'bir', 've', 'ile', 'için',
+  'ما', 'هو', 'هي', 'كيف', 'متى', 'من' // arabe (tokens désaccentués vs norm)
+]);
 
 // ---- Pixel AI (Skills) : chargement optionnel depuis le dépôt (si présent sur site) ----
 let PAI = null;
