@@ -13,7 +13,6 @@ function generatePDFReport(reportTitle, stats, outputPath) {
     stream.on('error', reject);
     doc.pipe(stream);
     doc.fillColor('#111111').fontSize(20).text('Pixel Software Design', { continued: false });
-    doc.fontSize(9).fillColor('#666666').text('Gabès, Tunisie — Matricule Fiscal : 1969711pam000');
     doc.moveDown();
     doc.fontSize(16).fillColor('#000000').text(reportTitle);
     doc.moveDown();
@@ -36,7 +35,6 @@ async function generateWordReport(reportTitle, stats, outputPath) {
       properties: {},
       children: [
         new Paragraph({ text: 'Pixel Software Design — Rapport Data Science', heading: HeadingLevel.HEADING_1 }),
-        new Paragraph({ text: 'Gabès, Tunisie — Matricule Fiscal : 1969711pam000', style: 'Normal' }),
         new Paragraph({ text: reportTitle, heading: HeadingLevel.HEADING_2 }),
         new Paragraph({ children: [new TextRun(`Effectif : ${stats.count} | Somme : ${stats.sum} | Moyenne : ${stats.mean} | Médiane : ${stats.median} | Min : ${stats.min} | Max : ${stats.max}`)] })
       ]

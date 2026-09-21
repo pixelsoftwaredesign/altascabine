@@ -28,8 +28,9 @@ const modules = require('./marketplace/moduleLoader');
   assert.strictEqual(tr.lang, 'arabic');
 
   const compliance = await skills.execute('compliance');
-  assert.strictEqual(compliance.taxId, '1969711pam000');
-  console.log('compliance.taxId:', compliance.taxId);
+  assert.strictEqual(compliance.contacts.email, 'info@pixelsoftwaredesign.xyz');
+  assert.strictEqual('taxId' in compliance, false);
+  console.log('compliance.contacts.email:', compliance.contacts.email);
 
   const tva = await skills.execute('accounting', { action: 'calculate_tva', amountHT: 150 });
   console.log('tva 150HT:', tva.data.totalTTC);

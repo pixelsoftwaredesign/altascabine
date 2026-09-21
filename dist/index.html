@@ -497,8 +497,8 @@
                     </div>
                     <div class="col-span-1 sm:col-span-2 bg-[#2D3748] text-[#9ACD32] rounded-2xl p-3.5 text-[11px] mono leading-relaxed">
                         PixelSoftware Design — Gabès, Tunisie<br>
-                        Matricule fiscal : 1969711pam000 · CERT/ANCE · INPDP (Loi 63-2022) · Facturation TEJ<br>
-                        +216 52 675 027 · pixelsoftwaredesign@gmail.com
+                        CERT/ANCE · INPDP (Loi 63-2022) · Facturation TEJ<br>
+                        +216 52 675 027 · info@pixelsoftwaredesign.xyz
                     </div>
                 </div>
                 <div class="flex gap-2 justify-end mt-3">
@@ -1927,11 +1927,11 @@
                     case 'maintenance_power':
                     case 'maintenance_network': return res('🛠️ ' + runTool('get_maintenance_guide', {}).guide);
                     case 'lead': return res(rep(lang, 'Avec plaisir' + (N ? ', ' + N : '') + ' ! Je prépare une proposition personnalisée — commencez par votre email, puis votre nom et téléphone.', 'بكل سرور! ابدأوا ببريدكم الإلكتروني.', 'With pleasure! Start with your email, then name and phone.', 'Memnuniyetle! Önce e-postanız, sonra ad ve telefonunuz.'));
-                    case 'compliance': return res('🏭 Fabriqué en Tunisie (PixelSoftware Design — Gabès), matricule fiscal 1969711pam000, CERT/ANCE, INPDP, facturation électronique TEJ, verre trempé EN 12150, acoustique ISO 3382-1.');
+                    case 'compliance': return res('🏭 Fabriqué en Tunisie (PixelSoftware Design — Gabès), verre trempé EN 12150, acoustique ISO 3382-1.');
                     case 'tva': return res(tvaReply(q0));
                     case 'schedule': return res(rep(lang, '📅 Je réserve un créneau technique : laissez-moi un email et un téléphone pour que l’équipe confirme. Centre technique : +216 52 675 027.', 'احجز لكم موعداً تقنياً — أرسلوا بريدكم ورقمكم.', 'I will book a technical slot — leave email and phone. +216 52 675 027.', 'Teknik randevu alıyorum — e-posta ve telefon bırakın.'));
                     case 'price': return res('💶 Prix indicatifs (DT HT) : S 18 500 · M 32 900 · L 58 500. Un devis précis sur mesure ? Je prépare une proposition.');
-                    case 'contact': return res('📞 PixelSoftware Design — Gabès, Tunisie · +216 52 675 027 · pixelsoftwaredesign@gmail.com');
+                    case 'contact': return res('📞 PixelSoftware Design — +216 52 675 027 · info@pixelsoftwaredesign.xyz');
                     case 'security': return res('🛡️ Vos échanges restent privés : l’assistant tourne à bord de la cabine, réseau WiFi isolé, télémétrie minimale. Rien ne part vers le cloud.');
                     case 'time': return res('🕐 ' + new Date().toLocaleTimeString('fr-FR') + ' — ' + new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }));
                     case 'date': return res('🗓️ ' + new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }));
@@ -1990,7 +1990,7 @@
                     const pred = window.PixelNeural.predict(window.PixelNeuralModel, q);
                     const top = pred.top[0], sec = pred.top[1] || { s: 0 };
                     const isAct = /door_|lights_|climate_|maintenance_|schedule/.test(top.intent);
-                    const th = isAct ? 0.78 : 0.65;
+                    const th = isAct ? 0.78 : 0.80;
                     if (top && top.intent && top.s >= th && (top.s - sec.s) >= 0.12) {
                         conv.lastIntent = top.intent;
                         conv.asked = top.intent;
@@ -2110,7 +2110,7 @@
                         return { text: rep(lang, '', 'دليل الصيانة السريعة: 1) اقطع التيار 10 ثوانٍ. 2) أعد التشغيل. 3) تحقق من الراوتر. 4) إن لم يُحل: +216 52 675 027.', 'Quick maintenance: 1) Power off 10s. 2) Restart. 3) Check router. 4) If not fixed: +216 52 675 027.', 'Hızlı bakım: 1) Gücü 10sn kesin. 2) Yeniden başlatın. 3) Yönlendiriciyi kontrol edin. 4) Çözülmezse: +216 52 675 027.'), lang };
                     }
                     if (/(devis|prix|price|quote|contact|telephone|tarif)/.test(t)) {
-                        return { text: rep(lang, '', 'للحصول على عرض سعر: اسمك ورقم هاتفك؟ أو اتصل بنا: +216 52 675 027 — pixelsoftwaredesign@gmail.com', 'For a quote: your name and phone? Or call +216 52 675 027 — pixelsoftwaredesign@gmail.com', 'Fiyat teklifi için ad ve telefon? Ya da: +216 52 675 027 — pixelsoftwaredesign@gmail.com'), lang };
+                        return { text: rep(lang, '', 'للحصول على عرض سعر: اسمك ورقم هاتفك؟ أو اتصل بنا: +216 52 675 027 — info@pixelsoftwaredesign.xyz', 'For a quote: your name and phone? Or call +216 52 675 027 — info@pixelsoftwaredesign.xyz', 'Fiyat teklifi için ad ve telefon? Ya da: +216 52 675 027 — info@pixelsoftwaredesign.xyz'), lang };
                     }
                     const n = knownName();
                     if (lang === 'ar') {

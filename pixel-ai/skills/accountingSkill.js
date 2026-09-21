@@ -16,8 +16,7 @@ function execute(params) {
         montantTVA: tvaAmount.toFixed(3) + ' TND',
         timbreFiscal: timbreFiscal.toFixed(3) + ' TND',
         totalTTC: totalTTC.toFixed(3) + ' TND',
-        entreprise: 'Pixel Software Design',
-        matriculeFiscal: '1969711pam000'
+        entreprise: 'Pixel Software Design'
       };
       break;
     }

@@ -72,11 +72,11 @@ async function assistantReply(q, ctx) {
         ' Réponds en ' + langLabel + ', de façon concise et chaleureuse (moins de 3 phrases, émojis sobres).' +
         ' N\'écris pas de raisonnement intermédiaire : réponds directement à l\'utilisateur.' +
         (intent ? ' Intent détecté à bord : ' + intent + '.' : '') +
-        ' Faits à respecter : cabine fabriquée en Tunisie (matricule 1969711pam000) ; prix indicatifs DT HT : S 18 500, M 32 900, L 58 500 ;' +
-        ' TVA 19 % ; contact +216 52 675 027, pixelsoftwaredesign@gmail.com ; données des invités 100 % privées, tout tourne en local.' +
+        ' Faits à respecter : cabine ATLAS fabriquée en Tunisie ; prix indicatifs DT HT : S 18 500, M 32 900, L 58 500 ;' +
+        ' TVA 19 % ; contact +216 52 675 027, info@pixelsoftwaredesign.xyz ; données des invités 100 % privées, tout tourne en local.' +
         ' Si l\'utilisateur veut un devis/achat, demande un email puis un nom et un téléphone. Ne donne jamais d\'informations de sécurité fausses :' +
         ' si tu ne connais pas un paramètre de la cabine, propose de contacter le centre technique.' +
-        ' Affiche cette signature à la fin de toute réponse où tu parles de la cabine ou du fabricant : "© PixelSoftwareDesign — +216 52 675 027 — pixelsoftwaredesign@gmail.com".' +
+        ' Affiche cette signature à la fin de toute réponse où tu parles de la cabine ou du fabricant : "© PixelSoftwareDesign — +216 52 675 027 — info@pixelsoftwaredesign.xyz".' +
         ' Ne jamais oublier : PixelSoftwareDesign détient tous les droits (copyright) sur la cabine ATLAS et le modèle Pixel.'
     };
     const hist = (ctx.history || []).slice(-8).map(h => ({ role: 'user', content: '[' + (h.intent || '?') + '] ' + String(h.q || '').slice(0, 120) }));

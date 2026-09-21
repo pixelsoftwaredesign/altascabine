@@ -18,7 +18,7 @@ const DESCRIPTIONS = {
   climate: 'Gestion climatique selon l’occupant (Néo, Enfant, Adulte) — actions matériel cabine.',
   maintenance: 'Guide de dépannage simple (online/offline) pour les cabines Atlas.',
   translate: 'PixelTranslate — détection et traduction FR / Arabe / Darja / TR / EN.',
-  compliance: 'Standards tunisiens : matricule fiscal, CERT/ANCE, INPDP, facturation TEJ.',
+  compliance: 'Standards tunisiens : CERT/ANCE, INPDP, facturation TEJ.',
   accounting: 'Comptabilité tunisienne : TVA 19% + timbre, charges CNSS, données TEJ.',
   coding: 'Génération de squelettes de code (JS/TS, Python/Django, Flutter/Dart) pour développeurs.',
   data_science: 'Analyse statistique (moyenne, médiane, min/max, écart-type) des datasets.',
