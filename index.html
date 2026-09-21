@@ -504,6 +504,11 @@
                             <option value="ar">العربية</option>
                             <option value="tr">Türkçe</option>
                             <option value="it">Italiano</option>
+                            <option value="de">Deutsch</option>
+                            <option value="ru">Русский</option>
+                            <option value="zh">中文</option>
+                            <option value="ja">日本語</option>
+                            <option value="ko">한국어</option>
                         </select>
                     </div>
                     <div class="bg-[#F4F6F0] rounded-2xl p-3.5 border border-[#2D5A27]/10">
@@ -515,6 +520,11 @@
                             <option value="ar">العربية</option>
                             <option value="tr">Türkçe</option>
                             <option value="it">Italiano</option>
+                            <option value="de">Deutsch</option>
+                            <option value="ru">Русский</option>
+                            <option value="zh">中文 (Pinyin)</option>
+                            <option value="ja">日本語</option>
+                            <option value="ko">한국어</option>
                         </select>
                         <p id="setKbdHint" class="text-[10px] text-slate-500 mono mt-1.5">Sur le dispositif : Réglages → Langue et saisie → Langues du clavier = langue choisie.</p>
                     </div>
@@ -2482,7 +2492,7 @@ if (saveLead()) return { text: rep(lang, '✅ Prospect enregistré, ' + who + ' 
 (function () {
     function $ (id) { return document.getElementById(id); }
     function get (k, d) { try { var v = localStorage.getItem(k); return v === null ? d : v; } catch (e) { return d; } }
-    var I18N_LANGS = ['fr', 'en', 'ar', 'tr', 'darja', 'it'];
+    var I18N_LANGS = ['fr', 'en', 'ar', 'tr', 'it', 'de', 'ru', 'zh', 'ja', 'ko'];
     I18N_UI_T = {
         'Porte': { en: 'Door', ar: 'باب', tr: 'Kapı', darja: 'Porte', it: 'Porta' },
         'LED & Éclairage': { en: 'LED & Lighting', ar: 'LED والإضاءة', tr: 'LED & Aydınlatma', darja: 'LED w Eda2a', it: 'LED & Illuminazione' },
@@ -2580,10 +2590,98 @@ if (saveLead()) return { text: rep(lang, '✅ Prospect enregistré, ' + who + ' 
         ar: '👋 مرحباً! أنا <b>مساعد أطلس</b> (Pixel AI).<br>اطرح سؤالاً بالفرنسية أو العربية أو الدارجة أو الإنجليزية أو التركية أو الإيطالية — ويمكنني أيضاً <b>التنفيذ</b>: «افتح الباب»، «الإضاءة 80%»، «الحرارة 21°»…',
         tr: '👋 Merhaba! Ben <b>Atlas Asistanı</b> (Pixel AI).<br>Fransızca, Arapça, darija, İngilizce, Türkçe veya İtalyanca sorun — <b>eyleme de geçebilirim</b>: «kapıyı aç», «ışık %80», «sıcaklık 21 °C»…',
         darja: '👋 Ahla bik! Ena <b>Assistant Atlas</b> (Pixel AI).<br>Selek sawel b français, arabe, darija, anglais, turc wala italien — o najem kost <b>n3amel</b>: «7el el porte», «lumiere 80%», «température 21°C»…',
-        it: '👋 Ciao! Sono l\'<b>Assistente Atlas</b> (Pixel AI).<br>Fai una domanda in francese, arabo, darija, inglese, turco o italiano — posso anche <b>agire</b>: “apri la porta”, “luce all’80%”, “temperatura 21 °C”…'
+        it: '👋 Ciao! Sono l\'<b>Assistente Atlas</b> (Pixel AI).<br>Fai una domanda in francese, arabo, darija, inglese, turco o italiano — posso anche <b>agire</b>: “apri la porta”, “luce all’80%”, “temperatura 21 °C”…',
+        de: '👋 Hallo! Ich bin der <b>Atlas-Assistent</b> (Pixel AI).<br>Fragen Sie auf Französisch, Arabisch, Darija, Englisch, Türkisch, Italienisch, Deutsch, Russisch, Chinesisch, Japanisch oder Koreanisch — ich kann auch <b>handeln</b>: „Tür öffnen“, „Licht 80 %“, „21 °C“…',
+        ru: '👋 Здравствуйте! Я <b>ассистент Atlas</b> (Pixel AI).<br>Спросите по-французски, по-арабски, на даридже, по-английски, по-турецки, по-итальянски, по-немецки, по-русски, по-китайски, по-японски или по-корейски — я также могу <b>действовать</b>: «открой дверь», «свет 80%», «21 °C»…',
+        zh: '👋 你好！我是 <b>Atlas 助手</b>（Pixel AI）。<br>可用法语、阿拉伯语、达里亚语、英语、土耳其语、意大利语、德语、俄语、汉语、日语或韩语提问 — 我还能<b>实地操作</b>：如「开门」「灯光 80%」「21 °C」。',
+        ja: '👋 こんにちは！<b>Atlas アシスタント</b>（Pixel AI）です。<br>フランス語・アラビア語・ダリジャ語・英語・トルコ語・イタリア語・ドイツ語・ロシア語・中国語・日本語・韓国語で質問できます — <b>操作も可能</b>：例「ドアを開けて」「照明 80%」「21 ℃」…',
+        ko: '👋 안녕하세요! 저는 <b>Atlas 어시스턴트</b>(Pixel AI)입니다.<br>프랑스어·아랍어·다리자어·영어·터키어·이탈리아어·독일어·러시아어·중국어·일본어·한국어로 질문하세요 — <b>실행도 가능</b>: 예「문 열어」「조명 80%」「21 °C」…'
     };
+    var I18N_MORE = {
+        'Porte': { de: 'Tür', ru: 'Дверь', zh: '门', ja: 'ドア', ko: '문' },
+        'LED & Éclairage': { de: 'LED & Beleuchtung', ru: 'LED и освещение', zh: 'LED 照明', ja: 'LED・照明', ko: 'LED 조명' },
+        'Clim & Air': { de: 'Klima & Luft', ru: 'Климат и воздух', zh: '空调与空气', ja: 'エアコン・空気', ko: '냉방·공기' },
+        'Audio & Playlist': { de: 'Audio & Playlist', ru: 'Аудио и плейлист', zh: '音频与播放列表', ja: 'オーディオ・プレイリスト', ko: '오디오·재생 목록' },
+        'Assistant': { de: 'Assistent', ru: 'Ассистент', zh: '助手', ja: 'アシスタント', ko: '어시스턴트' },
+        'Réglages': { de: 'Einstellungen', ru: 'Настройки', zh: '设置', ja: '設定', ko: '설정' },
+        'Accès & Sécurité': { de: 'Zugang & Sicherheit', ru: 'Доступ и безопасность', zh: '门禁与安全', ja: '出入り・セキュリティ', ko: '출입·보안' },
+        'Contrôle de la Porte': { de: 'Türsteuerung', ru: 'Управление дверью', zh: '门控', ja: 'ドア制御', ko: '문 제어' },
+        'Ouvrir la Porte': { de: 'Tür öffnen', ru: 'Открыть дверь', zh: '开门', ja: 'ドアを開く', ko: '문 열기' },
+        'Fermer & Verrouiller': { de: 'Schließen & Verriegeln', ru: 'Закрыть и заблокировать', zh: '关闭并锁定', ja: '閉じてロック', ko: '닫고 잠그기' },
+        'Verrouillé (Sécurisé)': { de: 'Verriegelt (gesichert)', ru: 'Заблокировано (защищено)', zh: '已锁定（安全）', ja: 'ロック済み（安全）', ko: '잠김（안전）' },
+        '● Capteur actif': { de: '● Sensor aktiv', ru: '● Датчик активен', zh: '● 传感器活跃', ja: '● センサー稼働中', ko: '● 센서 작동 중' },
+        'Ambiance Visuelle': { de: 'Visuelle Atmosphäre', ru: 'Визуальная атмосфера', zh: '视觉氛围', ja: 'ビジュアル空間', ko: '시각적 분위기' },
+        'Gestion des LEDs & Intensité': { de: 'LED-Steuerung & Intensität', ru: 'Управление LED и яркостью', zh: 'LED 亮度管理', ja: 'LED・明るさ調整', ko: 'LED 밝기 조절' },
+        'Diminuer': { de: 'Verringern', ru: 'Уменьшить', zh: '调低', ja: '下げる', ko: '낮추기' },
+        'Intensité LED': { de: 'LED-Intensität', ru: 'Яркость LED', zh: 'LED 亮度', ja: 'LED の明るさ', ko: 'LED 밝기' },
+        'Augmenter': { de: 'Erhöhen', ru: 'Увеличить', zh: '调高', ja: '上げる', ko: '높이기' },
+        'Mode Focus (5000K)': { de: 'Fokus-Modus (5000K)', ru: 'Режим Фокус (5000K)', zh: '专注模式（5000K）', ja: '集中モード（5000K）', ko: '집중 모드（5000K）' },
+        'Mode Relax (3000K)': { de: 'Relax-Modus (3000K)', ru: 'Режим Релакс (3000K)', zh: '放松模式（3000K）', ja: 'リラックスモード（3000K）', ko: '휴식 모드（3000K）' },
+        'Atmosphère': { de: 'Atmosphäre', ru: 'Атмосфера', zh: '氛围', ja: '演出', ko: '분위기' },
+        'Ventilation & Climatisation': { de: 'Lüftung & Klimaanlage', ru: 'Вентиляция и кондиционирование', zh: '通风与空调', ja: '換気・空調', ko: '환기·에어컨' },
+        '🍃 Vitesse Ventilation': { de: '🍃 Lüftungsstufe', ru: '🍃 Скорость вентиляции', zh: '🍃 通风风速', ja: '🍃 換気の風量', ko: '🍃 환기 풍량' },
+        '❄️ Température Cible': { de: '❄️ Zieltemperatur', ru: '❄️ Целевая температура', zh: '❄️ 目标温度', ja: '❄️ 目標温度', ko: '❄️ 목표 온도' },
+        'Excellente (420 ppm CO2)': { de: 'Ausgezeichnet (420 ppm CO2)', ru: 'Отлично (420 ppm CO2)', zh: '优秀（420 ppm CO2）', ja: '良好（420 ppm CO2）', ko: '우수（420 ppm CO2）' },
+        '● HEPA actif': { de: '● HEPA aktiv', ru: '● HEPA активен', zh: '● HEPA 运行中', ja: '● HEPA 稼働中', ko: '● HEPA 가동 중' },
+        'Ambiance Sonore': { de: 'Klangatmosphäre', ru: 'Звуковая атмосфера', zh: '音效氛围', ja: 'サウンド演出', ko: '사운드 분위기' },
+        'Audio & Playlist de Concentration': { de: 'Audio & Konzentrations-Playlist', ru: 'Аудио и плейлист концентрации', zh: '专注音频与播放列表', ja: '集中オーディオ・プレイリスト', ko: '집중 오디오·재생 목록' },
+        'Masquage acoustique': { de: 'Akustische Maskierung', ru: 'Акустическая маскировка', zh: '声音掩蔽', ja: '騒音マスキング', ko: '소리 차폐' },
+        'En cours': { de: 'Läuft', ru: 'Выполняется', zh: '进行中', ja: '実行中', ko: '실행 중' },
+        'Ambiance relaxante': { de: 'Entspannende Atmosphäre', ru: 'Расслабляющая атмосфера', zh: '放松氛围', ja: 'リラックス空間', ko: '휴식 분위기' },
+        'Sélectionner': { de: 'Auswählen', ru: 'Выбрать', zh: '选择', ja: '選択', ko: '선택' },
+        'Sons binauraux focus': { de: 'Binaurale Fokus-Klänge', ru: 'Бинауральные фокус-звуки', zh: '双耳专注音', ja: 'バイノーラル集中音', ko: '바이노럴 집중음' },
+        '🔊 Volume Haut-Parleur': { de: '🔊 Lautsprecher-Lautstärke', ru: '🔊 Громкость динамика', zh: '🔊 扬声器音量', ja: '🔊 スピーカー音量', ko: '🔊 스피커 볼륨' },
+        '● Bluetooth Prêt': { de: '● Bluetooth bereit', ru: '● Bluetooth готов', zh: '● 蓝牙就绪', ja: '● Bluetooth 接続可能', ko: '● Bluetooth 준비됨' },
+        'IA privée · PixelTranslate': { de: 'Private KI · PixelTranslate', ru: 'Частный ИИ · PixelTranslate', zh: '私有 AI · PixelTranslate', ja: 'プライベート AI · PixelTranslate', ko: '프라이빗 AI·PixelTranslate' },
+        'Assistant Atlas': { de: 'Atlas-Assistent', ru: 'Ассистент Atlas', zh: 'Atlas 助手', ja: 'Atlas アシスタント', ko: 'Atlas 어시스턴트' },
+        'Envoyer ➤': { de: 'Senden ➤', ru: 'Отправить ➤', zh: '发送 ➤', ja: '送信 ➤', ko: '보내기 ➤' },
+        'Kiosque & Système': { de: 'Kiosk & System', ru: 'Киоск и система', zh: '信息亭与系统', ja: 'キオスク・システム', ko: '키오스크·시스템' },
+        '⚙️ Réglages': { de: '⚙️ Einstellungen', ru: '⚙️ Настройки', zh: '⚙️ 设置', ja: '⚙️ 設定', ko: '⚙️ 설정' },
+        '🧠 Matériel': { de: '🧠 Hardware', ru: '🧠 Оборудование', zh: '🧠 硬件', ja: '🧠 ハードウェア', ko: '🧠 하드웨어' },
+        'ESP32 seul': { de: 'Nur ESP32', ru: 'Только ESP32', zh: '仅 ESP32', ja: 'ESP32 のみ', ko: 'ESP32 단독' },
+        'Pi + ESP32 (hub)': { de: 'Pi + ESP32 (Hub)', ru: 'Pi + ESP32 (хаб)', zh: 'Pi + ESP32（集线器）', ja: 'Pi + ESP32（ハブ）', ko: 'Pi + ESP32（허브）' },
+        'Tablette Android': { de: 'Android-Tablet', ru: 'Android-планшет', zh: '安卓平板', ja: 'Android タブレット', ko: 'Android 태블릿' },
+        '🌍 Mode système': { de: '🌍 Systemmodus', ru: '🌍 Режим системы', zh: '🌍 系统模式', ja: '🌍 システムモード', ko: '🌍 시스템 모드' },
+        'Sécurisé (PROD)': { de: 'Sicher (PROD)', ru: 'Безопасный (PROD)', zh: '安全（生产）', ja: '本番（安全）', ko: '안전（PROD）' },
+        'Bêta': { de: 'Beta', ru: 'Бета', zh: '测试版', ja: 'ベータ', ko: '베타' },
+        'Développement': { de: 'Entwicklung', ru: 'Разработка', zh: '开发', ja: '開発', ko: '개발' },
+        '🏷️ ID cabine': { de: '🏷️ Kabinen-ID', ru: '🏷️ ID кабины', zh: '🏷️ 舱位 ID', ja: '🏷️ キャビン ID', ko: '🏷️ 캐빈 ID' },
+        '🗣️ Conversation vocale': { de: '🗣️ Sprachkonversation', ru: '🗣️ Голосовой диалог', zh: '🗣️ 语音对话', ja: '🗣️ 音声会話', ko: '🗣️ 음성 대화' },
+        '🎤 Activer la voix': { de: '🎤 Stimme aktivieren', ru: '🎤 Включить голос', zh: '🎤 启用语音', ja: '🎤 音声を有効化', ko: '🎤 음성 활성화' },
+        '🔇 Voix active — désactiver': { de: '🔇 Stimme aktiv — deaktivieren', ru: '🔇 Голос активен — выключить', zh: '🔇 语音已启用 — 停用', ja: '🔇 音声有効 — 無効化', ko: '🔇 음성 활성 — 비활성화' },
+        '🌐 Hub backend (Pi)': { de: '🌐 Backend-Hub (Pi)', ru: '🌐 Бэкенд-хаб (Pi)', zh: '🌐 后端集线器（Pi）', ja: '🌐 バックエンドハブ（Pi）', ko: '🌐 백엔드 허브（Pi）' },
+        '✴️ Serveur Pixel AI': { de: '✴️ Pixel-AI-Server', ru: '✴️ Сервер Pixel AI', zh: '✴️ Pixel AI 服务器', ja: '✴️ Pixel AI サーバー', ko: '✴️ Pixel AI 서버' },
+        'Tester': { de: 'Testen', ru: 'Проверить', zh: '测试', ja: 'テスト', ko: '테스트' },
+        'Aucun test effectué pour le moment.': { de: 'Noch kein Test durchgeführt.', ru: 'Пока не проводилось тестов.', zh: '目前尚未进行测试。', ja: 'まだテストは行われていません。', ko: '아직 테스트를 수행하지 않았습니다.' },
+        '🌐 Langue de l\'assistant': { de: '🌐 Sprache des Assistenten', ru: '🌐 Язык ассистента', zh: '🌐 助手语言', ja: '🌐 アシスタントの言語', ko: '🌐 어시스턴트 언어' },
+        'Auto (détection)': { de: 'Auto (Erkennung)', ru: 'Авто (определение)', zh: '自动（检测）', ja: '自動（検出）', ko: '자동（감지）' },
+        '↺ Réinitialiser': { de: '↺ Zurücksetzen', ru: '↺ Сбросить', zh: '↺ 重置', ja: '↺ リセット', ko: '↺ 초기화' },
+        '✴️ Ouvrir l\'Assistant': { de: '✴️ Assistent öffnen', ru: '✴️ Открыть ассистента', zh: '✴️ 打开助手', ja: '✴️ アシスタントを開く', ko: '✴️ 어시스턴트 열기' },
+        '⚠️ Assistance': { de: '⚠️ Unterstützung', ru: '⚠️ Поддержка', zh: '⚠️ 帮助', ja: '⚠️ サポート', ko: '⚠️ 지원' },
+        'Quitter la cabine (Kiosque)': { de: 'Kabine verlassen (Kiosk)', ru: 'Покинуть кабину (киоск)', zh: '离开舱位（信息亭）', ja: 'キャビンから退出（キオスク）', ko: '캐빈 떠나기（키오스크）' },
+        '🎤 Commande Vocale': { de: '🎤 Sprachbefehl', ru: '🎤 Голосовая команда', zh: '🎤 语音命令', ja: '🎤 音声コマンド', ko: '🎤 음성 명령' },
+        'Prêt à écouter...': { de: 'Bereit zum Zuhören...', ru: 'Готов слушать...', zh: '准备聆听…', ja: '聞き取り準備完了…', ko: '듣기 준비 완료…' },
+        'Dites une commande, ex : « Ouvre la porte »': { de: 'Sagen Sie einen Befehl, z. B. „Tür öffnen"', ru: 'Скажите команду, напр. «Открой дверь»', zh: '说出命令，例如「开门」', ja: 'コマンドを話してください。例:「ドアを開けて」', ko: '명령을 말하세요. 예:「문 열어」' },
+        'Mode focus': { de: 'Fokus-Modus', ru: 'Режим фокуса', zh: '专注模式', ja: '集中モード', ko: '집중 모드' },
+        'Musique relaxante': { de: 'Entspannungsmusik', ru: 'Расслабляющая музыка', zh: '放松音乐', ja: 'リラックス音楽', ko: '휴식 음악' },
+        'Augmenter la température': { de: 'Temperatur erhöhen', ru: 'Увеличить температуру', zh: '升高温度', ja: '温度を上げる', ko: '온도 올리기' },
+        'Reconnaissance vocale indisponible sur ce navigateur. Saisissez votre commande :': { de: 'Spracherkennung in diesem Browser nicht verfügbar. Geben Sie Ihren Befehl ein:', ru: 'Распознавание речи недоступно в этом браузере. Введите команду:', zh: '此浏览器不支持语音识别。请输入命令：', ja: 'このブラウザでは音声認識を利用できません。コマンドを入力してください：', ko: '이 브라우저에서는 음성 인식을 사용할 수 없습니다. 명령을 입력하세요:' },
+        'OK': { de: 'OK', ru: 'ОК', zh: '确定', ja: 'OK', ko: 'OK' },
+        'Comment utiliser la cabine ?': { de: 'Wie benutze ich die Kabine?', ru: 'Как пользоваться кабиной?', zh: '如何使用舱位？', ja: 'キャビンの使い方は？', ko: '캐빈 사용법은?' },
+        'État des composants': { de: 'Komponentenstatus', ru: 'Состояние компонентов', zh: '组件状态', ja: 'コンポーネントの状態', ko: '구성 요소 상태' },
+        'Quelle heure ?': { de: 'Wie spät ist es?', ru: 'Который час?', zh: '现在几点？', ja: '今何時ですか？', ko: '지금 몇 시예요?' },
+        'Ouvre la porte': { de: 'Tür öffnen', ru: 'Открой дверь', zh: '开门', ja: 'ドアを開けて', ko: '문 열어' },
+        'Urgence': { de: 'Notfall', ru: 'Чрезвычайная ситуация', zh: '紧急情况', ja: '緊急', ko: '비상' },
+        'Votre demande… (multilingue)': { de: 'Ihre Anfrage… (multilingual)', ru: 'Ваш запрос… (мультиязычный)', zh: '您的请求…（多语种）', ja: 'ご要望…（多言語）', ko: '문의…（다국어）' },
+        'Ex : allume les LEDs en mode focus': { de: 'Z. B.: LEDs in den Fokus-Modus', ru: 'Напр.: включите LED в режим фокуса', zh: '例如：开启聚焦模式的 LED', ja: '例：LED を集中モードに', ko: '예：LED를 집중 모드로' },
+        'Commande vocale': { de: 'Sprachbefehl', ru: 'Голосовая команда', zh: '语音命令', ja: '音声コマンド', ko: '음성 명령' },
+        'Tester la connexion': { de: 'Verbindung testen', ru: 'Проверить соединение', zh: '测试连接', ja: '接続をテスト', ko: '연결 테스트' },
+        'Diminuer le volume': { de: 'Lautstärke verringern', ru: 'Уменьшить громкость', zh: '调低音量', ja: '音量を下げる', ko: '볼륨 낮추기' },
+        'Augmenter le volume': { de: 'Lautstärke erhöhen', ru: 'Увеличить громкость', zh: '调高音量', ja: '音量を上げる', ko: '볼륨 높이기' }
+    };
+    for (var _k in I18N_MORE) { if (I18N_UI_T[_k]) { var _m = I18N_MORE[_k]; for (var _l in _m) if (I18N_LANGS.indexOf(_l) >= 0) I18N_UI_T[_k][_l] = _m[_l]; } }
     function cur () { var L = get('atlasKioskLang', 'fr'); if (L === 'darja') return 'fr'; return I18N_LANGS.indexOf(L) >= 0 ? L : 'fr'; }
-    var I18N_BCP47 = { fr: 'fr-FR', en: 'en-US', ar: 'ar-SA', tr: 'tr-TR', darja: 'ar-TN', it: 'it-IT' };
+    var I18N_BCP47 = { fr: 'fr-FR', en: 'en-US', ar: 'ar-SA', tr: 'tr-TR', darja: 'ar-TN', it: 'it-IT', de: 'de-DE', ru: 'ru-RU', zh: 'zh-CN', ja: 'ja-JP', ko: 'ko-KR' };
     function bcp47 (L) { return I18N_BCP47[L] || 'fr-FR'; }
     window.aiSpeechLang = function () {
         try { var A = localStorage.getItem('atlasAssistantLang'); if (A === 'auto') return null; return bcp47(A); } catch (e) { return null; }
@@ -2596,14 +2694,14 @@ if (saveLead()) return { text: rep(lang, '✅ Prospect enregistré, ' + who + ' 
         var c = el.firstChild;
         if (!c || c.nodeType !== 3) return false;
         var t = c.nodeValue || '';
-        var k = t.trim();
+        var k = el.getAttribute('data-i18n-fr') || t.trim();
         if (!k) return false;
         var tr = (typeof I18N_UI_T !== 'undefined') ? I18N_UI_T[k] : null;
         if (!tr) return false;
         var L = cur();
-        if (L === 'fr') return false;
+        if (L === 'fr') { if (k !== t.trim() && k !== t) { el.removeAttribute('data-i18n-fr'); c.nodeValue = k; return true; } return false; }
         var v = tr[L] || tr.fr || k;
-        if (v && v !== t) { c.nodeValue = v; return true; }
+        if (v && v !== t) { if (!el.getAttribute('data-i18n-fr')) el.setAttribute('data-i18n-fr', k); c.nodeValue = v; return true; }
         return false;
     }
     function walk () {
@@ -2616,11 +2714,19 @@ if (saveLead()) return { text: rep(lang, '✅ Prospect enregistré, ' + who + ' 
         for (var j = 0; j < I18N_ATS.length; j++) {
             var a = I18N_ATS[j];
             var n = document.querySelector(a[0]);
-            if (!n || n.getAttribute(a[1]) !== a[2]) continue;
-            var mm = I18N_UI_T[a[2]];
+            if (!n) continue;
+            var attrKey = 'data-i18n-' + a[1];
+            var src = n.getAttribute(attrKey) || a[2];
+            var mm = I18N_UI_T[src];
             if (!mm) continue;
             var vv = mm[cur()];
-            if (vv) n.setAttribute(a[1], vv);
+            if (!vv) continue;
+            if (cur() === 'fr' && src === a[2] && n.getAttribute(a[1]) === a[2]) continue;
+            if (n.getAttribute(a[1]) !== vv) {
+                if (!n.getAttribute(attrKey)) n.setAttribute(attrKey, a[2]);
+                n.setAttribute(a[1], vv);
+            }
+            if (cur() === 'fr' && n.getAttribute(attrKey)) n.removeAttribute(attrKey);
         }
     }
     function welcome () {
@@ -2655,6 +2761,194 @@ if (saveLead()) return { text: rep(lang, '✅ Prospect enregistré, ' + who + ' 
     boot();
 })();
 </script>
+
+<div id="osk" class="osk-hidden" aria-hidden="true">
+    <div id="oskHead" class="flex items-center justify-between px-3 py-1.5">
+        <span id="oskLang" class="text-[10px] font-extrabold text-white/80">⌨️</span>
+        <div class="flex gap-1.5">
+            <button type="button" onclick="oskCycle()" class="osk-btn w-9" title="Changer de disposition">🌐</button>
+            <button type="button" aria-label="Fermer le clavier" onclick="oskClose()" class="osk-btn w-9">✕</button>
+        </div>
+    </div>
+    <div id="oskRows" class="px-1.5 pb-1.5 grid gap-y-1.5 select-none"></div>
+</div>
+<button id="oskToggle" onclick="oskToggle()" aria-label="Ouvrir le clavier visuel" title="Clavier visuel" class="osk-float">⌨️</button>
+
+<script>window.osk=(function(){
+    var OSK_LAYOUTS={
+        fr:{name:'FR AZERTY',shift:true,dir:'ltr',rows:[
+            ['1','2','3','4','5','6','7','8','9','0'],
+            ['a','z','e','r','t','y','u','i','o','p'],
+            ['q','s','d','f','g','h','j','k','l','m'],
+            ['w','x','c','v','b','n','#endrow','#space']
+        ],extra:['à','é','è','ê','ë','ç','î','ï','ô','û','ù','ü','â']},
+        en:{name:'EN QWERTY',shift:true,dir:'ltr',rows:[
+            ['1','2','3','4','5','6','7','8','9','0'],
+            ['q','w','e','r','t','y','u','i','o','p'],
+            ['a','s','d','f','g','h','j','k','l'],
+            ['z','x','c','v','b','n','m','#endrow','#space']
+        ],extra:['à','é','è','ê','ç','ô','â','ü','ö','ñ']},
+        it:{name:'IT AZERTY',shift:true,dir:'ltr',rows:[
+            ['1','2','3','4','5','6','7','8','9','0'],
+            ['a','z','e','r','t','y','u','i','o','p'],
+            ['q','s','d','f','g','h','j','k','l','m'],
+            ['w','x','c','v','b','n','#endrow','#space']
+        ],extra:['à','è','é','ì','ò','ù','ç']},
+        tr:{name:'TR QWERTY',shift:true,dir:'ltr',rows:[
+            ['1','2','3','4','5','6','7','8','9','0'],
+            ['q','w','e','r','t','y','u','ı','o','p','ğ'],
+            ['a','s','d','f','g','h','j','k','l','ş','i'],
+            ['z','x','c','v','b','n','m','ö','ç','ü','#endrow','#space']
+        ],extra:[]},
+        ar:{name:'AR',shift:false,dir:'rtl',rows:[
+            ['1','2','3','4','5','6','7','8','9','0'],
+            ['ض','ص','ث','ق','ف','غ','ع','ه','خ','ح','ج','د'],
+            ['ش','س','ي','ب','ل','ا','ت','ن','م','ك','ط'],
+            ['ئ','ء','ؤ','ر','لا','ى','ة','و','ز','ظ','#endrow','#space']
+        ],extra:[]},
+        de:{name:'DE QWERTZ',shift:true,dir:'ltr',rows:[
+            ['1','2','3','4','5','6','7','8','9','0'],
+            ['q','w','e','r','t','z','u','i','o','p','ü'],
+            ['a','s','d','f','g','h','j','k','l','ö','ä'],
+            ['y','x','c','v','b','n','m','#endrow','#space']
+        ],extra:['ß','é','è','ê','à','ç','@']},
+        ru:{name:'RUS ЙЦУКЕН',shift:true,dir:'ltr',rows:[
+            ['1','2','3','4','5','6','7','8','9','0'],
+            ['й','ц','у','к','е','н','г','ш','щ','з','х','ъ'],
+            ['ф','ы','в','а','п','р','о','л','д','ж','э'],
+            ['я','ч','с','м','и','т','ь','б','ю','#endrow','#space']
+        ],extra:['ё']},
+        zh:{name:'ZH Pinyin',shift:true,dir:'ltr',rows:[
+            ['1','2','3','4','5','6','7','8','9','0'],
+            ['q','w','e','r','t','y','u','i','o','p'],
+            ['a','s','d','f','g','h','j','k','l'],
+            ['z','x','c','v','b','n','m','#endrow','#space']
+        ],extra:['ā','á','ǎ','à','ē','é','ě','è','ī','í','ǐ','ì','ō','ó','ǒ','ò','ū','ú','ǔ','ù','ü']},
+        ja:{name:'JA Romaji',shift:true,dir:'ltr',rows:[
+            ['1','2','3','4','5','6','7','8','9','0'],
+            ['q','w','e','r','t','y','u','i','o','p'],
+            ['a','s','d','f','g','h','j','k','l'],
+            ['z','x','c','v','b','n','m','#endrow','#space']
+        ],extra:['あ','か','さ','た','な','は','ま','や','ら','わ','い','し','ち','に','ひ','み','り']},
+        ko:{name:'KO 자모',shift:false,dir:'ltr',rows:[
+            ['1','2','3','4','5','6','7','8','9','0'],
+            ['ㄱ','ㄴ','ㄷ','ㄹ','ㅁ','ㅂ','ㅅ','ㅇ','ㅈ','ㅊ'],
+            ['ㅋ','ㅌ','ㅍ','ㅎ','ㅏ','ㅑ','ㅓ','ㅕ','ㅗ'],
+            ['ㅛ','ㅜ','ㅠ','ㅡ','ㅣ','#endrow','#space']
+        ],extra:['ㅐ','ㅔ','ㅒ','ㅖ','ㅘ','ㅙ','ㅚ','ㅝ','ㅞ','ㅟ','ㅢ']}
+    };
+    var LAYOUT_ORDER=['fr','en','it','tr','ar','de','ru','zh','ja','ko'];
+    var el=document.getElementById('osk'), rowsEl=document.getElementById('oskRows'), langEl=document.getElementById('oskLang'), togBtn=document.getElementById('oskToggle');
+    var open=false, shiftOn=false, cur='fr', activeEl=null, markedInput=null;
+    function kbdPref(){ try{ var K=localStorage.getItem('atlasKbdLang'); return (K&&K!=='auto'&&OSK_LAYOUTS[K])?K:null; }catch(e){ return null; } }
+    function defaultLayout(){ var p=kbdPref(); if(p) return p;
+        try{ var K=localStorage.getItem('atlasKioskLang'); if(OSK_LAYOUTS[K]) return K; }catch(e){}
+        return 'fr';
+    }
+    function cap(ch){ return shiftOn && OSK_LAYOUTS[cur].shift ? ch.toUpperCase() : ch; }
+    function render(){
+        var L=OSK_LAYOUTS[cur];
+        if(el) el.dir=L.dir;
+        if(langEl) langEl.textContent='⌨️ '+L.name+(open?' ✔':'');
+        if(!rowsEl) return;
+        var html='';
+        for(var r=0;r<L.rows.length;r++){
+            var row=L.rows[r];
+            html+='<div class="flex gap-1.5">';
+            for(var i=0;i<row.length;i++){
+                var k=row[i];
+                if(k==='#space'){ html+='<button type="button" class="osk-btn osk-space flex-[3]"><span>ESPACE</span></button>'; continue; }
+                if(k==='#endrow'){ html+='<button type="button" class="osk-btn osk-acc" onclick="oskShift()" title="Majuscules">⇧</button><button type="button" class="osk-btn osk-acc" onclick="oskBS()" title="Effacer">⌫</button>'; continue; }
+                html+='<button type="button" class="osk-btn osk-key flex-1 min-w-0" data-k="'+k+'">'+cap(k)+'</button>';
+            }
+            html+='</div>';
+        }
+        if(L.extra&&L.extra.length){
+            html+='<div class="flex gap-1.5">';
+            for(var j=0;j<L.extra.length;j++){ var ex=L.extra[j]; html+='<button type="button" class="osk-btn osk-key flex-1 min-w-0" data-k="'+ex+'">'+ex+'</button>'; }
+            html+='</div>';
+        }
+        html+='<div class="flex gap-1.5"><button type="button" class="osk-btn osk-acc flex-[2]" onclick="oskShift()">⇧ Maj</button><button type="button" class="osk-btn osk-acc flex-[2]" onclick="oskBS()">⌫ Retour</button><button type="button" class="osk-enter flex-[2]" onclick="oskEnter()">↵ OK</button></div>';
+        rowsEl.innerHTML=html;
+    }
+    function active(){ if(activeEl&&document.contains(activeEl)) return activeEl; var a=document.activeElement; if(a&&(a.tagName==='INPUT'||a.tagName==='TEXTAREA')&&a.type!=='hidden'){ activeEl=a; return a; } return null; }
+    function fireInput(e){ var ev; try{ ev=new Event('input',{bubbles:true}); }catch(err){ ev=document.createEvent('Event'); ev.initEvent('input',true,true); } if(e) e.dispatchEvent(ev); }
+    window.oskInsert=function(ch){
+        var e=active(); if(!e) return;
+        var s=(e.selectionStart==null)?e.value.length:e.selectionStart, en=(e.selectionEnd==null)?s:e.selectionEnd;
+        e.value=e.value.slice(0,s)+ch+e.value.slice(en);
+        var p=s+ch.length; if(e.setSelectionRange)e.setSelectionRange(p,p);
+        fireInput(e); e.focus();
+    };
+    window.oskBS=function(){
+        var e=active(); if(!e) return;
+        var s=(e.selectionStart==null)?e.value.length:e.selectionStart, en=(e.selectionEnd==null)?s:e.selectionEnd;
+        if(s!==en){ e.value=e.value.slice(0,s)+e.value.slice(en); }
+        else if(s>0){ e.value=e.value.slice(0,s-1)+e.value.slice(s); s--; }
+        if(e.setSelectionRange)e.setSelectionRange(s,s);
+        fireInput(e); e.focus();
+    };
+    window.oskShift=function(){ shiftOn=!shiftOn; render(); };
+    window.oskEnter=function(){
+        var e=active();
+        if(e&&e.id==='tabQ'&&window.tabSend){ try{ window.tabSend(); }catch(err){} return; }
+        if(e&&e.tagName==='TEXTAREA'){ window.oskInsert('\n'); return; }
+        window.oskClose();
+    };
+    window.oskCycle=function(){
+        var i=LAYOUT_ORDER.indexOf(cur); cur=LAYOUT_ORDER[(i+1)%LAYOUT_ORDER.length];
+        try{ localStorage.setItem('atlasKbdLang',cur); }catch(e){}
+        shiftOn=false; render();
+    };
+    window.oskOpen=function(){
+        if(!el||open) return; open=true;
+        el.classList.remove('osk-hidden'); el.setAttribute('aria-hidden','false');
+        if(togBtn)togBtn.classList.add('osk-on');
+        render();
+        var a=active();
+        if(a&&markedInput!==a){ try{ a.setAttribute('inputmode','none'); }catch(e){} markedInput=a; }
+        if(activeEl)try{ activeEl.focus(); }catch(e){}
+    };
+    window.oskClose=function(){
+        if(!el||!open) return; open=false;
+        el.classList.add('osk-hidden'); el.setAttribute('aria-hidden','true');
+        if(togBtn)togBtn.classList.remove('osk-on');
+        if(markedInput){ try{ markedInput.removeAttribute('inputmode'); }catch(e){} markedInput=null; }
+    };
+    window.oskToggle=function(){ open?window.oskClose():window.oskOpen(); };
+    function pickLayout(){ cur=defaultLayout(); shiftOn=false; }
+    document.addEventListener('focusin',function(ev){
+        var t=ev.target;
+        if(!t||(t.tagName!=='INPUT'&&t.tagName!=='TEXTAREA')||t.type==='hidden') return;
+        activeEl=t;
+        if(open) pickLayout();
+        if(('ontouchstart' in window)&&t.type!=='checkbox'&&t.type!=='range'&&t.id!=='setMode'&&t.id!=='setHardware'&&!open){
+            pickLayout(); window.oskOpen();
+        }
+    });
+    document.addEventListener('click',function(ev){
+        var k=ev.target&&ev.target.closest?ev.target.closest('.osk-key'):null;
+        if(k&&k.dataset&&k.dataset.k!=='') window.oskInsert(k.dataset.k);
+    },true);
+    pickLayout(); render();
+    return { open:window.oskOpen, close:window.oskClose, toggle:window.oskToggle };
+})();</script>
+
+<style>
+.osk-hidden{display:none!important}
+#osk{position:fixed;left:0;right:0;bottom:0;z-index:9999;background:rgba(24,39,31,.97);border-top:1px solid rgba(154,205,50,.45);box-shadow:0 -12px 40px rgba(0,0,0,.45);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding-bottom:env(safe-area-inset-bottom)}
+#oskHead{background:rgba(255,255,255,.06)}
+.osk-btn,.osk-enter{height:46px;border-radius:10px;font-size:17px;font-weight:800;color:#fff;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.08);user-select:none;-webkit-user-select:none;touch-action:manipulation;cursor:pointer}
+.osk-btn:active,.osk-enter:active{background:rgba(154,205,50,.55);transform:translateY(1px)}
+.osk-key{min-width:0}
+.osk-space span{display:block;font-size:11px;letter-spacing:.2em;color:rgba(255,255,255,.55)}
+.osk-acc{min-width:0}
+.osk-enter{background:linear-gradient(135deg,#9ACD32,#6f9e22);color:#18271f}
+.osk-float{position:fixed;bottom:18px;right:18px;z-index:9000;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#2D5A27,#23451e);color:#fff;font-size:26px;box-shadow:0 10px 30px rgba(0,0,0,.35);border:2px solid rgba(154,205,50,.5);cursor:pointer;touch-action:manipulation}
+.osk-float:active{transform:scale(.94)}
+.osk-float.osk-on{background:linear-gradient(135deg,#9ACD32,#6f9e22);color:#18271f}
+@media(max-width:640px){.osk-btn,.osk-enter{height:42px;font-size:15px}}
+</style>
 
 
 </body>
