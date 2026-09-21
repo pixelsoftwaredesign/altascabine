@@ -2936,15 +2936,17 @@ if (saveLead()) return { text: rep(lang, '✅ Prospect enregistré, ' + who + ' 
 
 <style>
 .osk-hidden{display:none!important}
-#osk{position:fixed;left:0;right:0;bottom:0;z-index:9999;background:rgba(24,39,31,.97);border-top:1px solid rgba(154,205,50,.45);box-shadow:0 -12px 40px rgba(0,0,0,.45);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding-bottom:env(safe-area-inset-bottom)}
-#oskHead{background:rgba(255,255,255,.06)}
-.osk-btn,.osk-enter{height:46px;border-radius:10px;font-size:17px;font-weight:800;color:#fff;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.08);user-select:none;-webkit-user-select:none;touch-action:manipulation;cursor:pointer}
-.osk-btn:active,.osk-enter:active{background:rgba(154,205,50,.55);transform:translateY(1px)}
-.osk-key{min-width:0}
-.osk-space span{display:block;font-size:11px;letter-spacing:.2em;color:rgba(255,255,255,.55)}
+#osk{position:fixed;left:0;right:0;bottom:0;z-index:9999;background:rgba(252,252,249,.97);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid rgba(45,90,39,.18);box-shadow:0 -14px 40px rgba(45,90,39,.18);padding-bottom:calc(env(safe-area-inset-bottom) + 4px)}
+#oskHead{background:rgba(45,90,39,.06);color:#2D5A27}
+.osk-btn,.osk-enter{height:clamp(30px,5.4vw,42px);border-radius:12px;font-size:clamp(12px,2.2vw,16px);font-weight:700;color:#2D3748;background:#fff;border:1px solid rgba(45,90,39,.18);box-shadow:0 1px 2px rgba(45,90,39,.06);user-select:none;-webkit-user-select:none;touch-action:manipulation;cursor:pointer;min-width:0}
+.osk-btn:active,.osk-enter:active{background:#9ACD32;color:#2D3748;border-color:rgba(45,90,39,.25);transform:translateY(1px)}
+.osk-key{flex:1;min-width:0}
+.osk-space span{display:block;font-size:clamp(7px,1.2vw,10px);letter-spacing:.18em;color:rgba(45,90,39,.5)}
 .osk-acc{min-width:0}
-.osk-enter{background:linear-gradient(135deg,#9ACD32,#6f9e22);color:#18271f}
-@media(max-width:640px){.osk-btn,.osk-enter{height:42px;font-size:15px}}
+.osk-enter{background:linear-gradient(135deg,#2D5A27,#1d4020);color:#fff;border-color:rgba(45,90,39,.3)}
+.osk-enter:active{background:#23451e;color:#fff}
+.footer-ok{display:flex;align-items:center;gap:2px;justify-content:center}
+@media(max-width:640px){.osk-btn,.osk-enter{height:clamp(28px,6vw,36px);font-size:clamp(11px,2.6vw,14px)}#oskHead{padding-top:2px}}
 </style>
 
 
