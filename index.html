@@ -569,6 +569,7 @@
         <footer class="flex flex-wrap justify-between items-center gap-2 px-2 py-2 text-xs text-slate-500 border-t border-[#2D5A27]/10">
             <div class="flex items-center gap-3">
                 <button onclick="callAssistance()" class="hover:text-[#2D5A27] font-semibold">⚠️ Assistance</button>
+                <button id="oskToggle" onclick="oskToggle()" title="Clavier visuel" class="hover:text-[#2D5A27] font-semibold">⌨️ Clavier</button>
                 <button id="footerUser" onclick="logout()" class="hidden items-center gap-1 text-[#2D5A27] font-bold hover:underline"></button>
             </div>
             <span class="mono text-[10px] text-slate-400">🇹🇳 Made in Tunisia · PixelSoftware Design (R&D) · Atlas Working</span>
@@ -2772,7 +2773,6 @@ if (saveLead()) return { text: rep(lang, '✅ Prospect enregistré, ' + who + ' 
     </div>
     <div id="oskRows" class="px-1.5 pb-1.5 grid gap-y-1.5 select-none"></div>
 </div>
-<button id="oskToggle" onclick="oskToggle()" aria-label="Ouvrir le clavier visuel" title="Clavier visuel" class="osk-float">⌨️</button>
 
 <script>window.osk=(function(){
     var OSK_LAYOUTS={
@@ -2944,9 +2944,6 @@ if (saveLead()) return { text: rep(lang, '✅ Prospect enregistré, ' + who + ' 
 .osk-space span{display:block;font-size:11px;letter-spacing:.2em;color:rgba(255,255,255,.55)}
 .osk-acc{min-width:0}
 .osk-enter{background:linear-gradient(135deg,#9ACD32,#6f9e22);color:#18271f}
-.osk-float{position:fixed;bottom:18px;right:18px;z-index:9000;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#2D5A27,#23451e);color:#fff;font-size:26px;box-shadow:0 10px 30px rgba(0,0,0,.35);border:2px solid rgba(154,205,50,.5);cursor:pointer;touch-action:manipulation}
-.osk-float:active{transform:scale(.94)}
-.osk-float.osk-on{background:linear-gradient(135deg,#9ACD32,#6f9e22);color:#18271f}
 @media(max-width:640px){.osk-btn,.osk-enter{height:42px;font-size:15px}}
 </style>
 
