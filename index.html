@@ -496,7 +496,18 @@
                         <p id="setPixelState" class="text-[10px] text-slate-500 mono mt-1.5">Aucun test effectué pour le moment.</p>
                     </div>
                     <div class="bg-[#F4F6F0] rounded-2xl p-3.5 border border-[#2D5A27]/10">
-                        <p class="text-xs font-extrabold text-[#2D5A27] mb-2">🌐 Langue de l'assistant</p>
+                        <p class="text-xs font-extrabold text-[#2D5A27] mb-2">🌐 Langue de l'interface</p>
+                        <select id="setLangUI" onchange="setLangUS(this.value)" class="w-full bg-white border border-[#2D5A27]/20 rounded-xl px-2 py-2 text-xs font-bold">
+                            <option value="auto">Français (défaut)</option>
+                            <option value="fr">Français</option>
+                            <option value="en">English</option>
+                            <option value="ar">العربية</option>
+                            <option value="tr">Türkçe</option>
+                            <option value="it">Italiano</option>
+                        </select>
+                    </div>
+                    <div class="bg-[#F4F6F0] rounded-2xl p-3.5 border border-[#2D5A27]/10">
+                        <p class="text-xs font-extrabold text-[#2D5A27] mb-2">🤖 Langue de Pixel AI</p>
                         <select id="setLang" onchange="setLangS(this.value)" class="w-full bg-white border border-[#2D5A27]/20 rounded-xl px-2 py-2 text-xs font-bold">
                             <option value="auto">Auto (détection)</option>
                             <option value="fr">Français</option>
@@ -506,6 +517,18 @@
                             <option value="darja">Tounsi (darija)</option>
                             <option value="it">Italiano</option>
                         </select>
+                    </div>
+                    <div class="bg-[#F4F6F0] rounded-2xl p-3.5 border border-[#2D5A27]/10">
+                        <p class="text-xs font-extrabold text-[#2D5A27] mb-2">⌨️ Clavier système (saisie)</p>
+                        <select id="setKbd" onchange="setKbdS(this.value)" class="w-full bg-white border border-[#2D5A27]/20 rounded-xl px-2 py-2 text-xs font-bold">
+                            <option value="auto">Suivre la langue de l'interface</option>
+                            <option value="fr">Français</option>
+                            <option value="en">English</option>
+                            <option value="ar">العربية</option>
+                            <option value="tr">Türkçe</option>
+                            <option value="it">Italiano</option>
+                        </select>
+                        <p id="setKbdHint" class="text-[10px] text-slate-500 mono mt-1.5">Sur le dispositif : Réglages → Langue et saisie → Langues du clavier = langue choisie.</p>
                     </div>
                 </div>
                 <div class="flex gap-2 justify-end mt-3">
@@ -1759,7 +1782,7 @@
                 return 'fr';
             }
             function rep(lang, fr, ar, en, tr, dj, it) { return { ar: ar || fr, en: en || fr, tr: tr || fr, darja: dj || fr, it: it || fr }[lang] || fr; }
-            function kioskLang() { try { const L = localStorage.getItem('atlasKioskLang'); if (L && L !== 'auto' && /^(fr|en|ar|tr|darja|it)$/.test(L)) return L; } catch (e) {} return 'auto'; }
+            function asstLang() { try { const L = localStorage.getItem('atlasAssistantLang'); if (L && L !== 'auto' && /^(fr|en|ar|tr|darja|it)$/.test(L)) return L; } catch (e) {} return 'auto'; }
 
             function setClimate(profile) {
                 const P = {
@@ -1962,7 +1985,7 @@
                 return '🧮 TVA tunisienne : 19 % + timbre 1 TND. Donnez un montant HT, ex. « TVA sur 150 DT ».';
             }
             function natural(q) {
-                const lang = kioskLang() !== 'auto' ? kioskLang() : detect(q); conv.lang = lang;
+                const lang = asstLang() !== 'auto' ? asstLang() : detect(q); conv.lang = lang;
                 const t = norm(q);
                 const name = conv.name || (function () { try { return knownName(); } catch (e) { return null; } })();
                 if (name) conv.name = name;
@@ -2072,7 +2095,7 @@
             function runTool(name, args) { const t = tools[name]; if (!t) return { ok: false, error: 'unknown tool: ' + name }; return t.execute(args || {}); }
 
             function prefer(q) {
-                const lang = kioskLang() !== 'auto' ? kioskLang() : detect(q);
+                const lang = asstLang() !== 'auto' ? asstLang() : detect(q);
                 const t = norm(q);
                 const em = q.match(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i);
                 const nm = extractName(q);
@@ -2340,7 +2363,7 @@ if (saveLead()) return { text: rep(lang, '✅ Prospect enregistré, ' + who + ' 
             if(v) tabSend();
         }
         rec=new SR();
-        rec.lang='fr-FR'; rec.continuous=false; rec.interimResults=true;
+        rec.lang=(window.aiSpeechLang&&window.aiSpeechLang())||'fr-FR'; rec.continuous=false; rec.interimResults=true;
         rec.onresult=function(e){
             var t='';
             for(var i=e.resultIndex;i<e.results.length;i++) t+=e.results[i][0].transcript;
@@ -2373,7 +2396,13 @@ if (saveLead()) return { text: rep(lang, '✅ Prospect enregistré, ' + who + ' 
         var md=$('setMode'); if(md) md.value=get('atlasMode','secure');
         var cb=$('setCabin'); if(cb) cb.value=get('atlasCabinId','');
         var hb=$('setHub'); if(hb) hb.value=get('atlasHub','');
-        var ln=$('setLang'); if(ln) ln.value=get('atlasKioskLang','auto');
+        var ln=$('setLang'); if(ln) ln.value=get('atlasAssistantLang','auto');
+        var ul=$('setLangUI'); if(ul) ul.value=get('atlasKioskLang','auto');
+        var kb=$('setKbd'); if(kb) kb.value=get('atlasKbdLang','auto');
+        try{
+            var kh=$('setKbdHint');
+            if(kh && get('atlasKbdLang','auto')!=='auto') kh.textContent='Sur le dispositif : Réglages → Langue et saisie → Langues du clavier, ou ADB : adb shell am start -a android.settings.INPUT_METHOD_SUBTYPE_SETTINGS';
+        }catch(e){}
         var px=$('setPixel');
         if(px){
             var manual=get('atlasPixelServer','').trim().replace(/\/+$/,'');
@@ -2396,7 +2425,16 @@ if (saveLead()) return { text: rep(lang, '✅ Prospect enregistré, ' + who + ' 
     window.setModeS=function(m){ set('atlasMode',m); try{ if(window.applyModeUI) applyModeUI(); }catch(e){} };
     window.setCabinS=function(v){ set('atlasCabinId',String(v||'').trim()); try{ if(window.kioskLabel) kioskLabel('Libre'); }catch(e){} };
     window.setHubS=function(v){ set('atlasHub',String(v||'').trim()); };
-    window.setLangS=function(v){ set('atlasKioskLang',v); try{ if(window.setUILang) window.setUILang(v); }catch(e){} };
+    window.setLangS=function(v){ set('atlasAssistantLang',v); };
+    window.setLangUS=function(v){ set('atlasKioskLang',v); try{ if(window.setUILang) window.setUILang(v); }catch(e){} };
+    window.setKbdS=function(v){
+        set('atlasKbdLang',v);
+        try{ if(document.documentElement&&window.applyKbd) window.applyKbd(); }catch(e){}
+        try{
+            var h=$('setKbdHint');
+            if(h) h.textContent=(v&&v!=='auto')?'Sur le dispositif : Réglages → Langue et saisie → Langues du clavier, ou ADB : adb shell am start -a android.settings.INPUT_METHOD_SUBTYPE_SETTINGS':'Sur le dispositif : Réglages → Langue et saisie → Langues du clavier = langue choisie.';
+        }catch(e){}
+    };
     window.setPixelS=function(v){ set('atlasPixelServer',String(v||'').trim().replace(/\/+$/,'')); };
     window.toggleVoiceS=function(){
         var on=get('atlasVoice','off')==='on';
@@ -2439,7 +2477,7 @@ if (saveLead()) return { text: rep(lang, '✅ Prospect enregistré, ' + who + ' 
     };
     window.resetSettingsS=function(){
         if(!confirm('Réinitialiser les réglages du kiosque ?')) return;
-        ['atlasHardware','atlasMode','atlasCabinId','atlasHub','atlasPixelServer','atlasVoice','atlasKioskLang'].forEach(function(k){ try{ localStorage.removeItem(k); }catch(e){} });
+        ['atlasHardware','atlasMode','atlasCabinId','atlasHub','atlasPixelServer','atlasVoice','atlasKioskLang','atlasAssistantLang','atlasKbdLang'].forEach(function(k){ try{ localStorage.removeItem(k); }catch(e){} });
         try{ if(window.paStopVoice) paStopVoice(); }catch(e){}
         render();
     };
@@ -2554,6 +2592,14 @@ if (saveLead()) return { text: rep(lang, '✅ Prospect enregistré, ' + who + ' 
         it: '👋 Ciao! Sono l\'<b>Assistente Atlas</b> (Pixel AI).<br>Fai una domanda in francese, arabo, darija, inglese, turco o italiano — posso anche <b>agire</b>: “apri la porta”, “luce all’80%”, “temperatura 21 °C”…'
     };
     function cur () { var L = get('atlasKioskLang', 'fr'); if (L === 'darja') return 'fr'; return I18N_LANGS.indexOf(L) >= 0 ? L : 'fr'; }
+    var I18N_BCP47 = { fr: 'fr-FR', en: 'en-US', ar: 'ar-SA', tr: 'tr-TR', darja: 'ar-TN', it: 'it-IT' };
+    function bcp47 (L) { return I18N_BCP47[L] || 'fr-FR'; }
+    window.aiSpeechLang = function () {
+        try { var A = localStorage.getItem('atlasAssistantLang'); if (A === 'auto') return null; return bcp47(A); } catch (e) { return null; }
+    };
+    window.kioskBCP47 = function () { return bcp47(cur()); };
+    function kbdLang () { try { var K = localStorage.getItem('atlasKbdLang'); if (K === 'auto' || !K) return cur(); return I18N_LANGS.indexOf(K) >= 0 || K === 'darja' ? K : cur(); } catch (e) { return cur(); } }
+    window.applyKbd = function () { try { var h = document.documentElement; if (h) h.setAttribute('lang', bcp47(kbdLang())); } catch (e) {} };
     function hit (el) {
         if (el.childNodes.length !== 1) return false;
         var c = el.firstChild;
@@ -2597,7 +2643,7 @@ if (saveLead()) return { text: rep(lang, '✅ Prospect enregistré, ' + who + ' 
     var I18N_last = null, I18N_busy = false;
     function apply (force) {
         var L = cur(), html = document.documentElement;
-        if (html) { try { html.setAttribute('lang', L); html.setAttribute('dir', L === 'ar' ? 'rtl' : 'ltr'); } catch (e) {} }
+        if (html) { try { html.setAttribute('lang', bcp47(kbdLang())); html.setAttribute('dir', L === 'ar' ? 'rtl' : 'ltr'); } catch (e) {} }
         walk();
         if (force || L !== I18N_last) {
             try { if (window.tabChat && window.tabChat.chips) window.tabChat.chips(); } catch (e) {}
