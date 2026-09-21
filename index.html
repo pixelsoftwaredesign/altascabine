@@ -495,10 +495,16 @@
                         </div>
                         <p id="setPixelState" class="text-[10px] text-slate-500 mono mt-1.5">Aucun test effectué pour le moment.</p>
                     </div>
-                    <div class="col-span-1 sm:col-span-2 bg-[#2D3748] text-[#9ACD32] rounded-2xl p-3.5 text-[11px] mono leading-relaxed">
-                        PixelSoftware Design — Gabès, Tunisie<br>
-                        CERT/ANCE · INPDP (Loi 63-2022) · Facturation TEJ<br>
-                        +216 52 675 027 · info@pixelsoftwaredesign.xyz
+                    <div class="bg-[#F4F6F0] rounded-2xl p-3.5 border border-[#2D5A27]/10">
+                        <p class="text-xs font-extrabold text-[#2D5A27] mb-2">🌐 Langue de l'assistant</p>
+                        <select id="setLang" onchange="setLangS(this.value)" class="w-full bg-white border border-[#2D5A27]/20 rounded-xl px-2 py-2 text-xs font-bold">
+                            <option value="auto">Auto (détection)</option>
+                            <option value="fr">Français</option>
+                            <option value="en">English</option>
+                            <option value="ar">العربية</option>
+                            <option value="tr">Türkçe</option>
+                            <option value="darja">Tounsi (darija)</option>
+                        </select>
                     </div>
                 </div>
                 <div class="flex gap-2 justify-end mt-3">
@@ -1752,6 +1758,7 @@
                 return 'fr';
             }
             function rep(lang, fr, ar, en, tr, dj) { return { ar: ar || fr, en: en || fr, tr: tr || fr, darja: dj || fr }[lang] || fr; }
+            function kioskLang() { try { const L = localStorage.getItem('atlasKioskLang'); if (L && L !== 'auto' && /^(fr|en|ar|tr|darja)$/.test(L)) return L; } catch (e) {} return 'auto'; }
 
             function setClimate(profile) {
                 const P = {
@@ -1935,7 +1942,7 @@
                     case 'security': return res('🛡️ Vos échanges restent privés : l’assistant tourne à bord de la cabine, réseau WiFi isolé, télémétrie minimale. Rien ne part vers le cloud.');
                     case 'time': return res('🕐 ' + new Date().toLocaleTimeString('fr-FR') + ' — ' + new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }));
                     case 'date': return res('🗓️ ' + new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }));
-                    case 'who_are_you': return res(rep(lang, 'Je suis ✴️ Pixel, l’algorithme neuronal de la cabine ATLAS, conçu par PixelSoftware Design. Je comprends plusieurs langues et je peux piloter porte, lumière et climat, répondre prix/maintenance.', 'أنا بيكسل، مساعد كابينة أطلس العصبي.', 'I am Pixel, the ATLAS cabin neural assistant by PixelSoftware Design.', 'Ben Pixel, ATLAS kabin nöral asistanıyım.'));
+                    case 'who_are_you': return res(rep(lang, 'Je suis ✴️ Pixel, l’algorithme neuronal de la cabine ATLAS. Je comprends plusieurs langues et je peux piloter porte, lumière et climat, répondre prix/maintenance.', 'أنا بيكسل، مساعد كابينة أطلس العصبي.', 'I am Pixel, the ATLAS cabin neural assistant. I speak several languages and can control the door, lights and climate, plus answer prices/maintenance.', 'Ben Pixel, ATLAS kabin nöral asistanıyım.'));
                     case 'capabilities': return res(rep(lang, 'Je peux : 🚪 ouvrir/fermer la porte · 💡 piloter l’éclairage · ❄️ régler le climat (bébé/enfant/adulte) · 🛠️ maintenance · 💶 prix & devis · 🗓️ heure, date, créneaux.', 'أستطيع فتح الباب وإدارة الضوء والمناخ والأسعار.', 'I can: door, lighting, climate, maintenance, pricing, schedule.', 'Kapı, ışık, iklim, bakım, fiyat, randevu.'));
                     case 'greeting': return res(rep(lang, '👋 Bonjour' + (N ? ', ' + N : '') + ' ! Je suis Pixel, votre assistante de cabine. Comment puis-je vous aider ? (état, climat, porte, prix…)', 'أهلاً! كيف أساعدك؟', 'Hello! How can I help?', 'Merhaba! Nasıl yardımcı olabilirim?'));
                     case 'smalltalk': return res(rep(lang, 'Très bien, merci' + (N ? ', ' + N : '') + ' ! Toujours au service de la cabine. Et vous, tout se passe bien ici ?', 'بخير، وأنت؟', 'All good, thank you! And you?', 'İyiyim, teşekkürler! Ya siz?'));
@@ -1954,7 +1961,7 @@
                 return '🧮 TVA tunisienne : 19 % + timbre 1 TND. Donnez un montant HT, ex. « TVA sur 150 DT ».';
             }
             function natural(q) {
-                const lang = detect(q); conv.lang = lang;
+                const lang = kioskLang() !== 'auto' ? kioskLang() : detect(q); conv.lang = lang;
                 const t = norm(q);
                 const name = conv.name || (function () { try { return knownName(); } catch (e) { return null; } })();
                 if (name) conv.name = name;
@@ -2057,7 +2064,7 @@
             function runTool(name, args) { const t = tools[name]; if (!t) return { ok: false, error: 'unknown tool: ' + name }; return t.execute(args || {}); }
 
             function prefer(q) {
-                const lang = detect(q);
+                const lang = kioskLang() !== 'auto' ? kioskLang() : detect(q);
                 const t = norm(q);
                 const em = q.match(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i);
                 const nm = extractName(q);
@@ -2345,6 +2352,7 @@
         var md=$('setMode'); if(md) md.value=get('atlasMode','secure');
         var cb=$('setCabin'); if(cb) cb.value=get('atlasCabinId','');
         var hb=$('setHub'); if(hb) hb.value=get('atlasHub','');
+        var ln=$('setLang'); if(ln) ln.value=get('atlasKioskLang','auto');
         var px=$('setPixel');
         if(px){
             var manual=get('atlasPixelServer','').trim().replace(/\/+$/,'');
@@ -2367,6 +2375,7 @@
     window.setModeS=function(m){ set('atlasMode',m); try{ if(window.applyModeUI) applyModeUI(); }catch(e){} };
     window.setCabinS=function(v){ set('atlasCabinId',String(v||'').trim()); try{ if(window.kioskLabel) kioskLabel('Libre'); }catch(e){} };
     window.setHubS=function(v){ set('atlasHub',String(v||'').trim()); };
+    window.setLangS=function(v){ set('atlasKioskLang',v); };
     window.setPixelS=function(v){ set('atlasPixelServer',String(v||'').trim().replace(/\/+$/,'')); };
     window.toggleVoiceS=function(){
         var on=get('atlasVoice','off')==='on';
@@ -2409,7 +2418,7 @@
     };
     window.resetSettingsS=function(){
         if(!confirm('Réinitialiser les réglages du kiosque ?')) return;
-        ['atlasHardware','atlasMode','atlasCabinId','atlasHub','atlasPixelServer','atlasVoice'].forEach(function(k){ try{ localStorage.removeItem(k); }catch(e){} });
+        ['atlasHardware','atlasMode','atlasCabinId','atlasHub','atlasPixelServer','atlasVoice','atlasKioskLang'].forEach(function(k){ try{ localStorage.removeItem(k); }catch(e){} });
         try{ if(window.paStopVoice) paStopVoice(); }catch(e){}
         render();
     };
