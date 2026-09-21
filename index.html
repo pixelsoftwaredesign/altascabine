@@ -528,6 +528,11 @@
                         </select>
                         <p id="setKbdHint" class="text-[10px] text-slate-500 mono mt-1.5">Sur le dispositif : Réglages → Langue et saisie → Langues du clavier = langue choisie.</p>
                     </div>
+                    <div class="bg-[#F4F6F0] rounded-2xl p-3.5 border border-[#2D5A27]/10">
+                        <p class="text-xs font-extrabold text-[#2D5A27] mb-2">🖥️ Clavier visuel</p>
+                        <button id="setOskBtn" onclick="toggleOskFloatS()" class="w-full bg-[#2D5A27] text-white rounded-xl px-2 py-2 text-xs font-extrabold">Clavier flottant : NON</button>
+                        <p class="text-[10px] text-slate-500 mono mt-1.5">Flottant : panneau déplaçable. Sinon : barre ancrée en bas.</p>
+                    </div>
                 </div>
                 <div class="flex gap-2 justify-end mt-3">
                     <button onclick="resetSettingsS()" class="text-[11px] px-3 py-2 rounded-xl bg-rose-50 text-rose-600 border border-rose-200 font-bold hover:bg-rose-100 transition">↺ Réinitialiser</button>
@@ -2397,6 +2402,7 @@ if (saveLead()) return { text: rep(lang, '✅ Prospect enregistré, ' + who + ' 
         var hb=$('setHub'); if(hb) hb.value=get('atlasHub','');
         var ul=$('setLangUI'); if(ul) ul.value=get('atlasKioskLang','auto');
         var kb=$('setKbd'); if(kb) kb.value=get('atlasKbdLang','auto');
+        var of=$('setOskBtn'); if(of) of.textContent=(typeof window.oskFloatOn==='function'&&window.oskFloatOn())?'🖥️ Clavier flottant : OUI':'🖥️ Clavier flottant : NON';
         try{
             var kh=$('setKbdHint');
             if(kh && get('atlasKbdLang','auto')!=='auto') kh.textContent='Sur le dispositif : Réglages → Langue et saisie → Langues du clavier, ou ADB : adb shell am start -a android.settings.INPUT_METHOD_SUBTYPE_SETTINGS';
@@ -2479,7 +2485,7 @@ if (saveLead()) return { text: rep(lang, '✅ Prospect enregistré, ' + who + ' 
     };
     window.resetSettingsS=function(){
         if(!confirm('Réinitialiser les réglages du kiosque ?')) return;
-        ['atlasHardware','atlasMode','atlasCabinId','atlasHub','atlasPixelServer','atlasVoice','atlasKioskLang','atlasAssistantLang','atlasKbdLang'].forEach(function(k){ try{ localStorage.removeItem(k); }catch(e){} });
+        ['atlasHardware','atlasMode','atlasCabinId','atlasHub','atlasPixelServer','atlasVoice','atlasKioskLang','atlasAssistantLang','atlasKbdLang','atlasOskFloat','atlasOskXY'].forEach(function(k){ try{ localStorage.removeItem(k); }catch(e){} });
         try{ if(window.paStopVoice) paStopVoice(); }catch(e){}
         render();
     };
@@ -2765,7 +2771,10 @@ if (saveLead()) return { text: rep(lang, '✅ Prospect enregistré, ' + who + ' 
 
 <div id="osk" class="osk-hidden" aria-hidden="true">
     <div id="oskHead" class="flex items-center justify-between px-3 py-1.5">
-        <span id="oskLang" class="text-[10px] font-extrabold text-white/80">⌨️</span>
+        <div class="flex items-center gap-2">
+        <span id="oskDrag" class="text-sm font-black text-[#2D5A27]/60 hidden" title="Maintenir pour déplacer (mode flottant)">⠿</span>
+        <span id="oskLang" class="text-[10px] font-extrabold text-[#2D5A27]">⌨️</span>
+        </div>
         <div class="flex gap-1.5">
             <button type="button" onclick="oskCycle()" class="osk-btn w-9" title="Changer de disposition">🌐</button>
             <button type="button" aria-label="Fermer le clavier" onclick="oskClose()" class="osk-btn w-9">✕</button>
@@ -2872,6 +2881,29 @@ if (saveLead()) return { text: rep(lang, '✅ Prospect enregistré, ' + who + ' 
         rowsEl.innerHTML=html;
     }
     function active(){ if(activeEl&&document.contains(activeEl)) return activeEl; var a=document.activeElement; if(a&&(a.tagName==='INPUT'||a.tagName==='TEXTAREA')&&a.type!=='hidden'){ activeEl=a; return a; } return null; }
+    var fp=null;
+    window.oskFloatOn=function(){ try{ return (localStorage.getItem('atlasOskFloat')||'off')==='on'; }catch(e){ return false; } };
+    function applyFloat(){
+        if(!el) return;
+        if(window.oskFloatOn&&window.oskFloatOn()){
+            el.classList.add('osk-floating');
+            var g=document.getElementById('oskDrag'); if(g)g.classList.remove('hidden');
+            try{ var xy=JSON.parse(localStorage.getItem('atlasOskXY')||'null'); if(xy&&typeof xy.x==='number'){ fp=xy; applyPos(); return; } }catch(e){}
+            el.style.left='auto'; el.style.top='auto'; el.style.right='12px'; el.style.bottom='64px';
+        }else{
+            el.classList.remove('osk-floating');
+            var g2=document.getElementById('oskDrag'); if(g2)g2.classList.add('hidden');
+            el.style.left=''; el.style.top=''; el.style.right=''; el.style.bottom='';
+        }
+    }
+    function applyPos(){ if(!fp||!el) return; el.style.left=fp.x+'px'; el.style.top=fp.y+'px'; el.style.right='auto'; el.style.bottom='auto'; }
+    window.toggleOskFloatS=function(){
+        try{ localStorage.setItem('atlasOskFloat', window.oskFloatOn()?'off':'on'); }catch(e){}
+        applyFloat();
+        if(open) render();
+        try{ if(window.tabSettings&&window.tabSettings.render) window.tabSettings.render(); }catch(e){}
+    };
+    window.osk.refresh=function(){ try{ pickLayout(); }catch(e){} applyFloat(); render(); }
     function fireInput(e){ var ev; try{ ev=new Event('input',{bubbles:true}); }catch(err){ ev=document.createEvent('Event'); ev.initEvent('input',true,true); } if(e) e.dispatchEvent(ev); }
     window.oskInsert=function(ch){
         var e=active(); if(!e) return;
@@ -2930,8 +2962,18 @@ if (saveLead()) return { text: rep(lang, '✅ Prospect enregistré, ' + who + ' 
         var k=ev.target&&ev.target.closest?ev.target.closest('.osk-key'):null;
         if(k&&k.dataset&&k.dataset.k!=='') window.oskInsert(k.dataset.k);
     },true);
-    pickLayout(); render();
-    return { open:window.oskOpen, close:window.oskClose, toggle:window.oskToggle };
+    var dragEl=document.getElementById('oskDrag');
+    if(dragEl)dragEl.addEventListener('pointerdown',function(e){
+        if(!(window.oskFloatOn&&window.oskFloatOn())) return;
+        e.preventDefault();
+        if(!fp){ var r=el.getBoundingClientRect(); fp={x:r.left,y:r.top}; }
+        var sx=e.clientX, sy=e.clientY, ox=fp.x, oy=fp.y;
+        function mv(ev){ if(!fp) fp={x:0,y:0}; fp.x=ox+(ev.clientX-sx); fp.y=oy+(ev.clientY-sy); applyPos(); }
+        function up(){ window.removeEventListener('pointermove',mv); window.removeEventListener('pointerup',up); try{ localStorage.setItem('atlasOskXY',JSON.stringify(fp)); }catch(err){} }
+        window.addEventListener('pointermove',mv); window.addEventListener('pointerup',up);
+    });
+    pickLayout(); applyFloat(); render();
+    return { open:window.oskOpen, close:window.oskClose, toggle:window.oskToggle, refresh:window.osk.refresh };
 })();</script>
 
 <style>
@@ -2945,6 +2987,9 @@ if (saveLead()) return { text: rep(lang, '✅ Prospect enregistré, ' + who + ' 
 .osk-acc{min-width:0}
 .osk-enter{background:linear-gradient(135deg,#2D5A27,#1d4020);color:#fff;border-color:rgba(45,90,39,.3)}
 .osk-enter:active{background:#23451e;color:#fff}
+#osk.osk-floating{width:min(92vw,540px);max-height:66vh;overflow-y:auto;border-radius:18px;box-shadow:0 18px 50px rgba(45,90,39,.25);border:1px solid rgba(45,90,39,.18)}
+#osk.osk-floating #oskHead{cursor:grab;touch-action:none;-webkit-user-select:none;user-select:none;border-radius:18px 18px 0 0}
+#oskDrag{cursor:grab;touch-action:none}
 .footer-ok{display:flex;align-items:center;gap:2px;justify-content:center}
 @media(max-width:640px){.osk-btn,.osk-enter{height:clamp(28px,6vw,36px);font-size:clamp(11px,2.6vw,14px)}#oskHead{padding-top:2px}}
 </style>
