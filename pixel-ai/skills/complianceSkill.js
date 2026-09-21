@@ -4,7 +4,7 @@ function execute() {
     status: 'success',
     company: 'Pixel Software Design',
     location: 'Gabès, Tunisie',
-    standards: ['CERT', 'CERT/ANCE', 'INPDP', 'Facturation Électronique TEJ'],
+    standards: ['CERT', 'CERT/ANCE', 'INPDP'],
     dataPrivacy: 'Conformité INPDP (RGPD tunisien / Loi 63-2022) : données clients traitées localement.',
     contacts: {
       email: 'info@pixelsoftwaredesign.xyz',

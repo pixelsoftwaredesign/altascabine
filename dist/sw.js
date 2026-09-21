@@ -1,7 +1,8 @@
-const CACHE = 'atlas-cabin-v4';
+const CACHE = 'atlas-cabin-v5';
 const CORE = [
   '/',
   '/index.html',
+  '/pixelneural.js',
   '/tailwind.prod.css',
   '/manifest.webmanifest',
   '/icon.svg',

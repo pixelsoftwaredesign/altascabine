@@ -98,7 +98,7 @@ const SLOT = {
     maintenance_network: { o: ['le réseau', 'le routeur', 'le wifi', 'la liaison', 'internet'], v: ['répond', 'marche', 'connecte', 'passe', 'fonctionne'] },
     lead: { o: ['une proposition', 'un devis', 'un projet', 'une estimation', 'un accompagnement commercial'] },
     compliance: { o: ['certificats', 'références', 'normes', 'agréments'], s: [''],
-        _extra: ['cert ance', 'inpdp', 'tej'] },
+        _extra: ['cert ance', 'inpdp'] },
     tva: { o: ['la tva', 'l\'adju', 'la taxe', 'l\'impôt'] },
     schedule: { o: ['un créneau technique', 'un rendez-vous', 'une visite', 'une installation'] },
     price: { o: ['une cabine', 'le modèle', 'une cabine atlas', 'votre cabine', 'le solaire'] },

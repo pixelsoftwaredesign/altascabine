@@ -504,6 +504,7 @@
                             <option value="ar">العربية</option>
                             <option value="tr">Türkçe</option>
                             <option value="darja">Tounsi (darija)</option>
+                            <option value="it">Italiano</option>
                         </select>
                     </div>
                 </div>
@@ -1753,16 +1754,16 @@
                 if (/(salam|salem|labes|chneya|3alacbed|brabi|baddel|kifach|n3awnek|sghir|reje3|hamdoullah)/.test(m)) return 'darja';
                 if (/(merhaba|nasilsin|nasıl|selam|klima|sicaklik|teşekkür|teşekkuder|lütfen)/.test(m)) return 'tr';
                 if (/(je suis|je m'appelle|mon nom est|comment puis|pouvez[- ]vous|merci beaucoup|voulez[- ]vous)/.test(m)) return 'fr';
-                if (/(^|[^a-zé])(ciao|salve|buongiorno|buonasera|come stai|come posso|aiutarmi|grazie mille|per favore)([^a-z]|$)/.test(m)) return 'it';
+                if (/(^|[^a-z])(ciao|salve|buongiorno|buonasera|come stai|come posso|aiutarmi|grazie mille|per favore|apri la porta|chiudi la porta|accendi|spegni|che ora|orario|quanto costa|manutenzione)([^a-z]|$)/.test(m)) return 'it';
                 if (/(^|[^a-z])(hello|\bhi\b|how are you|can you|could you|please|thank|thanks|help me|i want|i would|what is|how do|whats|welcome|good (morning|afternoon|evening))\b/.test(m)) return 'en';
                 return 'fr';
             }
-            function rep(lang, fr, ar, en, tr, dj) { return { ar: ar || fr, en: en || fr, tr: tr || fr, darja: dj || fr }[lang] || fr; }
-            function kioskLang() { try { const L = localStorage.getItem('atlasKioskLang'); if (L && L !== 'auto' && /^(fr|en|ar|tr|darja)$/.test(L)) return L; } catch (e) {} return 'auto'; }
+            function rep(lang, fr, ar, en, tr, dj, it) { return { ar: ar || fr, en: en || fr, tr: tr || fr, darja: dj || fr, it: it || fr }[lang] || fr; }
+            function kioskLang() { try { const L = localStorage.getItem('atlasKioskLang'); if (L && L !== 'auto' && /^(fr|en|ar|tr|darja|it)$/.test(L)) return L; } catch (e) {} return 'auto'; }
 
             function setClimate(profile) {
                 const P = {
-                    neo: { temp: 23, fan: 'Eco', air: rep('x', 'Zéro courant d\'air', 'بدون تيار هواء', 'No draft', 'Cereyan yok') },
+                    neo: { temp: 23, fan: 'Eco', air: rep('x', 'Zéro courant d\'air', 'بدون تيار هواء', 'No draft', 'Cereyan yok', '', 'Zero correnti d\'aria') },
                     enfant: { temp: 22, fan: 'Auto', air: 'doux' },
                     adulte: { temp: 21.5, fan: 'Auto', air: 'standard' }
                 }[profile] || { temp: 21.5, fan: 'Auto', air: 'standard' };
@@ -1875,7 +1876,7 @@
             function hang() {
                 return rep(conv.lang || 'fr',
                     '🤔 Je n’ai pas trouvé dans ma base. Essayez : « état de la cabine », « climatisation », « ouvre la porte », « prix », « devis », « maintenance », « quelle heure ? ».',
-                    '🤔 لم أجد. اسأل عن الحالة أو المناخ أو السعر أو الصيانة.', '🤔 Not found. Try status, climate, door, pricing, maintenance or time.', '🤔 Bulamadım. Durum, iklim, kapı, fiyat, bakım ya da saat deneyin.', '🤔 3lach menjawnich. Es2al 3la état, climat, prix, maintenance wala heure.');
+                    '🤔 لم أجد. اسأل عن الحالة أو المناخ أو السعر أو الصيانة.', '🤔 Not found. Try status, climate, door, pricing, maintenance or time.', '🤔 Bulamadım. Durum, iklim, kapı, fiyat, bakım ya da saat deneyin.', '🤔 3lach menjawnich. Es2al 3la état, climat, prix, maintenance wala heure.', '🤔 Non ho trovato nella mia base. Prova: “stato della cabina”, “aria condizionata”, “apri la porta”, “prezzo”, “preventivo”, “manutenzione”, “che ora è?”.');
             }
             const SUG = {
                 greeting: ['État de la cabine', 'Quelle heure ?', 'Ouvre la porte', 'Prix'],
@@ -1923,34 +1924,34 @@
                 const N = conv.name ? cap(conv.name) : null;
                 const res = (text) => { const r = { text, lang, intent, sug: SUG[intent] || [] }; return r; };
                 switch (intent) {
-                    case 'door_open': return res(rep(lang, 'Bien sûr' + (N ? ', ' + N : '') + ' ! J’ouvre la porte (gâche déverrouillée 15 s).', 'بالتأكيد! أفتح الباب الآن.', 'Of course! Opening the door now.', 'Tabii ki! Kapıyı açıyorum.', 'Yais, na7ki el porte!').split('|')[0]);
-                    case 'door_close': return res(rep(lang, 'Compris' + (N ? ', ' + N : '') + ' ! Je verrouille la porte.', 'حسناً، أغلق الباب.', 'Got it! Locking the door.', 'Anlaşıldı! Kapıyı kilitliyorum.'));
+                    case 'door_open': return res(rep(lang, 'Bien sûr' + (N ? ', ' + N : '') + ' ! J’ouvre la porte (gâche déverrouillée 15 s).', 'بالتأكيد! أفتح الباب الآن.', 'Of course! Opening the door now.', 'Tabii ki! Kapıyı açıyorum.', 'Yais, na7ki el porte!', 'Certo' + (N ? ', ' + N : '') + '! Apro la porta (serratura sbloccata 15 s).').split('|')[0]);
+                    case 'door_close': return res(rep(lang, 'Compris' + (N ? ', ' + N : '') + ' ! Je verrouille la porte.', 'حسناً، أغلق الباب.', 'Got it! Locking the door.', 'Anlaşıldı! Kapıyı kilitliyorum.', '', 'Ricevuto' + (N ? ', ' + N : '') + '! Blocco la porta.'));
                     case 'door_state': return res('🚪 Porte : ' + (function () { try { return document.getElementById('doorStatus') ? document.getElementById('doorStatus').textContent : '—'; } catch (e) { return '—'; } })() + '.');
-                    case 'lights_on': return res(rep(lang, '💡 J’allume l’éclairage — mode Focus 5000 K pour travailler.', 'سأضيء الإضاءة.', 'Lighting on — Focus 5000 K.', 'Işığı açıyorum — Focus 5000 K.'));
-                    case 'lights_off': return res(rep(lang, '💡 J’éteins l’éclairage.', 'أطفئ الإضاءة.', 'Lights off.', 'Işığı kapatıyorum.'));
-                    case 'climate_neo': return res(rep(lang, '❄️ Profil « bébé » : 23 °C, ventilation douce, zéro courant d’air.', 'تم ضبط مناخ الرضيع.', 'Baby climate: 23 °C, gentle flow.', 'Bebek iklimi: 23°C, cereyan yok.'));
-                    case 'climate_child': return res(rep(lang, '❄️ Profil enfant : 22 °C, ventilation Auto.', 'مناخ الطفل مضبوط.', 'Child climate: 22 °C.', 'Çocuk iklimi: 22°C.'));
-                    case 'climate_adult': return res(rep(lang, '❄️ Profil adulte : 21,5 °C, ventilation Auto.', 'مناخ البالغ مضبوط.', 'Adult climate: 21.5 °C.', 'Yetişkin iklimi: 21.5°C.'));
+                    case 'lights_on': return res(rep(lang, '💡 J’allume l’éclairage — mode Focus 5000 K pour travailler.', 'سأضيء الإضاءة.', 'Lighting on — Focus 5000 K.', 'Işığı açıyorum — Focus 5000 K.', '', '💡 Accendo le luci — modalità Focus 5000 K per lavorare.'));
+                    case 'lights_off': return res(rep(lang, '💡 J’éteins l’éclairage.', 'أطفئ الإضاءة.', 'Lights off.', 'Işığı kapatıyorum.', '', '💡 Spengo le luci.'));
+                    case 'climate_neo': return res(rep(lang, '❄️ Profil « bébé » : 23 °C, ventilation douce, zéro courant d’air.', 'تم ضبط مناخ الرضيع.', 'Baby climate: 23 °C, gentle flow.', 'Bebek iklimi: 23°C, cereyan yok.', '', '❄️ Profilo “bebè”: 23 °C, ventilazione dolce, zero correnti d’aria.'));
+                    case 'climate_child': return res(rep(lang, '❄️ Profil enfant : 22 °C, ventilation Auto.', 'مناخ الطفل مضبوط.', 'Child climate: 22 °C.', 'Çocuk iklimi: 22°C.', '', '❄️ Profilo bambino: 22 °C, ventilazione Auto.'));
+                    case 'climate_adult': return res(rep(lang, '❄️ Profil adulte : 21,5 °C, ventilation Auto.', 'مناخ البالغ مضبوط.', 'Adult climate: 21.5 °C.', 'Yetişkin iklimi: 21.5°C.', '', '❄️ Profilo adulto: 21,5 °C, ventilazione Auto.'));
                     case 'maintenance_power':
                     case 'maintenance_network': return res('🛠️ ' + runTool('get_maintenance_guide', {}).guide);
-                    case 'lead': return res(rep(lang, 'Avec plaisir' + (N ? ', ' + N : '') + ' ! Je prépare une proposition personnalisée — commencez par votre email, puis votre nom et téléphone.', 'بكل سرور! ابدأوا ببريدكم الإلكتروني.', 'With pleasure! Start with your email, then name and phone.', 'Memnuniyetle! Önce e-postanız, sonra ad ve telefonunuz.'));
+                    case 'lead': return res(rep(lang, 'Avec plaisir' + (N ? ', ' + N : '') + ' ! Je prépare une proposition personnalisée — commencez par votre email, puis votre nom et téléphone.', 'بكل سرور! ابدأوا ببريدكم الإلكتروني.', 'With pleasure! Start with your email, then name and phone.', 'Memnuniyetle! Önce e-postanız, sonra ad ve telefonunuz.', '', 'Con piacere' + (N ? ', ' + N : '') + '! Preparo una proposta personalizzata — iniziate con la vostra email, poi nome e telefono.'));
                     case 'compliance': return res('🏭 Fabriqué en Tunisie (PixelSoftware Design — Gabès), verre trempé EN 12150, acoustique ISO 3382-1.');
                     case 'tva': return res(tvaReply(q0));
-                    case 'schedule': return res(rep(lang, '📅 Je réserve un créneau technique : laissez-moi un email et un téléphone pour que l’équipe confirme. Centre technique : +216 52 675 027.', 'احجز لكم موعداً تقنياً — أرسلوا بريدكم ورقمكم.', 'I will book a technical slot — leave email and phone. +216 52 675 027.', 'Teknik randevu alıyorum — e-posta ve telefon bırakın.'));
+                    case 'schedule': return res(rep(lang, '📅 Je réserve un créneau technique : laissez-moi un email et un téléphone pour que l’équipe confirme. Centre technique : +216 52 675 027.', 'احجز لكم موعداً تقنياً — أرسلوا بريدكم ورقمكم.', 'I will book a technical slot — leave email and phone. +216 52 675 027.', 'Teknik randevu alıyorum — e-posta ve telefon bırakın.', '', '📅 Prenoto uno slot tecnico: lasciatemi email e telefono per la conferma. Centro tecnico: +216 52 675 027.'));
                     case 'price': return res('💶 Prix indicatifs (DT HT) : S 18 500 · M 32 900 · L 58 500. Un devis précis sur mesure ? Je prépare une proposition.');
                     case 'contact': return res('📞 PixelSoftware Design — +216 52 675 027 · info@pixelsoftwaredesign.xyz');
                     case 'security': return res('🛡️ Vos échanges restent privés : l’assistant tourne à bord de la cabine, réseau WiFi isolé, télémétrie minimale. Rien ne part vers le cloud.');
-                    case 'time': return res('🕐 ' + new Date().toLocaleTimeString('fr-FR') + ' — ' + new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }));
-                    case 'date': return res('🗓️ ' + new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }));
-                    case 'who_are_you': return res(rep(lang, 'Je suis ✴️ Pixel, l’algorithme neuronal de la cabine ATLAS. Je comprends plusieurs langues et je peux piloter porte, lumière et climat, répondre prix/maintenance.', 'أنا بيكسل، مساعد كابينة أطلس العصبي.', 'I am Pixel, the ATLAS cabin neural assistant. I speak several languages and can control the door, lights and climate, plus answer prices/maintenance.', 'Ben Pixel, ATLAS kabin nöral asistanıyım.'));
-                    case 'capabilities': return res(rep(lang, 'Je peux : 🚪 ouvrir/fermer la porte · 💡 piloter l’éclairage · ❄️ régler le climat (bébé/enfant/adulte) · 🛠️ maintenance · 💶 prix & devis · 🗓️ heure, date, créneaux.', 'أستطيع فتح الباب وإدارة الضوء والمناخ والأسعار.', 'I can: door, lighting, climate, maintenance, pricing, schedule.', 'Kapı, ışık, iklim, bakım, fiyat, randevu.'));
-                    case 'greeting': return res(rep(lang, '👋 Bonjour' + (N ? ', ' + N : '') + ' ! Je suis Pixel, votre assistante de cabine. Comment puis-je vous aider ? (état, climat, porte, prix…)', 'أهلاً! كيف أساعدك؟', 'Hello! How can I help?', 'Merhaba! Nasıl yardımcı olabilirim?'));
-                    case 'smalltalk': return res(rep(lang, 'Très bien, merci' + (N ? ', ' + N : '') + ' ! Toujours au service de la cabine. Et vous, tout se passe bien ici ?', 'بخير، وأنت؟', 'All good, thank you! And you?', 'İyiyim, teşekkürler! Ya siz?'));
-                    case 'status_ok': return res(rep(lang, 'Ravi de l’entendre' + (N ? ', ' + N : '') + ' ! Je reste à disposition.', 'سعيد بسماع ذلك!', 'Glad to hear it!', 'Sevindim!'));
-                    case 'thanks': return res(rep(lang, 'Je vous en prie' + (N ? ', ' + N : '') + ' 😊 N’hésitez pas si vous avez besoin de quoi que ce soit.', 'عفواً!', 'You are welcome!', 'Rica ederim!'));
-                    case 'goodbye': return res(rep(lang, 'Au revoir' + (N ? ', ' + N : '') + ' ! Belle journée 👋 C’était un plaisir.', 'إلى اللقاء!', 'Goodbye!', 'Görüşürüz!'));
-                    case 'vent_eco': return res('🍃 Ventilation Eco activée.');
-                    case 'vent_max': return res('🍃 Ventilation Max activée.');
+                    case 'time': return res(rep(lang, '🕐 Il est ' + new Date().toLocaleTimeString('fr-FR') + ' — ' + new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) + '.', '', '🕐 It is ' + new Date().toLocaleTimeString('en-GB') + ' — ' + new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) + '.', '', '', '🕐 Sono le ' + new Date().toLocaleTimeString('it-IT') + ' — ' + new Date().toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) + '.'));
+                    case 'date': return res(rep(lang, '🗓️ ' + new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) + '.', '', '🗓️ ' + new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) + '. Every visit is counted as a session.', '', '', '🗓️ ' + new Date().toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) + '. Ogni presenza è contata come sessione.'));
+                    case 'who_are_you': return res(rep(lang, 'Je suis ✴️ Pixel, l’algorithme neuronal de la cabine ATLAS. Je comprends plusieurs langues et je peux piloter porte, lumière et climat, répondre prix/maintenance.', 'أنا بيكسل، مساعد كابينة أطلس العصبي.', 'I am Pixel, the ATLAS cabin neural assistant. I speak several languages and can control the door, lights and climate, plus answer prices/maintenance.', 'Ben Pixel, ATLAS kabin nöral asistanıyım.', '', 'Sono ✴️ Pixel, l’algoritmo neurale della cabina ATLAS. Capisco più lingue e controllo porta, luce e clima, rispondo su prezzi/manutenzione.'));
+                    case 'capabilities': return res(rep(lang, 'Je peux : 🚪 ouvrir/fermer la porte · 💡 piloter l’éclairage · ❄️ régler le climat (bébé/enfant/adulte) · 🛠️ maintenance · 💶 prix & devis · 🗓️ heure, date, créneaux.', 'أستطيع فتح الباب وإدارة الضوء والمناخ والأسعار.', 'I can: door, lighting, climate, maintenance, pricing, schedule.', 'Kapı, ışık, iklim, bakım, fiyat, randevu.', '', 'Posso: 🚪 aprire/chiudere la porta · 💡 controllare le luci · ❄️ regolare il clima (bebè/bambino/adulto) · 🛠️ manutenzione · 💶 prezzi & preventivi · 🗓️ ora, data, slot.'));
+                    case 'greeting': return res(rep(lang, '👋 Bonjour' + (N ? ', ' + N : '') + ' ! Je suis Pixel, votre assistante de cabine. Comment puis-je vous aider ? (état, climat, porte, prix…)', 'أهلاً! كيف أساعدك؟', 'Hello! How can I help?', 'Merhaba! Nasıl yardımcı olabilirim?', '', '👋 Ciao' + (N ? ', ' + N : '') + '! Sono Pixel, la vostra assistente di cabina. Come posso aiutarvi? (stato, clima, porta, prezzi…)'));
+                    case 'smalltalk': return res(rep(lang, 'Très bien, merci' + (N ? ', ' + N : '') + ' ! Toujours au service de la cabine. Et vous, tout se passe bien ici ?', 'بخير، وأنت؟', 'All good, thank you! And you?', 'İyiyim, teşekkürler! Ya siz?', '', 'Molto bene, grazie' + (N ? ', ' + N : '') + '! Sempre al servizio della cabina. E voi, tutto bene qui?'));
+                    case 'status_ok': return res(rep(lang, 'Ravi de l’entendre' + (N ? ', ' + N : '') + ' ! Je reste à disposition.', 'سعيد بسماع ذلك!', 'Glad to hear it!', 'Sevindim!', '', 'Felice di sentirvi' + (N ? ', ' + N : '') + '! Resto a disposizione.'));
+                    case 'thanks': return res(rep(lang, 'Je vous en prie' + (N ? ', ' + N : '') + ' 😊 N’hésitez pas si vous avez besoin de quoi que ce soit.', 'عفواً!', 'You are welcome!', 'Rica ederim!', '', 'Prego' + (N ? ', ' + N : '') + ' 😊 Non esitate a chiedere qualsiasi cosa.'));
+                    case 'goodbye': return res(rep(lang, 'Au revoir' + (N ? ', ' + N : '') + ' ! Belle journée 👋 C’était un plaisir.', 'إلى اللقاء!', 'Goodbye!', 'Görüşürüz!', '', 'Arrivederci' + (N ? ', ' + N : '') + '! Buona giornata 👋 È stato un piacere.'));
+                    case 'vent_eco': return res(rep(lang, '🍃 Ventilation Eco activée.', '🍃 تم تفعيل التهوية الاقتصادية.', '🍃 Eco fan mode enabled.', '🍃 Eko fan modu etkin.', 'Ventilation Eco activée.', '🍃 Ventilazione Eco attivata.'));
+                    case 'vent_max': return res(rep(lang, '🍃 Ventilation Max activée.', '🍃 تم تفعيل التهوية القصوى.', '🍃 Max fan mode enabled.', '🍃 Maksimum fan modu etkin.', 'Ventilation Max activée.', '🍃 Ventilazione Max attivata.'));
                     default: return null;
                 }
             }
@@ -1967,6 +1968,13 @@
                 if (name) conv.name = name;
                 const N = name ? cap(name) : null;
 
+                // Italien : « ciao » = accueil/renseignement d'identité (pas un adieu)
+                if (lang === 'it' && /^ciao/.test(t)) {
+                    const nm = (function () { try { return knownName() || conv.name; } catch (e) { return conv.name || null; } })();
+                    if (nm) return { text: '👋 Ciao ' + cap(nm) + '! Come posso assisterti? Posso: stato cabina, clima, manutenzione, prezzi, assistenza.', lang, intent: 'greeting' };
+                    return { text: '👋 Ciao! Sono Pixel, l\'assistente di Pixel Software Design. Con chi parlo? Dimmi il tuo nome o la tua email per riconoscerti.', lang, intent: 'greeting' };
+                }
+
                 // Réponses courtes OUI / NON (multi-tours)
                 const yes = /^\s*(oui|ouai|ouais|ok|okay|d accord|daccord|super|vas y|yalla|aywa|evet|yes|نعم|بالطبع|carrément)\b/.test(t);
                 const no = /^\s*(non|no|hayır|hayir|laa|لا|pas maintenant|plus tard|apres|après)\b/.test(t);
@@ -1978,7 +1986,7 @@
                 // Courtoisie — décidée par des ancres lexicales (précision)
                 if (/(je vais bien|ça va bien|ça va merci|très bien|tres bien|impeccable|nickel|au top|formidable|ipiyim|iyiyim|بخير|بخير الحمد|tout va bien)/.test(t)) { conv.lastIntent = 'status_ok'; const r = intentText('status_ok'); r.lang = lang; push(lang, q, 'status_ok'); return r; }
                 if (/(merci|mercii|y3aychek|choukran|shukran|شكرا|شكراً|teşekkür|sa ol|şükür|thank you|thanks|grazie|muchas gracias)/.test(t)) { conv.lastIntent = 'thanks'; const r = intentText('thanks'); r.lang = lang; push(lang, q, 'thanks'); return r; }
-                if (/(au revoir|a bientot|a plus tard|a la prochaine|bonne journee|bonne soiree|bon week|bye|goodbye|see you|beslema|مع السلامة|إلى اللقاء|görüşürüz|hoşça kal|addio|ciao)/.test(t)) { conv.lastIntent = 'goodbye'; const r = intentText('goodbye'); r.lang = lang; push(lang, q, 'goodbye'); return r; }
+                if (/(au revoir|a bientot|a plus tard|a la prochaine|bonne journee|bonne soiree|bon week|bye|goodbye|see you|beslema|مع السلامة|إلى اللقاء|görüşürüz|hoşça kal|addio)/.test(t)) { conv.lastIntent = 'goodbye'; const r = intentText('goodbye'); r.lang = lang; push(lang, q, 'goodbye'); return r; }
                 if (/(comment ca va|comment allez|comment vous allez|comment tu vas|how are you|nasılsın|كيف حالك|كيفك|kifach|kifk|chnowa ahwalek|come stai)/.test(t)) { conv.lastIntent = 'smalltalk'; const r = intentText('smalltalk'); r.lang = lang; push(lang, q, 'smalltalk'); return r; }
                 if (/(et toi|et vous|and you|peki sen|وأنت\b|وأنتي|w nta|w nti)/.test(t)) { conv.lastIntent = 'smalltalk'; const r = intentText('smalltalk'); r.lang = lang; r.text = (N ? cap(N) + ', ' : '') + (lang === 'ar' ? 'أنا بخير، ماذا عنك؟' : lang === 'tr' ? 'İyiyim, ya siz?' : lang === 'en' ? 'Fine, thanks! And you?' : 'Très bien, merci ! Et vous, comment se passe votre séjour ?'); push(lang, q, 'smalltalk'); return r; }
                 if (/(qui es tu|qui es-tu|qui etes|tu es qui|you are who|who are you|presente toi|presente|presente-toi|chkounek|من أنت|kimsin|come ti chiami|qui etes vous)/.test(t)) { conv.lastIntent = 'who_are_you'; const r = intentText('who_are_you'); r.lang = lang; push(lang, q, 'who_are_you'); return r; }
@@ -1988,7 +1996,7 @@
                 const pend = pendState();
                 if (pend && pend.email && !pend.name && !pend.phone) {
                     if (!/(mon nom|je m appelle|je m'appelle|mon tel|mon numero|appelle moi|ferry|oslovie|téléphone|tel:)/.test(t)) {
-                        const r = { text: rep(lang, 'Merci pour votre email ! Pour finaliser votre fiche, précisez votre nom et votre numéro de téléphone. Vous pouvez aussi me laisser juste un nom.', '', 'Thanks! To finish your file, add your name and phone number.', 'Teşekkürler! Dosyayı tamamlamak için ad ve telefonunuzu bırakın.'), lang, intent: 'lead' }; conv.lastIntent = 'lead'; push(lang, q, 'lead'); return r;
+                        const r = { text: rep(lang, 'Merci pour votre email ! Pour finaliser votre fiche, précisez votre nom et votre numéro de téléphone. Vous pouvez aussi me laisser juste un nom.', '', 'Thanks! To finish your file, add your name and phone number.', 'Teşekkürler! Dosyayı tamamlamak için ad ve telefonunuzu bırakın.', '', 'Grazie per la vostra email! Per completare la scheda, indicate nome e numero di telefono. Potete anche lasciarmi solo un nome.'), lang, intent: 'lead' }; conv.lastIntent = 'lead'; push(lang, q, 'lead'); return r;
                     }
                 }
 
@@ -2072,17 +2080,17 @@
 
                 if (em) {
                     const known = clients.find(c => c.email === em[0].toLowerCase());
-                    if (known) return { text: rep(lang, '✴️ Content de vous revoir, ' + known.name + ' ! ' + known.company + ' — votre installation nécessite une maintenance, un état des lieux ou une évolution ?', '✴️ سعدت برؤيتك مجدداً ' + known.name + '، هل تحتاج صيانة أم استشارة؟', '✴️ Good to see you again, ' + known.name + '! Maintenance, status or a new project?', '✴️ Tekrar görüşmek güzel, ' + known.name + '! Bakım mı, durum mu?' , '✴️ Marhba bik mrigi ' + known.name + '! Ta3amal maintenance walla tawjihet?'), lang };
+                    if (known) return { text: rep(lang, '✴️ Content de vous revoir, ' + known.name + ' ! ' + known.company + ' — votre installation nécessite une maintenance, un état des lieux ou une évolution ?', '✴️ سعدت برؤيتك مجدداً ' + known.name + '، هل تحتاج صيانة أم استشارة؟', '✴️ Good to see you again, ' + known.name + '! Maintenance, status or a new project?', '✴️ Tekrar görüşmek güzel, ' + known.name + '! Bakım mı, durum mu?' , '✴️ Marhba bik mrigi ' + known.name + '! Ta3amal maintenance walla tawjihet?', '✴️ Lieta di rivedervi, ' + known.name + '! ' + known.company + ' — la vostra installazione necessita di manutenzione, verifica o evoluzione?'), lang };
                     pend.email = em[0].toLowerCase(); store('pixelLeadPend', pend);
-                    return { text: rep(lang, 'Merci ! Pour préparer une proposition adaptée, puis-je avoir votre nom et votre numéro de téléphone ?', 'شكراً! لأجهز لكم عرضاً مناسباً، هل يمكنني الحصول على اسمك ورقم هاتفك؟', 'Thank you! To prepare a tailored proposal, may I have your name and phone number?', 'Teşekkürler! Uygun bir teklif hazırlamak için adınızı ve telefon numaranızı alabilir miyim?'), lang };
+                    return { text: rep(lang, 'Merci ! Pour préparer une proposition adaptée, puis-je avoir votre nom et votre numéro de téléphone ?', 'شكراً! لأجهز لكم عرضاً مناسباً، هل يمكنني الحصول على اسمك ورقم هاتفك؟', 'Thank you! To prepare a tailored proposal, may I have your name and phone number?', 'Teşekkürler! Uygun bir teklif hazırlamak için adınızı ve telefon numaranızı alabilir miyim?', '', 'Grazie! Per preparare una proposta adeguata, posso avere nome e numero di telefono?'), lang };
                 }
                 if (ph) {
                     if (nm) pend.name = nm;
                     pend.phone = ph[1].replace(/\s+/g, ' ').trim();
                     const who = pend.name || 'Cher client';
                     store('pixelLeadPend', pend);
-                    if (saveLead()) return { text: rep(lang, '✅ Prospect enregistré, ' + who + ' ! Un expert PixelSoftware Design vous recontacte rapidement. (+216 52 675 027 en attendant)', '✅ تم تسجيل بياناتكم! سيتواصل معكم خبير PixelSoftware Design قريباً.', '✅ Lead captured, ' + who + '! A PixelSoftware Design expert will reach out shortly.', '✅ Müşteri kaydedildi! Bir uzmanımız en kısa sürede sizinle iletişime geçecek.'), lang };
-                    return { text: rep(lang, 'J\'enregistre vos coordonnées. Il me faut un email pour finaliser votre fiche (ou dites « je m\'appelle … » avec votre téléphone).', '', 'One more thing — I need an email to complete your lead.', ''), lang };
+if (saveLead()) return { text: rep(lang, '✅ Prospect enregistré, ' + who + ' ! Un expert PixelSoftware Design vous recontacte rapidement. (+216 52 675 027 en attendant)', '✅ تم تسجيل بياناتكم! سيتواصل معكم خبير PixelSoftware Design قريباً.', '✅ Lead captured, ' + who + '! A PixelSoftware Design expert will reach out shortly.', '✅ Müşteri kaydedildi! Bir uzmanımız en kısa sürede sizinle iletişime geçecek.', '', '✅ Prospetto salvato, ' + who + '! Un esperto PixelSoftware Design vi ricontatta a breve. (+216 52 675 027 nel frattempo)'), lang };
+                return { text: rep(lang, 'J\'enregistre vos coordonnées. Il me faut un email pour finaliser votre fiche (ou dites « je m\'appelle … » avec votre téléphone).', '', 'One more thing — I need an email to complete your lead.', '', '', 'Registro i vostri dati. Mi serve un’email per completare la scheda (o dite “mi chiamo …” con il telefono).'), lang };
                 }
                 if (nm) {
                     pend.name = nm; store('pixelLeadPend', pend);
@@ -2100,9 +2108,22 @@
                         '❄️ Profil ' + prof + ' détecté : climatisation vers ' + P.temp + '°C, ventilation ' + P.fan + ' — ' + P.air + '.',
                         { neo: '❄️ تم ضبط المناخ على 23°م وتهوية لطيفة بدون تيار هواء.', enfant: '❄️ رفعت درجة الحرارة إلى 22°م.', adulte: '❄️ ضبطت المناخ على 21.5°م.' }[prof] || '',
                         { neo: '❄️ Climate set to 23°C, gentle ventilation, no draft.', enfant: '❄️ Temperature set to 22°C.', adulte: '❄️ Climate set to 21.5°C.' }[prof] || '',
-                        { neo: '❄️ İklim 23°C\'ye ayarlandı, cereyan yok.', enfant: '❄️ Sıcaklık 22°C\'ye ayarlandı.', adulte: '❄️ İklim 21.5°C\'ye ayarlandı.' }[prof] || ''), lang };
+                        { neo: '❄️ İklim 23°C\'ye ayarlandı, cereyan yok.', enfant: '❄️ Sıcaklık 22°C\'ye ayarlandı.', adulte: '❄️ İklim 21.5°C\'ye ayarlandı.' }[prof] || '',
+                        '', { neo: '❄️ Profilo “bebè” rilevato: clima verso 23°C, ventilazione ' + P.fan + ' — zero correnti d’aria.', enfant: '❄️ Temperatura portata a 22°C.', adulte: '❄️ Clima regolato a 21.5°C.' }[prof] || ''), lang };
                 }
+                // Intents réels (courtoisie + neuronal) d'abord, pour TOUTES les langues
+                const nat = natural(q);
+                if (nat) { nat.lang = lang; return nat; }
                 if (lang === 'it') {
+                    const itA = /(apri|aprire|disfa).{0,12}porta|porta.{0,12}(apri|aprire)/.test(t) ? 'door_open'
+                        : /(chiudi|chiudere|blocca|serra).{0,12}porta|porta.{0,12}(chiudi|blocca|serra)/.test(t) ? 'door_close'
+                        : /(accendi|accendere).{0,12}(luce|luci|luc|leds)|(luce|luci).{0,12}(accendi|più|piu)/.test(t) ? 'lights_on'
+                        : /(spegni|spegnere).{0,12}(luce|luci|leds)|(luce|luci).{0,12}(spegni|meno)/.test(t) ? 'lights_off'
+                        : /(temperatura|freddo|caldo|clima|condizionatore)/.test(t) ? 'climate_adult'
+                        : /(bebè|bebe|baby|neonato)/.test(t) ? 'climate_neo'
+                        : /(bambino|ragazza)/.test(t) ? 'climate_child'
+                        : null;
+                    if (itA) { const rr = intentText(itA, q); rr.lang = lang; push(lang, q, itA); if (/door_|lights_|climate_|vent_/.test(itA)) actIntent(itA); return rr; }
                     const n = knownName();
                     if (n) return { text: '👋 Ciao ' + n + '! Come posso assisterti? Posso: stato cabina, clima, manutenzione, prezzi, assistenza.', lang };
                     return { text: '👋 Ciao! Sono Pixel, l\'assistente di Pixel Software Design. Con chi parlo? Dimmi il tuo nome o la tua email per riconoscerti.', lang };
@@ -2114,10 +2135,10 @@
                 }
                 if (lang !== 'fr') {
                     if (/(panne|maintenance|reboot|rasseps|reparer|broken|fix)/.test(t)) {
-                        return { text: rep(lang, '', 'دليل الصيانة السريعة: 1) اقطع التيار 10 ثوانٍ. 2) أعد التشغيل. 3) تحقق من الراوتر. 4) إن لم يُحل: +216 52 675 027.', 'Quick maintenance: 1) Power off 10s. 2) Restart. 3) Check router. 4) If not fixed: +216 52 675 027.', 'Hızlı bakım: 1) Gücü 10sn kesin. 2) Yeniden başlatın. 3) Yönlendiriciyi kontrol edin. 4) Çözülmezse: +216 52 675 027.'), lang };
+                        return { text: rep(lang, '', 'دليل الصيانة السريعة: 1) اقطع التيار 10 ثوانٍ. 2) أعد التشغيل. 3) تحقق من الراوتر. 4) إن لم يُحل: +216 52 675 027.', 'Quick maintenance: 1) Power off 10s. 2) Restart. 3) Check router. 4) If not fixed: +216 52 675 027.', 'Hızlı bakım: 1) Gücü 10sn kesin. 2) Yeniden başlatın. 3) Yönlendiriciyi kontrol edin. 4) Çözülmezse: +216 52 675 027.', '', 'Manutenzione rapida: 1) Togliete corrente 10 s. 2) Riavviate. 3) Controllate il router. 4) Se non risolto: +216 52 675 027.'), lang };
                     }
                     if (/(devis|prix|price|quote|contact|telephone|tarif)/.test(t)) {
-                        return { text: rep(lang, '', 'للحصول على عرض سعر: اسمك ورقم هاتفك؟ أو اتصل بنا: +216 52 675 027 — info@pixelsoftwaredesign.xyz', 'For a quote: your name and phone? Or call +216 52 675 027 — info@pixelsoftwaredesign.xyz', 'Fiyat teklifi için ad ve telefon? Ya da: +216 52 675 027 — info@pixelsoftwaredesign.xyz'), lang };
+                        return { text: rep(lang, '', 'للحصول على عرض سعر: اسمك ورقم هاتفك؟ أو اتصل بنا: +216 52 675 027 — info@pixelsoftwaredesign.xyz', 'For a quote: your name and phone? Or call +216 52 675 027 — info@pixelsoftwaredesign.xyz', 'Fiyat teklifi için ad ve telefon? Ya da: +216 52 675 027 — info@pixelsoftwaredesign.xyz', '', 'Per un preventivo: nome e telefono? Oppure chiamate: +216 52 675 027 — info@pixelsoftwaredesign.xyz'), lang };
                     }
                     const n = knownName();
                     if (lang === 'ar') {
@@ -2129,7 +2150,7 @@
                     const optr = n ? 'Merhaba ' + n + '! Pixel Software Design\'e hoş geldiniz.' : 'Pixel Software Design\'e hoş geldiniz.';
                     return { text: optr + ' Yardımcı olabilirim: durum, iklim, bakım, fiyat, iletişim.', lang };
                 }
-                return natural(q);
+                return null;
             }
 
             if (typeof window.addEventListener === 'function') {
@@ -2375,7 +2396,7 @@
     window.setModeS=function(m){ set('atlasMode',m); try{ if(window.applyModeUI) applyModeUI(); }catch(e){} };
     window.setCabinS=function(v){ set('atlasCabinId',String(v||'').trim()); try{ if(window.kioskLabel) kioskLabel('Libre'); }catch(e){} };
     window.setHubS=function(v){ set('atlasHub',String(v||'').trim()); };
-    window.setLangS=function(v){ set('atlasKioskLang',v); };
+    window.setLangS=function(v){ set('atlasKioskLang',v); try{ if(window.setUILang) window.setUILang(v); }catch(e){} };
     window.setPixelS=function(v){ set('atlasPixelServer',String(v||'').trim().replace(/\/+$/,'')); };
     window.toggleVoiceS=function(){
         var on=get('atlasVoice','off')==='on';
@@ -2427,6 +2448,176 @@
 })();</script>
 
 <script>"serviceWorker"in navigator&&location.protocol==="https:"&&navigator.serviceWorker.register("/sw.js").catch(function(){})</script>
+<script>
+// ============ I18N UI COMPLÈTE (6 langues + RTL arabe) ============
+(function () {
+    function $ (id) { return document.getElementById(id); }
+    function get (k, d) { try { var v = localStorage.getItem(k); return v === null ? d : v; } catch (e) { return d; } }
+    var I18N_LANGS = ['fr', 'en', 'ar', 'tr', 'darja', 'it'];
+    I18N_UI_T = {
+        'Porte': { en: 'Door', ar: 'باب', tr: 'Kapı', darja: 'Porte', it: 'Porta' },
+        'LED & Éclairage': { en: 'LED & Lighting', ar: 'LED والإضاءة', tr: 'LED & Aydınlatma', darja: 'LED w Eda2a', it: 'LED & Illuminazione' },
+        'Clim & Air': { en: 'AC & Air', ar: 'تكييف وهواء', tr: 'Klima & Hava', darja: 'Clim w Jow', it: 'Clim & Aria' },
+        'Audio & Playlist': { en: 'Audio & Playlist', ar: 'الصوت وقوائم التشغيل', tr: 'Ses & Çalma Listesi', darja: 'Audio w Playlist', it: 'Audio & Playlist' },
+        'Assistant': { en: 'Assistant', ar: 'المساعد', tr: 'Asistan', darja: 'Assistant', it: 'Assistente' },
+        'Réglages': { en: 'Settings', ar: 'الإعدادات', tr: 'Ayarlar', darja: 'Réglages', it: 'Impostazioni' },
+        'Accès & Sécurité': { en: 'Access & Security', ar: 'الدخول والأمان', tr: 'Erişim & Güvenlik', darja: 'Accès w Sécurité', it: 'Accesso & Sicurezza' },
+        'Contrôle de la Porte': { en: 'Door Control', ar: 'التحكم في الباب', tr: 'Kapı Kontrolü', darja: 'Contrôle de la Porte', it: 'Controllo della Porta' },
+        'Ouvrir la Porte': { en: 'Open the Door', ar: 'افتح الباب', tr: 'Kapıyı Aç', darja: '7el el porte', it: 'Apri la Porta' },
+        'Fermer & Verrouiller': { en: 'Close & Lock', ar: 'أغلق وقفل', tr: 'Kapat & Kilitle', darja: '9fel w sekrou el porte', it: 'Chiudi & Blocca' },
+        'Verrouillé (Sécurisé)': { en: 'Locked (Secure)', ar: 'مقفل (آمن)', tr: 'Kilitli (Güvenli)', darja: 'Verrouillé (Sécurisé)', it: 'Bloccata (Sicura)' },
+        '● Capteur actif': { en: '● Sensor active', ar: '● المستشعر نشط', tr: '● Sensör aktif', darja: '● Chef 3al capteur', it: '● Sensore attivo' },
+        'Ambiance Visuelle': { en: 'Visual Ambiance', ar: 'أجواء بصرية', tr: 'Görsel Atmosfer', darja: 'Ambiance Visuelle', it: 'Atmosfera Visiva' },
+        'Gestion des LEDs & Intensité': { en: 'LED & Brightness Control', ar: 'إدارة الإضاءة والسطوع', tr: 'LED & Parlaklık', darja: 'Tasri7 el LEDs w intensité', it: 'Gestione LED & Luminosità' },
+        'Diminuer': { en: 'Lower', ar: 'أخفض', tr: 'Azalt', darja: 'Na2es', it: 'Riduci' },
+        'Intensité LED': { en: 'LED Brightness', ar: 'سطوع LED', tr: 'LED Parlaklık', darja: 'Intensité LED', it: 'Luminosità LED' },
+        'Augmenter': { en: 'Raise', ar: 'ارفع', tr: 'Artır', darja: 'Kebber', it: 'Aumenta' },
+        'Mode Focus (5000K)': { en: 'Focus Mode (5000K)', ar: 'وضع التركيز (5000K)', tr: 'Odak Modu (5000K)', darja: 'Mode Focus (5000K)', it: 'Modalità Focus (5000K)' },
+        'Mode Relax (3000K)': { en: 'Relax Mode (3000K)', ar: 'وضع الاسترخاء (3000K)', tr: 'Rahat Mod (3000K)', darja: 'Mode Relax (3000K)', it: 'Modalità Relax (3000K)' },
+        'Atmosphère': { en: 'Atmosphere', ar: 'المناخ', tr: 'Atmosfer', darja: 'Atmosphère', it: 'Atmosfera' },
+        'Ventilation & Climatisation': { en: 'Ventilation & Air Conditioning', ar: 'التهوية والتكييف', tr: 'Havalandırma & Klima', darja: 'Ventilation w Climatisation', it: 'Ventilazione & Climatizzazione' },
+        '🍃 Vitesse Ventilation': { en: '🍃 Fan Speed', ar: '🍃 سرعة المروحة', tr: '🍃 Fan Hızı', darja: '🍃 Vitesse Ventilation', it: '🍃 Velocità Ventola' },
+        '❄️ Température Cible': { en: '❄️ Target Temperature', ar: '❄️ درجة الحرارة المستهدفة', tr: '❄️ Hedef Sıcaklık', darja: '❄️ Température Cible', it: '❄️ Temperatura Target' },
+        'Excellente (420 ppm CO2)': { en: 'Excellent (420 ppm CO2)', ar: 'ممتازة (420 ppm CO2)', tr: 'Mükemmel (420 ppm CO2)', darja: 'Excellente (420 ppm CO2)', it: 'Eccellente (420 ppm CO2)' },
+        '● HEPA actif': { en: '● HEPA active', ar: '● فلتر HEPA نشط', tr: '● HEPA aktif', darja: '● HEPA actif', it: '● HEPA attivo' },
+        'Ambiance Sonore': { en: 'Acoustic Ambiance', ar: 'أجواء صوتية', tr: 'Ses Atmosferi', darja: 'Ambiance Sonore', it: 'Atmosfera Sonora' },
+        'Audio & Playlist de Concentration': { en: 'Audio & Focus Playlist', ar: 'الصوت وقائمة التركيز', tr: 'Ses & Odak Listesi', darja: 'Audio w Playlist de concentration', it: 'Audio & Playlist di Concentrazione' },
+        'Masquage acoustique': { en: 'Acoustic masking', ar: 'إخفاء الصوت', tr: 'Akustik maskeleme', darja: 'Masquage acoustique', it: 'Mascheramento acustico' },
+        'En cours': { en: 'Playing', ar: 'قيد التشغيل', tr: 'Çalıyor', darja: 'En cours', it: 'In riproduzione' },
+        'Ambiance relaxante': { en: 'Relaxing ambiance', ar: 'أجواء مريحة', tr: 'Rahatlatıcı atmosfer', darja: 'Ambiance relaxante', it: 'Atmosfera rilassante' },
+        'Sélectionner': { en: 'Select', ar: 'اختر', tr: 'Seç', darja: 'Sélectionner', it: 'Seleziona' },
+        'Sons binauraux focus': { en: 'Binaural focus sounds', ar: 'أصوات ثنائية للتركيز', tr: 'Binaural odak sesleri', darja: 'Sons binauraux focus', it: 'Suoni binaurali focus' },
+        '🔊 Volume Haut-Parleur': { en: '🔊 Speaker Volume', ar: '🔊 مستوى الصوت', tr: '🔊 Hoparlör Sesi', darja: '🔊 Volume Haut-Parleur', it: '🔊 Volume Altoparlante' },
+        '● Bluetooth Prêt': { en: '● Bluetooth Ready', ar: '● البلوتوث جاهز', tr: '● Bluetooth Hazır', darja: '● Bluetooth Prêt', it: '● Bluetooth Pronto' },
+        'IA privée · PixelTranslate': { en: 'Private AI · PixelTranslate', ar: 'ذكاء خاص · PixelTranslate', tr: 'Özel YZ · PixelTranslate', darja: 'IA privée · PixelTranslate', it: 'IA privata · PixelTranslate' },
+        'Assistant Atlas': { en: 'Atlas Assistant', ar: 'مساعد أطلس', tr: 'Atlas Asistanı', darja: 'Assistant Atlas', it: 'Assistente Atlas' },
+        'Envoyer ➤': { en: 'Send ➤', ar: 'إرسال ➤', tr: 'Gönder ➤', darja: 'Envoie ➤', it: 'Invia ➤' },
+        'Kiosque & Système': { en: 'Kiosk & System', ar: 'الكشك والنظام', tr: 'Kiosk & Sistem', darja: 'Kiosque w Système', it: 'Chiosco & Sistema' },
+        '⚙️ Réglages': { en: '⚙️ Settings', ar: '⚙️ الإعدادات', tr: '⚙️ Ayarlar', darja: '⚙️ Réglages', it: '⚙️ Impostazioni' },
+        '🧠 Matériel': { en: '🧠 Hardware', ar: '🧠 الأجهزة', tr: '🧠 Donanım', darja: '🧠 Matériel', it: '🧠 Hardware' },
+        'ESP32 seul': { en: 'ESP32 only', ar: 'ESP32 فقط', tr: 'Yalnız ESP32', darja: 'ESP32 seul', it: 'Solo ESP32' },
+        'Pi + ESP32 (hub)': { en: 'Pi + ESP32 (hub)', ar: 'Pi + ESP32 (محور)', tr: 'Pi + ESP32 (hub)', darja: 'Pi + ESP32 (hub)', it: 'Pi + ESP32 (hub)' },
+        'Tablette Android': { en: 'Android tablet', ar: 'جهاز لوحي أندرويد', tr: 'Android tablet', darja: 'Tablette Android', it: 'Tablet Android' },
+        '🌍 Mode système': { en: '🌍 System Mode', ar: '🌍 وضع النظام', tr: '🌍 Sistem Modu', darja: '🌍 Mode système', it: '🌍 Modalità Sistema' },
+        'Sécurisé (PROD)': { en: 'Secure (PROD)', ar: 'آمن (إنتاج)', tr: 'Güvenli (PROD)', darja: 'Sécurisé (PROD)', it: 'Sicuro (PROD)' },
+        'Bêta': { en: 'Beta', ar: 'بيتا', tr: 'Beta', darja: 'Bêta', it: 'Beta' },
+        'Développement': { en: 'Development', ar: 'تطوير', tr: 'Geliştirme', darja: 'Développement', it: 'Sviluppo' },
+        '🏷️ ID cabine': { en: '🏷️ Cabin ID', ar: '🏷️ معرّف الكابينة', tr: '🏷️ Kabin Kimliği', darja: '🏷️ ID cabine', it: '🏷️ ID Cabina' },
+        '🗣️ Conversation vocale': { en: '🗣️ Voice Conversation', ar: '🗣️ المحادثة الصوتية', tr: '🗣️ Sesli Konuşma', darja: '🗣️ Conversation vocale', it: '🗣️ Conversazione Vocale' },
+        '🎤 Activer la voix': { en: '🎤 Enable Voice', ar: '🎤 تفعيل الصوت', tr: '🎤 Sesi Etkinleştir', darja: '🎤 Activer la voix', it: '🎤 Attiva la Voce' },
+        '🔇 Voix active — désactiver': { en: '🔇 Voice on — disable', ar: '🔇 الصوت مفعل — تعطيل', tr: '🔇 Ses Açık — Kapat', darja: '🔇 Voix active — désactiver', it: '🔇 Voce attiva — disattiva' },
+        '🌐 Hub backend (Pi)': { en: '🌐 Backend Hub (Pi)', ar: '🌐 المحور الخلفي (Pi)', tr: '🌐 Arka Uç Hub (Pi)', darja: '🌐 Hub backend (Pi)', it: '🌐 Hub backend (Pi)' },
+        '✴️ Serveur Pixel AI': { en: '✴️ Pixel AI Server', ar: '✴️ خادم Pixel AI', tr: '✴️ Pixel AI Sunucusu', darja: '✴️ Serveur Pixel AI', it: '✴️ Server Pixel AI' },
+        'Tester': { en: 'Test', ar: 'اختبار', tr: 'Test', darja: 'Tester', it: 'Testa' },
+        'Aucun test effectué pour le moment.': { en: 'No test performed yet.', ar: 'لم يتم إجراء أي اختبار بعد.', tr: 'Henüz test yapılmadı.', darja: 'Aucun test effectué pour le moment.', it: 'Nessun test eseguito finora.' },
+        '🌐 Langue de l\'assistant': { en: '🌐 Assistant Language', ar: '🌐 لغة المساعد', tr: '🌐 Asistan Dili', darja: '🌐 Langue de l\'assistant', it: '🌐 Lingua dell\'Assistente' },
+        'Auto (détection)': { en: 'Auto (detection)', ar: 'تلقائي (اكتشاف)', tr: 'Otomatik (algılama)', darja: 'Auto (détection)', it: 'Auto (rilevamento)' },
+        '↺ Réinitialiser': { en: '↺ Reset', ar: '↺ إعادة تعيين', tr: '↺ Sıfırla', darja: '↺ Réinitialiser', it: '↺ Ripristina' },
+        '✴️ Ouvrir l\'Assistant': { en: '✴️ Open Assistant', ar: '✴️ فتح المساعد', tr: '✴️ Asistanı Aç', darja: '✴️ Ouvrir l\'Assistant', it: '✴️ Apri l\'Assistente' },
+        '⚠️ Assistance': { en: '⚠️ Support', ar: '⚠️ مساعدة', tr: '⚠️ Destek', darja: '⚠️ Assistance', it: '⚠️ Assistenza' },
+        'Quitter la cabine (Kiosque)': { en: 'Leave cabin (Kiosk)', ar: 'مغادرة الكابينة (الكشك)', tr: 'Kabin Kioskundan Çık', darja: 'Quitter la cabine (Kiosque)', it: 'Esci dalla cabina (Chiosco)' },
+        '🎤 Commande Vocale': { en: '🎤 Voice Command', ar: '🎤 أمر صوتي', tr: '🎤 Sesli Komut', darja: '🎤 Commande Vocale', it: '🎤 Comando Vocale' },
+        'Prêt à écouter...': { en: 'Ready to listen...', ar: 'جاهز للاستماع...', tr: 'Dinlemeye hazır...', darja: 'Prêt à écouter...', it: 'Pronto ad ascoltare...' },
+        'Dites une commande, ex : « Ouvre la porte »': { en: 'Say a command, e.g. “Open the Door”', ar: 'قل أمراً، مثل «افتح الباب»', tr: 'Bir komut söyleyin, ör. “Kapıyı Aç”', darja: 'Dites une commande, ex : « Ouvre la porte »', it: 'Dite un comando, es. “Apri la Porta”' },
+        'Mode focus': { en: 'Focus mode', ar: 'وضع التركيز', tr: 'Odak modu', darja: 'Mode focus', it: 'Modalità focus' },
+        'Musique relaxante': { en: 'Relaxing music', ar: 'موسيقى مريحة', tr: 'Rahatlatıcı müzik', darja: 'Musique relaxante', it: 'Musica rilassante' },
+        'Augmenter la température': { en: 'Raise the temperature', ar: 'ارفع درجة الحرارة', tr: 'Sıcaklığı artır', darja: 'Ze3ed el température', it: 'Alza la temperatura' },
+        'Reconnaissance vocale indisponible sur ce navigateur. Saisissez votre commande :': { en: 'Voice recognition unavailable on this browser. Type your command:', ar: 'التعرف الصوتي غير متاح في هذا المتصفح. اكتب أمرك:', tr: 'Bu tarayıcıda ses tanıma yok. Komutunuzu yazın:', darja: 'Reconnaissance vocale indisponible sur ce navigateur. Saisissez votre commande :', it: 'Riconoscimento vocale non disponibile su questo browser. Digitate il comando:' },
+        'OK': { en: 'OK', ar: 'موافق', tr: 'Tamam', darja: 'OK', it: 'OK' },
+        'Comment utiliser la cabine ?': { en: 'How do I use the cabin?', ar: 'كيف أستخدم الكابينة؟', tr: 'Kabini nasıl kullanırım?', darja: 'Kifach nsta3mel el cabine?', it: 'Come uso la cabina?' },
+        'État des composants': { en: 'Component status', ar: 'حالة المكونات', tr: 'Bileşen durumu', darja: 'État des composants', it: 'Stato dei componenti' },
+        'Quelle heure ?': { en: 'What time is it?', ar: 'كم الساعة؟', tr: 'Saat kaç?', darja: 'Chhal men sa3a?', it: 'Che ora è?' },
+        'Ouvre la porte': { en: 'Open the door', ar: 'افتح الباب', tr: 'Kapıyı aç', darja: '7el el porte', it: 'Apri la porta' },
+        'Urgence': { en: 'Emergency', ar: 'طوارئ', tr: 'Acil durum', darja: 'Urgence', it: 'Emergenza' }
+    };
+    var I18N_ATS = [
+        ['#tabQ', 'placeholder', 'Votre demande… (multilingue)'],
+        ['#voiceInput', 'placeholder', 'Ex : allume les LEDs en mode focus'],
+        ['button[title="Commande vocale"]', 'title', 'Commande vocale'],
+        ['button[title="Commande vocale"]', 'aria-label', 'Commande vocale'],
+        ['button[title="Tester la connexion"]', 'title', 'Tester la connexion'],
+        ['button[title="Diminuer le volume"]', 'title', 'Diminuer le volume'],
+        ['button[title="Augmenter le volume"]', 'title', 'Augmenter le volume']
+    ];
+    I18N_UI_T['Votre demande… (multilingue)'] = { en: 'Your request… (multilingual)', ar: 'طلبك… (متعدد اللغات)', tr: 'İsteğiniz… (çok dilli)', darja: 'Votre demande… (multilingue)', it: 'La tua richiesta… (multilingue)' };
+    I18N_UI_T['Ex : allume les LEDs en mode focus'] = { en: 'E.g.: set LEDs to focus mode', ar: 'مثال: فعّل الإضاءة في وضع التركيز', tr: 'Ör.: LED’leri odak moduna al', darja: 'Ex : allume les LEDs en mode focus', it: 'Es.: accendi le luci in modalità focus' };
+    I18N_UI_T['Commande vocale'] = { en: 'Voice command', ar: 'أمر صوتي', tr: 'Sesli komut', darja: 'Commande vocale', it: 'Comando vocale' };
+    I18N_UI_T['Tester la connexion'] = { en: 'Test the connection', ar: 'اختبر الاتصال', tr: 'Bağlantıyı test et', darja: 'Tester la connexion', it: 'Testa la connessione' };
+    I18N_UI_T['Diminuer le volume'] = { en: 'Lower the volume', ar: 'أخفض الصوت', tr: 'Sesi azalt', darja: 'Diminuer le volume', it: 'Riduci il volume' };
+    I18N_UI_T['Augmenter le volume'] = { en: 'Raise the volume', ar: 'ارفع الصوت', tr: 'Sesi artır', darja: 'Augmenter le volume', it: 'Alza il volume' };
+    var I18N_WELCOME = {
+        fr: '👋 Bonjour ! Je suis l\'<b>Assistant Atlas</b> (Pixel AI).<br>Posez une question en français, arabe, darija, anglais, turc ou italien — je peux aussi <b>agir</b> : « ouvre la porte », « lumière à 80 % », « température 21 °C »…',
+        en: '👋 Hello! I\'m the <b>Atlas Assistant</b> (Pixel AI).<br>Ask in French, Arabic, Darija, English, Turkish or Italian — I can also <b>act</b>: “open the door”, “light at 80%”, “21 °C temperature”…',
+        ar: '👋 مرحباً! أنا <b>مساعد أطلس</b> (Pixel AI).<br>اطرح سؤالاً بالفرنسية أو العربية أو الدارجة أو الإنجليزية أو التركية أو الإيطالية — ويمكنني أيضاً <b>التنفيذ</b>: «افتح الباب»، «الإضاءة 80%»، «الحرارة 21°»…',
+        tr: '👋 Merhaba! Ben <b>Atlas Asistanı</b> (Pixel AI).<br>Fransızca, Arapça, darija, İngilizce, Türkçe veya İtalyanca sorun — <b>eyleme de geçebilirim</b>: «kapıyı aç», «ışık %80», «sıcaklık 21 °C»…',
+        darja: '👋 Ahla bik! Ena <b>Assistant Atlas</b> (Pixel AI).<br>Selek sawel b français, arabe, darija, anglais, turc wala italien — o najem kost <b>n3amel</b>: «7el el porte», «lumiere 80%», «température 21°C»…',
+        it: '👋 Ciao! Sono l\'<b>Assistente Atlas</b> (Pixel AI).<br>Fai una domanda in francese, arabo, darija, inglese, turco o italiano — posso anche <b>agire</b>: “apri la porta”, “luce all’80%”, “temperatura 21 °C”…'
+    };
+    function cur () { var L = get('atlasKioskLang', 'fr'); if (L === 'darja') return 'fr'; return I18N_LANGS.indexOf(L) >= 0 ? L : 'fr'; }
+    function hit (el) {
+        if (el.childNodes.length !== 1) return false;
+        var c = el.firstChild;
+        if (!c || c.nodeType !== 3) return false;
+        var t = c.nodeValue || '';
+        var k = t.trim();
+        if (!k) return false;
+        var tr = (typeof I18N_UI_T !== 'undefined') ? I18N_UI_T[k] : null;
+        if (!tr) return false;
+        var L = cur();
+        if (L === 'fr') return false;
+        var v = tr[L] || tr.fr || k;
+        if (v && v !== t) { c.nodeValue = v; return true; }
+        return false;
+    }
+    function walk () {
+        var els = document.querySelectorAll('body *');
+        for (var i = 0; i < els.length; i++) {
+            var el = els[i];
+            if (el.id === 'paPanel' || (el.closest && el.closest('#paPanel'))) continue;
+            hit(el);
+        }
+        for (var j = 0; j < I18N_ATS.length; j++) {
+            var a = I18N_ATS[j];
+            var n = document.querySelector(a[0]);
+            if (!n || n.getAttribute(a[1]) !== a[2]) continue;
+            var mm = I18N_UI_T[a[2]];
+            if (!mm) continue;
+            var vv = mm[cur()];
+            if (vv) n.setAttribute(a[1], vv);
+        }
+    }
+    function welcome () {
+        var tc = $('tabChat');
+        if (!tc || !tc.children.length) return;
+        var f = tc.children[0];
+        if (!f) return;
+        var nw = I18N_WELCOME[cur()] || I18N_WELCOME.fr;
+        if (nw !== f.innerHTML) f.innerHTML = nw;
+    }
+    var I18N_last = null, I18N_busy = false;
+    function apply (force) {
+        var L = cur(), html = document.documentElement;
+        if (html) { try { html.setAttribute('lang', L); html.setAttribute('dir', L === 'ar' ? 'rtl' : 'ltr'); } catch (e) {} }
+        walk();
+        if (force || L !== I18N_last) {
+            try { if (window.tabChat && window.tabChat.chips) window.tabChat.chips(); } catch (e) {}
+            walk(); welcome();
+            I18N_last = L;
+        }
+    }
+    function onMut () { if (I18N_busy) return; I18N_busy = true; try { apply(false); } catch (e) {} I18N_busy = false; }
+    function boot () {
+        if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', boot); return; }
+        if (window.MutationObserver) { try { new MutationObserver(onMut).observe(document.body, { childList: true, subtree: true, characterData: true }); } catch (e) {} }
+        apply(true);
+    }
+    window.setUILang = function (L) {
+        if (I18N_LANGS.indexOf(L) >= 0) { try { localStorage.setItem('atlasKioskLang', L); } catch (e) {} }
+        apply(true);
+    };
+    boot();
+})();
+</script>
 
 
 </body>

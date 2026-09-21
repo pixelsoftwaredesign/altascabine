@@ -14,7 +14,7 @@ function execute(params) {
   } else if (action === 'facture') {
     output = {
       message: 'Facturation des forfaits de formation (GestiActiv).',
-      tva: 'TVA 19% applicable sur la formation — édition TEJ.'
+      tva: 'TVA 19% applicable sur la formation.'
     };
   } else {
     output = { message: 'Pixel Driving Assistant actif (GestiActiv). Élèves, examens, facturation.' };

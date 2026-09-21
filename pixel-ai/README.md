@@ -1,6 +1,6 @@
 # Pixel AI — Assistant Multilingue & MCP
 
-Assistant léger de **Pixel Software Design** (Gabès, Tunisie). Architecture modulaire **Skills + Marketplace métiers** pour piloter les cabines **Atlas** (tablette Android 4–6 Go ou PC gaming), traduire via **PixelTranslate** (FR / Arabe / Darja / TR / EN) et rester conforme aux standards tunisiens (**CERT/ANCE, INPDP, Facturation électronique TEJ**).
+Assistant léger de **Pixel Software Design** (Gabès, Tunisie). Architecture modulaire **Skills + Marketplace métiers** pour piloter les cabines **Atlas** (tablette Android 4–6 Go ou PC gaming), traduire via **PixelTranslate** (FR / Arabe / Darja / TR / EN) et rester conforme aux standards tunisiens (**CERT/ANCE, INPDP**).
 
 ## Structure
 
@@ -10,7 +10,7 @@ pixel-ai/
 │   ├── climateSkill.js      #   Climat par occupant : Néo 23°C/vent1, Enfant 22°C/vent2, Adulte 21.5°C
 │   ├── maintenanceSkill.js  #   Guide de dépannage simple (online/offline)
 │   ├── translateSkill.js    #   PixelTranslate : détection + lexique FR/AR/Darja/TR/EN
-│   ├── complianceSkill.js   #   CERT/ANCE, INPDP, TEJ
+│   ├── complianceSkill.js   #   CERT/ANCE, INPDP
 │   ├── accountingSkill.js   #   TVA 19% + timbre 1 TND, charges CNSS (9.18% / 16.57%)
 │   ├── codingSkill.js       #   Boilerplates JS/TS, Python/Django, Flutter/Dart
 │   ├── dataScienceSkill.js  #   moyenne, médiane, min/max, écart-type

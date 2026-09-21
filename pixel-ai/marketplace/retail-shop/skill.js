@@ -9,7 +9,7 @@ function execute(params) {
   } else if (action === 'stock') {
     output = { message: 'Gestion de stock et alertes de réapprovisionnement.', alerteSeuil: params && params.seuil ? `< seuil ${params.seuil}` : null };
   } else if (action === 'z') {
-    output = { message: "Clôture de caisse (Z) et écart de caisse.", conformite: 'Journal de caisse — exigence TEJ.' };
+    output = { message: "Clôture de caisse (Z) et écart de caisse.", conformite: 'Journal de caisse conforme.' };
   } else {
     output = { message: 'Pixel Retail Compta actif. Caisse, stock, clôture Z.' };
   }
