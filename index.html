@@ -507,18 +507,6 @@
                         </select>
                     </div>
                     <div class="bg-[#F4F6F0] rounded-2xl p-3.5 border border-[#2D5A27]/10">
-                        <p class="text-xs font-extrabold text-[#2D5A27] mb-2">🤖 Langue de Pixel AI</p>
-                        <select id="setLang" onchange="setLangS(this.value)" class="w-full bg-white border border-[#2D5A27]/20 rounded-xl px-2 py-2 text-xs font-bold">
-                            <option value="auto">Auto (détection)</option>
-                            <option value="fr">Français</option>
-                            <option value="en">English</option>
-                            <option value="ar">العربية</option>
-                            <option value="tr">Türkçe</option>
-                            <option value="darja">Tounsi (darija)</option>
-                            <option value="it">Italiano</option>
-                        </select>
-                    </div>
-                    <div class="bg-[#F4F6F0] rounded-2xl p-3.5 border border-[#2D5A27]/10">
                         <p class="text-xs font-extrabold text-[#2D5A27] mb-2">⌨️ Clavier système (saisie)</p>
                         <select id="setKbd" onchange="setKbdS(this.value)" class="w-full bg-white border border-[#2D5A27]/20 rounded-xl px-2 py-2 text-xs font-bold">
                             <option value="auto">Suivre la langue de l'interface</option>
@@ -2396,7 +2384,6 @@ if (saveLead()) return { text: rep(lang, '✅ Prospect enregistré, ' + who + ' 
         var md=$('setMode'); if(md) md.value=get('atlasMode','secure');
         var cb=$('setCabin'); if(cb) cb.value=get('atlasCabinId','');
         var hb=$('setHub'); if(hb) hb.value=get('atlasHub','');
-        var ln=$('setLang'); if(ln) ln.value=get('atlasAssistantLang','auto');
         var ul=$('setLangUI'); if(ul) ul.value=get('atlasKioskLang','auto');
         var kb=$('setKbd'); if(kb) kb.value=get('atlasKbdLang','auto');
         try{
@@ -2426,7 +2413,11 @@ if (saveLead()) return { text: rep(lang, '✅ Prospect enregistré, ' + who + ' 
     window.setCabinS=function(v){ set('atlasCabinId',String(v||'').trim()); try{ if(window.kioskLabel) kioskLabel('Libre'); }catch(e){} };
     window.setHubS=function(v){ set('atlasHub',String(v||'').trim()); };
     window.setLangS=function(v){ set('atlasAssistantLang',v); };
-    window.setLangUS=function(v){ set('atlasKioskLang',v); try{ if(window.setUILang) window.setUILang(v); }catch(e){} };
+    window.setLangUS=function(v){
+        set('atlasKioskLang',v);
+        set('atlasAssistantLang', v === 'auto' ? 'auto' : v);
+        try{ if(window.setUILang) window.setUILang(v); }catch(e){}
+    };
     window.setKbdS=function(v){
         set('atlasKbdLang',v);
         try{ if(document.documentElement&&window.applyKbd) window.applyKbd(); }catch(e){}
