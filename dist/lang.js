@@ -333,27 +333,47 @@
         if (!b) return;
         b.textContent = (NAMES[cur] ? NAMES[cur][1] : "Fr") + " ▾";
         b.style.cursor = "pointer";
+        b.setAttribute("aria-haspopup", "true");
         b.onclick = function (e) { e.stopPropagation(); toggleLangDropdown(); };
         var d = document.getElementById("lang-drop");
         if (d) { tickLangDropdown(); return; }
         d = document.createElement("div");
         d.id = "lang-drop";
-        d.style.cssText = "display:none;position:fixed;top:" + (b.offsetTop + b.offsetHeight + 6) + "px;right:12px;z-index:999998;min-width:220px;max-height:min(60vh,480px);overflow-y:auto;overscroll-behavior:contain;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);border:1px solid rgba(45,90,39,.18);border-radius:14px;padding:6px;box-shadow:0 14px 40px rgba(0,0,0,.22);font-family:'Plus Jakarta Sans',sans-serif;";
+        d.style.cssText = "display:none;position:fixed;z-index:999998;min-width:230px;max-width:calc(100vw - 24px);overflow-y:auto;overscroll-behavior:contain;background:rgba(255,255,255,.97);backdrop-filter:blur(10px);border:1px solid rgba(45,90,39,.2);border-radius:14px;padding:6px;box-shadow:0 18px 46px rgba(0,0,0,.26);font-family:'Plus Jakarta Sans',sans-serif;";
         for (var i = 0; i < LANGS.length; i++) {
             (function (l) {
                 var it = document.createElement("button");
                 it.dataset.lang = l;
                 it.type = "button";
-                it.style.cssText = "display:block;width:100%;text-align:left;border:none;background:transparent;cursor:pointer;font-family:inherit;font-size:12px;font-weight:700;padding:8px 10px;border-radius:9px;";
+                it.style.cssText = "display:block;width:100%;text-align:left;border:none;background:transparent;cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;padding:7px 10px;border-radius:9px;";
                 it.onclick = function () { setLang(l); closeLangDropdown(); };
                 d.appendChild(it);
             })(LANGS[i]);
         }
         document.body.appendChild(d);
         document.addEventListener("click", function (e) {
-            if (d.style.display === "block" && !d.contains(e.target) && e.target.id !== "langBtnX") d.style.display = "none";
+            if (d.style.display === "block" && !d.contains(e.target) && e.target.id !== "langBtnX") closeLangDropdown();
+        });
+        document.addEventListener("keydown", function (e) {
+            if (e.key === "Escape" && d.style.display === "block") { closeLangDropdown(); b.focus(); }
         });
         tickLangDropdown();
+    }
+    function placeLangDropdown() {
+        var b = document.getElementById("langBtnX"), d = document.getElementById("lang-drop");
+        if (!b || !d) return;
+        var br = b.getBoundingClientRect();
+        var margin = 8, cap = 330, floor = 130;
+        var below = innerHeight - br.bottom - margin;
+        var above = br.top - margin;
+        var openUp = below < 150 && above >= 150;
+        var avail = openUp ? above : below;
+        d.style.maxHeight = Math.max(floor, Math.min(cap, avail)) + "px";
+        d.style.bottom = "";
+        d.style.right = Math.max(12, innerWidth - br.right) + "px";
+        if (openUp) { d.style.top = ""; d.style.bottom = (innerHeight - br.top + margin) + "px"; }
+        else { d.style.top = (br.bottom + margin) + "px"; d.style.bottom = ""; }
+        d.classList.toggle("open-up", openUp);
     }
     function tickLangDropdown() {
         var d = document.getElementById("lang-drop");
@@ -363,19 +383,24 @@
             var on = items[i].dataset.lang === cur;
             items[i].style.background = on ? "rgba(45,90,39,.14)" : "transparent";
             items[i].textContent = (NAMES[items[i].dataset.lang] ? NAMES[items[i].dataset.lang][1] + " · " + NAMES[items[i].dataset.lang][0] : items[i].dataset.lang) + (on ? " ✓" : "");
-            if (on) try { items[i].scrollIntoView({ block: "nearest" }); } catch (e) {}
+            if (on) { try { items[i].scrollIntoView({ block: "nearest" }); } catch (e) {} }
         }
     }
     function toggleLangDropdown() {
         buildLangDropdown();
         var d = document.getElementById("lang-drop");
         if (!d) return;
+        var b = document.getElementById("langBtnX");
         tickLangDropdown();
         d.style.display = d.style.display === "block" ? "none" : "block";
+        if (d.style.display === "block") { placeLangDropdown(); if (b) b.setAttribute("aria-expanded", "true"); }
+        else if (b) b.setAttribute("aria-expanded", "false");
     }
     function closeLangDropdown() {
         var d = document.getElementById("lang-drop");
         if (d) d.style.display = "none";
+        var b = document.getElementById("langBtnX");
+        if (b) b.setAttribute("aria-expanded", "false");
     }
     function setLang(lang) {
         if (lang === cur && DICS[lang]) { refreshUI(lang); return; }
