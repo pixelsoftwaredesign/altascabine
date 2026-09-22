@@ -201,6 +201,9 @@
         posPanels();
         var b = document.getElementById("langBtn");
         if (b) { b.textContent = NAMES[cur][1] + " ▾"; b.title = "Réglages · Langue & Clavier"; }
+        var bx = document.getElementById("langBtnX");
+        if (bx) { bx.textContent = (NAMES[cur] ? NAMES[cur][1] : cur) + " ▾"; }
+        tickLangDropdown();
     }
     function buildBar() {
         if (document.getElementById("lang-bar")) return;
@@ -325,6 +328,55 @@
         renderKeys();
         osk.style.display = osk.style.display === "block" ? "none" : "block";
     }
+    function buildLangDropdown() {
+        var b = document.getElementById("langBtnX");
+        if (!b) return;
+        b.textContent = (NAMES[cur] ? NAMES[cur][1] : "Fr") + " ▾";
+        b.style.cursor = "pointer";
+        b.onclick = function (e) { e.stopPropagation(); toggleLangDropdown(); };
+        var d = document.getElementById("lang-drop");
+        if (d) { tickLangDropdown(); return; }
+        d = document.createElement("div");
+        d.id = "lang-drop";
+        d.style.cssText = "display:none;position:fixed;top:" + (b.offsetTop + b.offsetHeight + 6) + "px;right:12px;z-index:999998;min-width:220px;max-height:min(60vh,480px);overflow-y:auto;overscroll-behavior:contain;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);border:1px solid rgba(45,90,39,.18);border-radius:14px;padding:6px;box-shadow:0 14px 40px rgba(0,0,0,.22);font-family:'Plus Jakarta Sans',sans-serif;";
+        for (var i = 0; i < LANGS.length; i++) {
+            (function (l) {
+                var it = document.createElement("button");
+                it.dataset.lang = l;
+                it.type = "button";
+                it.style.cssText = "display:block;width:100%;text-align:left;border:none;background:transparent;cursor:pointer;font-family:inherit;font-size:12px;font-weight:700;padding:8px 10px;border-radius:9px;";
+                it.onclick = function () { setLang(l); closeLangDropdown(); };
+                d.appendChild(it);
+            })(LANGS[i]);
+        }
+        document.body.appendChild(d);
+        document.addEventListener("click", function (e) {
+            if (d.style.display === "block" && !d.contains(e.target) && e.target.id !== "langBtnX") d.style.display = "none";
+        });
+        tickLangDropdown();
+    }
+    function tickLangDropdown() {
+        var d = document.getElementById("lang-drop");
+        if (!d) return;
+        var items = d.querySelectorAll("[data-lang]");
+        for (var i = 0; i < items.length; i++) {
+            var on = items[i].dataset.lang === cur;
+            items[i].style.background = on ? "rgba(45,90,39,.14)" : "transparent";
+            items[i].textContent = (NAMES[items[i].dataset.lang] ? NAMES[items[i].dataset.lang][1] + " · " + NAMES[items[i].dataset.lang][0] : items[i].dataset.lang) + (on ? " ✓" : "");
+            if (on) try { items[i].scrollIntoView({ block: "nearest" }); } catch (e) {}
+        }
+    }
+    function toggleLangDropdown() {
+        buildLangDropdown();
+        var d = document.getElementById("lang-drop");
+        if (!d) return;
+        tickLangDropdown();
+        d.style.display = d.style.display === "block" ? "none" : "block";
+    }
+    function closeLangDropdown() {
+        var d = document.getElementById("lang-drop");
+        if (d) d.style.display = "none";
+    }
     function setLang(lang) {
         if (lang === cur && DICS[lang]) { refreshUI(lang); return; }
         cur = lang;
@@ -364,6 +416,7 @@
             toggleOSK(); toggleOSK();
         } else {
             buildBar();
+            buildLangDropdown();
             var lh = document.getElementById("langBtn");
             if (lh) lh.style.display = "none";
         }

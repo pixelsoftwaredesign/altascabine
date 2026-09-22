@@ -70,3 +70,23 @@ html.atlas-blue #theme-dock{border-color:rgba(37,99,235,.3)}
 html.atlas-blue #theme-dock button{background:#2563eb;color:#fff}
 html.atlas-blue #theme-dock button.act{background:#eff6ff;color:#1d4ed8;box-shadow:0 0 0 2px #2563eb}
 @media (max-width:640px){#theme-dock{left:8px;bottom:8px;padding:5px}#theme-dock button{padding:6px 8px}}
+
+/* ---------- SÉLECTEUR DE LANGUE : LISTE DÉROULANTE DÉFILANTE ---------- */
+#langBtnX{font-weight:800}
+#lang-drop{font-family:'Plus Jakarta Sans',sans-serif}
+#lang-drop button{color:#2D5A27;transition:background .12s}
+#lang-drop button:hover{background:rgba(45,90,39,.1)}
+#lang-bar{scrollbar-width:thin!important;scrollbar-color:rgba(45,90,39,.4) transparent!important}
+#lang-bar::-webkit-scrollbar{height:5px}
+#lang-bar::-webkit-scrollbar-track{background:transparent}
+#lang-bar::-webkit-scrollbar-thumb{background:rgba(45,90,39,.35);border-radius:99px}
+html.atlas-dark #langBtnX{background:#9ACD32!important;color:#0a1322!important;box-shadow:0 6px 18px rgba(0,0,0,.35)}
+html.atlas-blue #langBtnX{background:#2563eb!important;box-shadow:0 6px 18px rgba(37,99,235,.35)}
+html.atlas-dark #lang-drop{background:rgba(13,22,41,.96)!important;border-color:rgba(148,163,184,.2)!important;box-shadow:0 14px 40px rgba(0,0,0,.5)!important}
+html.atlas-dark #lang-drop button{color:#dce6f6}
+html.atlas-dark #lang-drop button:hover{background:rgba(154,205,50,.18)}
+html.atlas-blue #lang-drop{border-color:rgba(37,99,235,.3)}
+html.atlas-blue #lang-drop button{color:#1d4ed8}
+html.atlas-blue #lang-drop button:hover{background:rgba(37,99,235,.1)}
+html.atlas-dark #lang-bar{scrollbar-color:rgba(154,205,50,.4) transparent}
+html.atlas-dark #lang-bar::-webkit-scrollbar-thumb{background:rgba(154,205,50,.4)}
