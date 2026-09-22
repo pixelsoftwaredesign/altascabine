@@ -376,9 +376,9 @@
                     <div class="bg-[#F4F6F0] p-5 rounded-2xl border border-[#2D5A27]/10 flex flex-col justify-between">
                         <span class="text-sm font-bold text-[#2D5A27]">🍃 Vitesse Ventilation</span>
                         <div class="grid grid-cols-3 gap-2 mt-3">
-                            <button onclick="setFanSpeed('Eco')" class="py-2.5 bg-white border border-[#2D5A27]/20 rounded-xl text-xs font-bold hover:bg-[#2D5A27] hover:text-white transition">Eco</button>
+                            <button onclick="setFanSpeed('Eco')" class="py-2.5 bg-white border border-[#2D5A27]/20 rounded-xl text-xs font-bold text-[#2D5A27] hover:bg-[#2D5A27] hover:text-white transition">Eco</button>
                             <button onclick="setFanSpeed('Auto')" class="py-2.5 bg-[#2D5A27] text-white rounded-xl text-xs font-bold">Auto</button>
-                            <button onclick="setFanSpeed('Max')" class="py-2.5 bg-white border border-[#2D5A27]/20 rounded-xl text-xs font-bold hover:bg-[#2D5A27] hover:text-white transition">Max</button>
+                            <button onclick="setFanSpeed('Max')" class="py-2.5 bg-white border border-[#2D5A27]/20 rounded-xl text-xs font-bold text-[#2D5A27] hover:bg-[#2D5A27] hover:text-white transition">Max</button>
                         </div>
                     </div>
                     <div class="bg-[#F4F6F0] p-5 rounded-2xl border border-[#2D5A27]/10 flex flex-col justify-between">
@@ -3415,6 +3415,9 @@ html.atlas-blue [class*="text-emerald-50"]{color:#eff6ff!important}
 html.atlas-blue #paPanel{border-color:rgba(37,99,235,.18)!important}
 html.atlas-blue #paBtn,.paMicBg{box-shadow:0 10px 30px rgba(37,99,235,.35)}
 html.atlas-blue #paHint{background:#1e3a8a}
+/* Texte des boutons blancs = couleur de la charte (sauf urgence rouge) */
+html:not(.atlas-dark) button[class*="bg-white"]:not([class*="text-\[#9f1239\]"]):not([class*="text-white"]){color:#2D5A27!important}
+html.atlas-blue button[class*="bg-white"]:not([class*="text-\[#9f1239\]"]):not([class*="text-white"]){color:#1d4ed8!important}
 html.atlas-dark #paHint{background:#0f1b31;border:1px solid rgba(148,163,184,.2)}
 html.atlas-dark #paPanel .bg-white\/10{background:rgba(255,255,255,.12)}
 html.atlas-dark #paQ{background:#101f3a;color:#dce6f6}
