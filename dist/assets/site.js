@@ -37,6 +37,7 @@
         if (t) { t.textContent = isDark() ? '☀️' : '🌓'; t.classList.toggle('act', isDark()); }
         var c = document.getElementById('td-charte');
         if (c) { c.textContent = isBlue() ? '🧿' : '🎨'; c.classList.toggle('act', isBlue()); }
+        try { document.dispatchEvent(new CustomEvent('atlas:theme', { detail: { dark: isDark(), bleu: isBlue() } })); } catch (e) {}
     }
     function init() {
         buildDock();

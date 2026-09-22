@@ -44,8 +44,11 @@ html.atlas-blue:not(.atlas-dark) [class*="hover:bg-\[#e4e9dc\]"]{background-colo
 html.atlas-blue .glass{background:rgba(255,255,255,.8)!important;border-color:rgba(37,99,235,.16)!important;box-shadow:0 8px 32px rgba(37,99,235,.12)!important}
 html.atlas-blue .card:hover{box-shadow:0 14px 36px -12px rgba(37,99,235,.35)}
 html.atlas-blue [class*="from-\[#2D5A27\]"]{--tw-gradient-from:#1d4ed8!important}
+html.atlas-blue [class*="from-\[#23451e\]"],html.atlas-blue [class*="from-\[#23451E\]"]{--tw-gradient-from:#2563eb!important}
+html.atlas-blue [class*="via-\[#2D5A27\]"]{--tw-gradient-via:#2563eb!important}
 html.atlas-blue [class*="to-\[#23451e\]"],html.atlas-blue [class*="to-\[#23451E\]"]{--tw-gradient-to:#1e3a8a!important}
 html.atlas-blue [class*="accent-\[#2D5A27\]"]{accent-color:#2563eb!important}
+html.atlas-blue [class*="border-\[#9ACD32\]"]{border-color:rgba(37,99,235,.4)!important}
 html.atlas-blue #lang-bar{border-color:rgba(37,99,235,.25)!important}
 
 /* ---------- ACCESSIBILITÉ & MICRO-POLISH ---------- */
