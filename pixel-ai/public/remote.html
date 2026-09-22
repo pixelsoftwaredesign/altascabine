@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#2D5A27">
+<title>📱 Envoyer à l'écran — Atlas Kiosk</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+  body{background:linear-gradient(160deg,#eef3e6 0%,#e6ecdc 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px;color:#2D3748}
+  .card{background:#fff;border:1px solid rgba(45,90,39,.15);border-radius:24px;padding:22px;width:100%;max-width:420px;box-shadow:0 14px 40px rgba(45,90,39,.12)}
+  h1{font-size:19px;color:#2D5A27;font-weight:800;display:flex;align-items:center;gap:8px;margin-bottom:4px}
+  p.sub{font-size:12px;color:#64748b;margin-bottom:18px}
+  label{display:block;font-size:11px;font-weight:700;color:#2D5A27;margin:14px 0 6px;text-transform:uppercase;letter-spacing:.4px}
+  input[type=text],input[type=number]{width:100%;padding:12px;border:1px solid rgba(45,90,39,.25);border-radius:12px;font-size:15px;background:#F4F6F0;outline:none;font-weight:700}
+  input:focus{border-color:#2D5A27}
+  .pick{display:block;width:100%;padding:16px;border:2px dashed rgba(45,90,39,.35);border-radius:14px;background:#F4F6F0;text-align:center;color:#2D5A27;font-weight:700;font-size:14px;cursor:pointer;margin-top:12px}
+  .pick small{display:block;color:#94a3b8;font-weight:500;margin-top:4px}
+  .file{display:none}
+  .btn{width:100%;margin-top:18px;padding:15px;border:none;border-radius:14px;background:linear-gradient(135deg,#2D5A27,#1d4020);color:#fff;font-size:15px;font-weight:800;cursor:pointer;transition:opacity .2s}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .meta{font-size:12px;color:#64748b;margin-top:10px}
+  .prog{height:8px;border-radius:99px;background:#e8ede0;overflow:hidden;margin-top:12px;display:none}
+  .prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,#9ACD32,#2D5A27);transition:width .2s}
+  .status{font-size:13px;margin-top:14px;padding:10px 12px;border-radius:12px;display:none;font-weight:600;line-height:1.4}
+  .ok{display:block;background:#eaf7e1;color:#1d4020;border:1px solid rgba(45,90,39,.25)}
+  .bad{display:block;background:#fdeaea;color:#9b1c1c;border:1px solid rgba(155,28,28,.25)}
+  .info{display:block;background:#eef4ff;color:#1e3a8a;border:1px solid rgba(30,58,138,.2)}
+  .room{text-align:center;font-size:30px;font-weight:900;color:#2D5A27;letter-spacing:6px;background:#F4F6F0;border-radius:14px;padding:10px;margin-top:6px;border:1px solid rgba(45,90,39,.2);font-variant-numeric:tabular-nums}
+  .hint{font-size:10.5px;color:#94a3b8;margin-top:16px;line-height:1.5}
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>📱 Envoyer à l'écran</h1>
+    <p class="sub">Atlas Kiosk — la musique ou la vidéo choisie sera diffusée sur l'écran de la cabine.</p>
+
+    <label>Salle (code reçu sur l'écran)</label>
+    <input type="number" id="room" inputmode="numeric" placeholder="6 chiffres" maxlength="6">
+
+    <label>Hub (adresse du pavillon) — si vide, optionnel</label>
+    <input type="text" id="hub" placeholder="http://IP-DU-PI:3000">
+
+    <label class="mt-1">Choix du fichier</label>
+    <label class="pick" id="pickLabel">🎵 / 🎬 Choisir Musique ou Vidéo
+      <small>MP3 · WAV · MP4 · WEBM · MOV · M4A</small>
+    </label>
+    <input type="file" id="fileIn" class="file" accept="video/*,audio/*,.mp3,.wav,.mp4,.webm,.mov,.m4a,audio/*,video/*">
+    <div class="meta" id="meta"></div>
+
+    <button class="btn" id="send" disabled>📡 Envoyer à l'écran</button>
+
+    <div class="prog"><i id="bar"></i></div>
+    <div class="status" id="status" style="display:none"></div>
+    <p class="hint">Astuce : l'écran affiche un QR à scanner — ce lien s'ouvre avec la salle et le hub déjà renseignés. L'envoi est direct vers le pavillon, rien n'est publié en ligne.</p>
+  </div>
+
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var q = function (k) {
+    try { return new URLSearchParams(location.search).get(k) || ''; } catch (e) { return ''; }
+  };
+  var room = q('room'), hub = q('hub');
+  if (hub) try { hub = decodeURIComponent(hub); } catch (e) {}
+  try { if (!hub) hub = localStorage.getItem('atlasCastHub') || ''; } catch (e) {}
+  try { if (!room) room = sessionStorage.getItem('atlasCastRoom') || ''; } catch (e) {}
+  if (room) $('room').value = room;
+  if (hub) $('hub').value = hub;
+  var file = null;
+
+  $('hub').addEventListener('input', function () { try { localStorage.setItem('atlasCastHub', this.value.trim()); } catch (e) {} refreshHub(); });
+  $('room').addEventListener('input', function () { try { sessionStorage.setItem('atlasCastRoom', this.value.trim()); } catch (e) {} refreshHub(); });
+  $('pickLabel').addEventListener('click', function () { $('fileIn').click(); });
+  $('fileIn').addEventListener('change', function () {
+    file = this.files && this.files[0] || null;
+    var meta = $('meta');
+    if (file) { meta.textContent = '📎 ' + file.name + ' · ' + (file.size / 1048576).toFixed(1) + ' Mo'; $('send').disabled = !roomValid(); }
+    else { meta.textContent = ''; $('send').disabled = true; }
+  });
+
+  function roomValid() { var r = $('room').value.trim(); return /^\d{6}$/.test(r) || r.length >= 4; }
+  function refreshHub() { if (file) $('send').disabled = !roomValid(); }
+
+  $('send').addEventListener('click', function () {
+    if (!file || !roomValid()) return;
+    var room = $('room').value.trim();
+    var hubBase = $('hub').value.trim().replace(/\/+$/, '');
+    if (!hubBase) { setStatus("⚠️ Renseignez l'adresse du hub (affichée sur l'écran : Serveur Pixel AI).", 'bad'); return; }
+    setStatus('📤 Connexion au hub…', 'info');
+    $('prog').style.display = 'block';
+    var xhr = new XMLHttpRequest();
+    var url = hubBase + '/api/cast/' + encodeURIComponent(room) + '?name=' + encodeURIComponent(file.name) + '&type=' + encodeURIComponent(file.type || 'audio');
+    xhr.open('POST', url);
+    xhr.responseType = 'json';
+    xhr.upload.onprogress = function (e) { if (e.lengthComputable) $('bar').style.width = Math.round(e.loaded / e.total * 100) + '%'; };
+    xhr.onload = function () {
+      $('bar').style.width = '100%';
+      if (xhr.status === 200 && xhr.response && xhr.response.status === 'success') {
+        setStatus("✅ Diffusion lancée ! L'écran joue votre fichier. Vous pouvez fermer cette page.", 'ok');
+        $('send').disabled = true;
+      } else {
+        var msg = (xhr.response && xhr.response.message) || 'Erreur ' + xhr.status;
+        setStatus('⚠️ ' + msg, 'bad');
+        $('bar').style.width = '0';
+        $('send').disabled = false;
+      }
+    };
+    xhr.onerror = function () {
+      setStatus('⚠️ Hub injoignable. Vérifiez que le pavillon est allumé et que l\'adresse est correcte.', 'bad');
+      $('bar').style.width = '0';
+      $('send').disabled = false;
+    };
+    $('send').disabled = true;
+    xhr.send(file);
+  });
+
+  function setStatus(msg, cls) {
+    var st = $('status');
+    st.textContent = msg;
+    st.className = 'status ' + cls;
+    st.style.display = 'block';
+  }
+})();
+</script>
+</body>
+</html>

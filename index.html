@@ -117,6 +117,30 @@
             </div>
         </main>
 
+        <div class="mt-6 mx-auto max-w-5xl w-full px-2 card-lift ux-up bg-white border border-[#2D5A27]/15 rounded-3xl p-5 shadow-sm">
+            <div class="flex flex-col md:flex-row items-center gap-5">
+                <div class="flex-1 w-full text-center md:text-left">
+                    <h2 class="text-lg font-bold text-[#2D5A27]" data-i18n-fr="📱 Téléphone → Écran principal">📱 Téléphone → Écran principal</h2>
+                    <p class="text-xs text-slate-500 mt-1" data-i18n-fr="Connectez le téléphone du visiteur pour diffuser sa musique ou sa vidéo sur cet écran — QR ou code.">Connectez le téléphone du visiteur pour diffuser sa musique ou sa vidéo sur cet écran — QR ou code.</p>
+                    <button onclick="toggleCastPanel()" id="castBtn" class="mt-3 px-5 py-3 rounded-xl bg-[#2D5A27] text-white font-extrabold text-sm hover:bg-[#23451e] transition" data-i18n-fr="📡 Connecter un téléphone">📡 Connecter un téléphone</button>
+                    <div id="castPanel" class="hidden mt-4 bg-[#F4F6F0] border border-[#2D5A27]/10 rounded-2xl p-4">
+                        <div class="flex flex-col sm:flex-row items-center gap-4">
+                            <div id="castQr" class="bg-white border border-[#2D5A27]/20 rounded-2xl p-3"></div>
+                            <div class="flex-1 w-full text-left">
+                                <p id="castStatus" class="text-xs text-slate-600 mono leading-relaxed">En attente du téléphone…</p>
+                                <p id="castCode" class="text-sm font-extrabold text-[#2D5A27] mono mt-2"></p>
+                                <p class="text-[11px] text-slate-500 mt-2" data-i18n-fr="Sur le téléphone : ouvrez le lien (QR) puis choisissez Musique ou Vidéo.">Sur le téléphone : ouvrez le lien (QR) puis choisissez Musique ou Vidéo.</p>
+                                <button onclick="stopCast(true)" class="mt-3 px-4 py-2 rounded-xl bg-[#9ACD32] text-[#2D3748] font-bold text-xs hover:bg-[#8bb82d] transition" data-i18n-fr="✖ Quitter la diffusion">✖ Quitter la diffusion</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <video id="castVideo" class="hidden fixed inset-0 z-[70] w-screen h-screen object-contain bg-black" playsinline controls></video>
+        <button id="castCloseBtn" onclick="stopCast(true)" class="hidden fixed top-4 right-4 z-[80] bg-black/70 text-white rounded-xl px-4 py-2 text-xs font-extrabold hover:bg-black/90 transition">✖ Fermer l'écran &amp; arrêter</button>
+
         <footer class="text-center text-xs text-slate-400 pb-2">
             © 2026 · Made in Tunisia 🇹🇳 · Logiciel & R&D : PixelSoftware Design — Design cabine &amp; standard acoustique : Atlas Working (développement / idée)
         
@@ -411,6 +435,15 @@
                     </div>
                 </div>
                 <div class="mt-2 bg-[#F4F6F0] p-3 rounded-2xl border border-[#2D5A27]/10">
+                    <div class="flex items-center justify-between gap-2 mb-2">
+                        <span class="text-sm font-bold text-[#2D5A27]">💿 Musique &amp; USB</span>
+                        <button onclick="detectUSB()" class="shrink-0 bg-[#2D5A27] text-white rounded-xl px-3 py-2 text-xs font-extrabold hover:bg-[#23451e] transition">🔎 Détecter</button>
+                    </div>
+                    <p id="mediaStatus" class="text-[11px] text-slate-500 mono mb-2">Aucune source détectée — branchez une clé USB ou choisissez un dossier.</p>
+                    <div id="usbPlaylist" class="space-y-1.5 max-h-44 overflow-y-auto no-scrollbar"></div>
+                    <input id="usbScan" type="file" webkitdirectory multiple accept="audio/*,.mp3,.wav,.ogg,.m4a,.flac,.aac,.opus" class="hidden" onchange="detectUSB(this)">
+                </div>
+                <div class="mt-2 bg-[#F4F6F0] p-3 rounded-2xl border border-[#2D5A27]/10">
                         <div class="flex items-center justify-between mb-2">
                             <span class="text-sm font-bold text-[#2D5A27]">🔊 Volume Haut-Parleur</span>
                             <span class="mono text-base font-extrabold text-[#2D5A27]" id="volPct">60%</span>
@@ -458,80 +491,151 @@
                     <h2 class="text-xs font-bold text-[#9ACD32] uppercase tracking-wider mb-1">Kiosque & Système</h2>
                     <p class="text-xl md:text-2xl font-bold text-[#2D5A27]">⚙️ Réglages</p>
                 </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 overflow-y-auto no-scrollbar pr-1">
-                    <div class="bg-[#F4F6F0] rounded-2xl p-3.5 border border-[#2D5A27]/10">
-                        <p class="text-xs font-extrabold text-[#2D5A27] mb-2">🧠 Matériel</p>
-                        <select id="setHardware" onchange="setHardwareS(this.value)" class="w-full bg-white border border-[#2D5A27]/20 rounded-xl px-2 py-2 text-xs font-bold">
-                            <option value="esp32">ESP32 seul</option>
-                            <option value="esp32+pi">Pi + ESP32 (hub)</option>
-                            <option value="android">Tablette Android</option>
-                        </select>
-                    </div>
-                    <div class="bg-[#F4F6F0] rounded-2xl p-3.5 border border-[#2D5A27]/10">
-                        <p class="text-xs font-extrabold text-[#2D5A27] mb-2">🌍 Mode système</p>
-                        <select id="setMode" onchange="setModeS(this.value)" class="w-full bg-white border border-[#2D5A27]/20 rounded-xl px-2 py-2 text-xs font-bold">
-                            <option value="secure">Sécurisé (PROD)</option>
-                            <option value="beta">Bêta</option>
-                            <option value="dev">Développement</option>
-                        </select>
-                    </div>
-                    <div class="bg-[#F4F6F0] rounded-2xl p-3.5 border border-[#2D5A27]/10">
-                        <p class="text-xs font-extrabold text-[#2D5A27] mb-2">🏷️ ID cabine</p>
-                        <input id="setCabin" onchange="setCabinS(this.value)" class="w-full bg-white border border-[#2D5A27]/20 rounded-xl px-2 py-2 text-xs font-bold mono" placeholder="Cabine N°01">
-                    </div>
-                    <div class="bg-[#F4F6F0] rounded-2xl p-3.5 border border-[#2D5A27]/10">
-                        <p class="text-xs font-extrabold text-[#2D5A27] mb-2">🗣️ Conversation vocale</p>
-                        <button id="setVoiceBtn" onclick="toggleVoiceS()" class="w-full bg-[#2D5A27] text-white rounded-xl px-2 py-2 text-xs font-extrabold">🎤 Activer la voix</button>
-                    </div>
-                    <div class="bg-[#F4F6F0] rounded-2xl p-3.5 border border-[#2D5A27]/10">
-                        <p class="text-xs font-extrabold text-[#2D5A27] mb-2">🌐 Hub backend (Pi)</p>
-                        <input id="setHub" onchange="setHubS(this.value)" class="w-full bg-white border border-[#2D5A27]/20 rounded-xl px-2 py-2 text-xs font-bold mono" placeholder="192.168.1.50:3000">
-                    </div>
-                    <div class="bg-[#F4F6F0] rounded-2xl p-3.5 border border-[#2D5A27]/10">
-                        <p class="text-xs font-extrabold text-[#2D5A27] mb-2">✴️ Serveur Pixel AI</p>
-                        <div class="flex gap-1.5">
-                            <input id="setPixel" onchange="setPixelS(this.value)" class="flex-1 bg-white border border-[#2D5A27]/20 rounded-xl px-2 py-2 text-xs font-bold mono min-w-0" placeholder="http://192.168.1.50:3000">
-                            <button onclick="testPixelS()" class="shrink-0 bg-[#9ACD32] text-[#2D3748] rounded-xl px-2 py-2 text-xs font-extrabold" title="Tester la connexion">Tester</button>
+                <div class="overflow-y-auto no-scrollbar pr-1 space-y-4">
+
+                    <div class="space-y-2">
+                        <p class="text-[10px] font-extrabold uppercase tracking-wider text-[#9ACD32]">🎨 Apparence</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <div class="bg-[#F4F6F0] rounded-2xl p-3.5 border border-[#2D5A27]/10">
+                                <p class="text-xs font-extrabold text-[#2D5A27] mb-2">🌗 Thème</p>
+                                <button id="setThemeBtn" onclick="toggleThemeS()" class="w-full bg-[#2D5A27] text-white rounded-xl px-2 py-2 text-xs font-extrabold">☀️ Clair</button>
+                            </div>
+                            <div class="bg-[#F4F6F0] rounded-2xl p-3.5 border border-[#2D5A27]/10">
+                                <p class="text-xs font-extrabold text-[#2D5A27] mb-2">🎨 Charte graphique</p>
+                                <select id="setCharte" onchange="setCharteS(this.value)" class="w-full bg-white border border-[#2D5A27]/20 rounded-xl px-2 py-2 text-xs font-bold">
+                                    <option value="vert">Vert (défaut)</option>
+                                    <option value="bleu">Bleu Premier</option>
+                                </select>
+                            </div>
+                            <div class="bg-[#F4F6F0] rounded-2xl p-3.5 border border-[#2D5A27]/10">
+                                <p class="text-xs font-extrabold text-[#2D5A27] mb-2">🔆 Luminosité de l'application</p>
+                                <div class="flex items-center gap-2">
+                                    <button onclick="setLumiS(-10)" class="w-9 h-9 shrink-0 bg-white border border-[#2D5A27]/20 rounded-xl font-bold text-[#2D5A27] hover:bg-[#e4e9dc] transition">➖</button>
+                                    <span id="lumiPct" class="flex-1 text-center mono font-extrabold text-[#2D5A27]">100%</span>
+                                    <button onclick="setLumiS(10)" class="w-9 h-9 shrink-0 bg-white border border-[#2D5A27]/20 rounded-xl font-bold text-[#2D5A27] hover:bg-[#e4e9dc] transition">➕</button>
+                                </div>
+                            </div>
                         </div>
-                        <p id="setPixelState" class="text-[10px] text-slate-500 mono mt-1.5">Aucun test effectué pour le moment.</p>
                     </div>
-                    <div class="bg-[#F4F6F0] rounded-2xl p-3.5 border border-[#2D5A27]/10">
-                        <p class="text-xs font-extrabold text-[#2D5A27] mb-2">🌐 Langue de l'interface</p>
-                        <select id="setLangUI" onchange="setLangUS(this.value)" class="w-full bg-white border border-[#2D5A27]/20 rounded-xl px-2 py-2 text-xs font-bold">
-                            <option value="auto">Français (défaut)</option>
-                            <option value="fr">Français</option>
-                            <option value="en">English</option>
-                            <option value="ar">العربية</option>
-                            <option value="tr">Türkçe</option>
-                            <option value="it">Italiano</option>
-                            <option value="de">Deutsch</option>
-                            <option value="ru">Русский</option>
-                            <option value="zh">中文</option>
-                            <option value="ja">日本語</option>
-                            <option value="ko">한국어</option>
-                        </select>
+
+                    <div class="space-y-2">
+                        <p class="text-[10px] font-extrabold uppercase tracking-wider text-[#9ACD32]">🌐 Langue</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div class="bg-[#F4F6F0] rounded-2xl p-3.5 border border-[#2D5A27]/10">
+                                <p class="text-xs font-extrabold text-[#2D5A27] mb-2">💬 Langue de l'interface</p>
+                                <select id="setLangUI" onchange="setLangUS(this.value)" class="w-full bg-white border border-[#2D5A27]/20 rounded-xl px-2 py-2 text-xs font-bold">
+                                    <option value="auto">Français (défaut)</option>
+                                    <option value="fr">Français</option>
+                                    <option value="en">English</option>
+                                    <option value="ar">العربية</option>
+                                    <option value="tr">Türkçe</option>
+                                    <option value="it">Italiano</option>
+                                    <option value="de">Deutsch</option>
+                                    <option value="ru">Русский</option>
+                                    <option value="zh">中文</option>
+                                    <option value="ja">日本語</option>
+                                    <option value="ko">한국어</option>
+                                </select>
+                            </div>
+                            <div class="bg-[#F4F6F0] rounded-2xl p-3.5 border border-[#2D5A27]/10">
+                                <p class="text-xs font-extrabold text-[#2D5A27] mb-2">⌨️ Clavier système (saisie)</p>
+                                <select id="setKbd" onchange="setKbdS(this.value)" class="w-full bg-white border border-[#2D5A27]/20 rounded-xl px-2 py-2 text-xs font-bold">
+                                    <option value="auto">Suivre la langue de l'interface</option>
+                                    <option value="fr">Français</option>
+                                    <option value="en">English</option>
+                                    <option value="ar">العربية</option>
+                                    <option value="tr">Türkçe</option>
+                                    <option value="it">Italiano</option>
+                                    <option value="de">Deutsch</option>
+                                    <option value="ru">Русский</option>
+                                    <option value="zh">中文 (Pinyin)</option>
+                                    <option value="ja">日本語</option>
+                                    <option value="ko">한국어</option>
+                                </select>
+                                <p id="setKbdHint" class="text-[10px] text-slate-500 mono mt-1.5">Sur le dispositif : Réglages → Langue et saisie → Langues du clavier = langue choisie.</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="bg-[#F4F6F0] rounded-2xl p-3.5 border border-[#2D5A27]/10">
-                        <p class="text-xs font-extrabold text-[#2D5A27] mb-2">⌨️ Clavier système (saisie)</p>
-                        <select id="setKbd" onchange="setKbdS(this.value)" class="w-full bg-white border border-[#2D5A27]/20 rounded-xl px-2 py-2 text-xs font-bold">
-                            <option value="auto">Suivre la langue de l'interface</option>
-                            <option value="fr">Français</option>
-                            <option value="en">English</option>
-                            <option value="ar">العربية</option>
-                            <option value="tr">Türkçe</option>
-                            <option value="it">Italiano</option>
-                            <option value="de">Deutsch</option>
-                            <option value="ru">Русский</option>
-                            <option value="zh">中文 (Pinyin)</option>
-                            <option value="ja">日本語</option>
-                            <option value="ko">한국어</option>
-                        </select>
-                        <p id="setKbdHint" class="text-[10px] text-slate-500 mono mt-1.5">Sur le dispositif : Réglages → Langue et saisie → Langues du clavier = langue choisie.</p>
+
+                    <div class="space-y-2">
+                        <p class="text-[10px] font-extrabold uppercase tracking-wider text-[#9ACD32]">🤖 Pixel AI</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div class="bg-[#F4F6F0] rounded-2xl p-3.5 border border-[#2D5A27]/10">
+                                <p class="text-xs font-extrabold text-[#2D5A27] mb-2">✴️ Serveur Pixel AI</p>
+                                <div class="flex gap-1.5">
+                                    <input id="setPixel" onchange="setPixelS(this.value)" class="flex-1 bg-white border border-[#2D5A27]/20 rounded-xl px-2 py-2 text-xs font-bold mono min-w-0" placeholder="http://192.168.1.50:3000">
+                                    <button onclick="testPixelS()" class="shrink-0 bg-[#9ACD32] text-[#2D3748] rounded-xl px-2 py-2 text-xs font-extrabold" title="Tester la connexion">Tester</button>
+                                </div>
+                                <p id="setPixelState" class="text-[10px] text-slate-500 mono mt-1.5">Aucun test effectué pour le moment.</p>
+                            </div>
+                            <div class="bg-[#F4F6F0] rounded-2xl p-3.5 border border-[#2D5A27]/10">
+                                <p class="text-xs font-extrabold text-[#2D5A27] mb-2">🗣️ Conversation vocale</p>
+                                <button id="setVoiceBtn" onclick="toggleVoiceS()" class="w-full bg-[#2D5A27] text-white rounded-xl px-2 py-2 text-xs font-extrabold">🎤 Activer la voix</button>
+                            </div>
+                        </div>
                     </div>
-                    <div class="bg-[#F4F6F0] rounded-2xl p-3.5 border border-[#2D5A27]/10">
-                        <p class="text-xs font-extrabold text-[#2D5A27] mb-2">🖥️ Clavier visuel</p>
-                        <button id="setOskBtn" onclick="toggleOskFloatS()" class="w-full bg-[#2D5A27] text-white rounded-xl px-2 py-2 text-xs font-extrabold">Clavier flottant : NON</button>
-                        <p class="text-[10px] text-slate-500 mono mt-1.5">Flottant : panneau déplaçable. Sinon : barre ancrée en bas.</p>
+
+                    <div class="space-y-2">
+                        <p class="text-[10px] font-extrabold uppercase tracking-wider text-[#9ACD32]">📡 Connectivité</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div class="bg-[#F4F6F0] rounded-2xl p-3.5 border border-[#2D5A27]/10">
+                                <p class="text-xs font-extrabold text-[#2D5A27] mb-2">🌐 Hub backend (Pi)</p>
+                                <input id="setHub" onchange="setHubS(this.value)" class="w-full bg-white border border-[#2D5A27]/20 rounded-xl px-2 py-2 text-xs font-bold mono" placeholder="192.168.1.50:3000">
+                            </div>
+                            <div class="bg-[#F4F6F0] rounded-2xl p-3.5 border border-[#2D5A27]/10">
+                                <p class="text-xs font-extrabold text-[#2D5A27] mb-2">🏷️ ID cabine</p>
+                                <input id="setCabin" onchange="setCabinS(this.value)" class="w-full bg-white border border-[#2D5A27]/20 rounded-xl px-2 py-2 text-xs font-bold mono" placeholder="Cabine N°01">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <p class="text-[10px] font-extrabold uppercase tracking-wider text-[#9ACD32]">🖥️ Système</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div class="bg-[#F4F6F0] rounded-2xl p-3.5 border border-[#2D5A27]/10">
+                                <p class="text-xs font-extrabold text-[#2D5A27] mb-2">🧠 Matériel</p>
+                                <select id="setHardware" onchange="setHardwareS(this.value)" class="w-full bg-white border border-[#2D5A27]/20 rounded-xl px-2 py-2 text-xs font-bold">
+                                    <option value="esp32">ESP32 seul</option>
+                                    <option value="esp32+pi">Pi + ESP32 (hub)</option>
+                                    <option value="android">Tablette Android</option>
+                                </select>
+                            </div>
+                            <div class="bg-[#F4F6F0] rounded-2xl p-3.5 border border-[#2D5A27]/10">
+                                <p class="text-xs font-extrabold text-[#2D5A27] mb-2">🌍 Mode système</p>
+                                <select id="setMode" onchange="setModeS(this.value)" class="w-full bg-white border border-[#2D5A27]/20 rounded-xl px-2 py-2 text-xs font-bold">
+                                    <option value="secure">Sécurisé (PROD)</option>
+                                    <option value="beta">Bêta</option>
+                                    <option value="dev">Développement</option>
+                                </select>
+                            </div>
+                            <div class="bg-[#F4F6F0] rounded-2xl p-3.5 border border-[#2D5A27]/10">
+                                <p class="text-xs font-extrabold text-[#2D5A27] mb-2">🖥️ Clavier visuel</p>
+                                <button id="setOskBtn" onclick="toggleOskFloatS()" class="w-full bg-[#2D5A27] text-white rounded-xl px-2 py-2 text-xs font-extrabold">Clavier flottant : NON</button>
+                                <p class="text-[10px] text-slate-500 mono mt-1.5">Flottant : panneau déplaçable. Sinon : barre ancrée en bas.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <p class="text-[10px] font-extrabold uppercase tracking-wider text-[#9ACD32]">🔌 IoT — Capteurs & Actionneurs</p>
+                        <div class="bg-[#F4F6F0] rounded-2xl p-3.5 border border-[#2D5A27]/10">
+                            <div id="iotStatus" class="text-xs text-[#2D3748] font-bold space-y-1.5"></div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <p class="text-[10px] font-extrabold uppercase tracking-wider text-[#9ACD32]">🗓️ Date & Heure</p>
+                        <div class="bg-[#F4F6F0] rounded-2xl p-3.5 border border-[#2D5A27]/10">
+                            <p id="setClock" class="mono text-lg font-extrabold text-[#2D5A27]">--:--:--</p>
+                            <p class="text-[10px] text-slate-500 mono mt-1">Fuseau : heure locale du dispositif.</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <p class="text-[10px] font-extrabold uppercase tracking-wider text-[#9ACD32]">🛟 Assistance Atlas</p>
+                        <div class="bg-[#F4F6F0] rounded-2xl p-3.5 border border-[#2D5A27]/10">
+                            <p class="text-xs text-slate-600 leading-relaxed">📞 Centre technique Atlas Working (S.A.V.) notifié automatiquement. En cas d'urgence immédiate, utilisez le bouton 🚨 ou demandez « urgence » à PixelAssistante.</p>
+                        </div>
                     </div>
                 </div>
                 <div class="flex gap-2 justify-end mt-3">
@@ -959,6 +1063,95 @@
         function getCabinId() {
             try { return localStorage.getItem('atlasCabinId') || 'Cabine N°01'; } catch (e) { return 'Cabine N°01'; }
         }
+
+        // ============ DIFFUSION TÉLÉPHONE → ÉCRAN (via hub /cast) ============
+        let castRoom = null, castTimer = null, castPlaying = false;
+        function castHubUrl() {
+            const s = (localStorage.getItem('atlasPixelServer') || '').trim().replace(/\/+$/, '');
+            if (s) return s;
+            try {
+                const host = String(location.hostname || '');
+                const priv = /^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.|127\.|localhost$)/.test(host) || host.endsWith('.local');
+                if (priv && location.origin && /^https?:/.test(location.origin)) return location.origin;
+            } catch (e) {}
+            return '';
+        }
+        function castRemoteUrl(room) {
+            const hub = castHubUrl();
+            const base = 'https://atlascabine.pages.dev/remote.html';
+            return base + '?room=' + encodeURIComponent(room) + (hub ? '&hub=' + encodeURIComponent(hub) : '');
+        }
+        function castQrBox() { return document.getElementById('castQr'); }
+        window.toggleCastPanel = function () {
+            if (castRoom || castPlaying) return window.stopCast(true);
+            window.startCast();
+        };
+        window.startCast = function () {
+            const hub = castHubUrl(); const st = document.getElementById('castStatus');
+            if (!hub) {
+                if (st) st.textContent = '⚠️ Hub non configuré — renseignez « Serveur Pixel AI » dans Réglages.';
+                return;
+            }
+            fetch(hub + '/api/cast/room', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ cabin: getCabinId() }) })
+                .then(function (r) { return r.json(); })
+                .then(function (j) {
+                    if (!j || j.status !== 'success' || !j.room) throw new Error('room-fail');
+                    castRoom = j.room;
+                    document.getElementById('castBtn').textContent = '📡 Session ' + castRoom + ' active';
+                    document.getElementById('castPanel').classList.remove('hidden');
+                    const cd = document.getElementById('castCode'); if (cd) cd.textContent = 'Code : ' + castRoom;
+                    const qr = castQrBox();
+                    if (qr) { qr.innerHTML = ''; try { new QRCode(qr, { text: castRemoteUrl(castRoom), width: 170, height: 170, colorDark: '#2D5A27', colorLight: '#F4F6F0', correctLevel: QRCode.CorrectLevel.M }); } catch (e) {} }
+                    if (st) st.textContent = 'En attente du téléphone… (scannez le QR ou ouvrez le lien)';
+                    clearInterval(castTimer);
+                    castTimer = setInterval(window.pollCast, 2500);
+                })
+                .catch(function () {
+                    if (st) st.textContent = '⚠️ Hub injoignable — vérifiez « Serveur Pixel AI » (IP du Pi) dans Réglages.';
+                });
+        };
+        window.pollCast = function () {
+            if (!castRoom) return;
+            const hub = castHubUrl();
+            fetch(hub + '/api/cast/' + castRoom).then(function (r) { return r.json(); }).then(function (j) {
+                if (j && j.ready && j.url) {
+                    clearInterval(castTimer); castTimer = null;
+                    window.playCast(hub + j.url, j);
+                }
+            }).catch(function () {});
+        };
+        window.playCast = function (url, j) {
+            castPlaying = true;
+            const isVideo = j && /video/.test(j.type || '');
+            const c = document.getElementById('currentTrack');
+            function safePlay(player) { try { const p = player.play(); if (p && p.catch) p.catch(function () {}); } catch (e) {} }
+            if (!isVideo) {
+                if (usbAudio) { try { usbAudio.pause(); } catch (e) {} usbAudio.src = url; try { usbAudio.volume = (volumeLevel || 60) / 100; } catch (e) {} safePlay(usbAudio); }
+                if (c) c.textContent = (j && j.name) || 'Diffusion téléphone';
+                return;
+            }
+            const v = document.getElementById('castVideo');
+            if (!v) return;
+            v.src = url; v.classList.remove('hidden'); v.controls = true;
+            document.getElementById('castCloseBtn').classList.remove('hidden');
+            safePlay(v);
+            v.onended = v.onerror = function () { if (!v.src) return; };
+            if (c) c.textContent = '▶ ' + ((j && j.name) || 'Vidéo téléphone');
+        };
+        window.stopCast = function (full) {
+            clearInterval(castTimer); castTimer = null;
+            const v = document.getElementById('castVideo');
+            if (v) { try { v.pause(); } catch (e) {} v.removeAttribute('src'); v.classList.add('hidden'); v.controls = false; }
+            document.getElementById('castCloseBtn').classList.add('hidden');
+            if (usbAudio) { try { usbAudio.pause(); } catch (e) {} }
+            const hub = castHubUrl();
+            if (castRoom && hub) { try { fetch(hub + '/api/cast/' + castRoom, { method: 'DELETE' }).catch(function () {}); } catch (e) {} }
+            castRoom = null; castPlaying = false;
+            const b = document.getElementById('castBtn'); if (b) b.textContent = '📡 Connecter un téléphone';
+            const p = document.getElementById('castPanel'); if (p) p.classList.add('hidden');
+            const qr = castQrBox(); if (qr) qr.innerHTML = '';
+            if (document.getElementById('tab-audio')) { const t = document.getElementById('currentTrack'); }
+        };
                 function validAccess(text) {
             const m = String(text || '').match(/access=([A-Za-z0-9]+)/);
             const code = m ? m[1].toUpperCase() : null;
@@ -1137,6 +1330,55 @@
             document.getElementById('currentTrack').innerText = trackName;
             alert("Lecture : " + trackName);
         }
+
+        // ============ DÉTECTION MUSIQUE / USB ============
+        const USB_EXTS = /\.(mp3|wav|ogg|m4a|flac|aac|opus|webm)$/i;
+        let usbAudio = null; try { usbAudio = new Audio(); usbAudio.volume = (volumeLevel || 60) / 100; usbAudio.preload = 'auto'; } catch (e) {}
+        let usbTracks = [];
+        function usbUrl(f) { try { return URL.createObjectURL(f); } catch (e) { return null; } }
+        async function scanDirHandle(dir) {
+            try {
+                for await (const entry of dir.values()) {
+                    if (entry.kind === 'file' && USB_EXTS.test(entry.name)) {
+                        try { const f = await entry.getFile(); const u = usbUrl(f); if (u) usbTracks.push({ name: entry.name, url: u, source: dir.name || 'USB' }); } catch (e) {}
+                    } else if (entry.kind === 'directory') { await scanDirHandle(entry); }
+                }
+            } catch (e) {}
+        }
+        function renderUSB(statusText) {
+            const st = document.getElementById('mediaStatus'); if (st) st.textContent = statusText || ('🎵 ' + usbTracks.length + ' piste(s)');
+            const box = document.getElementById('usbPlaylist'); if (!box) return;
+            if (!usbTracks.length) { box.innerHTML = ''; return; }
+            box.innerHTML = usbTracks.map((t, i) =>
+                '<div onclick="playUSB(' + i + ')" class="flex items-center justify-between gap-2 p-2 rounded-xl bg-white border border-[#2D5A27]/15 cursor-pointer hover:bg-[#e4e9dc] transition">' +
+                '<span class="text-xs font-bold text-[#2D3748] truncate">🎵 ' + t.name.replace(/\.(mp3|wav|ogg|m4a|flac|aac|opus|webm)$/i, '') + '</span>' +
+                '<span class="shrink-0 text-[11px] text-[#2D5A27] font-bold">▶</span></div>').join('');
+        }
+        window.detectUSB = function (input) {
+            if (input && input.files && input.files.length) {
+                usbTracks = [];
+                [].forEach.call(input.files, function (f) { if (USB_EXTS.test(f.name)) { const u = usbUrl(f); if (u) usbTracks.push({ name: f.name, url: u, source: f.webkitRelativePath ? f.webkitRelativePath.split('/')[0] : 'USB' }); } });
+                return renderUSB('📁 ' + usbTracks.length + ' piste(s) détectée(s)');
+            }
+            const W = window;
+            if (typeof W.showDirectoryPicker === 'function') {
+                W.showDirectoryPicker({ mode: 'read' }).then(function (dir) {
+                    usbTracks = [];
+                    scanDirHandle(dir).then(function () {
+                        renderUSB('💿 Source détectée : « ' + (dir.name || 'USB') + ' » — ' + usbTracks.length + ' piste(s)');
+                    });
+                }).catch(function (err) { if (!err || err.name !== 'AbortError') { const i = document.getElementById('usbScan'); if (i) i.click(); } });
+            } else { const i = document.getElementById('usbScan'); if (i) i.click(); }
+        };
+        window.playUSB = function (i) {
+            const t = usbTracks[i]; if (!t) return;
+            if (usbAudio) {
+                try { usbAudio.pause(); } catch (e) {}
+                usbAudio.src = t.url;
+                try { usbAudio.volume = (volumeLevel || 60) / 100; const p = usbAudio.play(); if (p && p.catch) p.catch(function () {}); } catch (e) {}
+            }
+            const c = document.getElementById('currentTrack'); if (c) c.textContent = t.name;
+        };
 
         // ============ APPEL DES SECOURS (Tunisie) ============
         const EMERGENCY_SERVICES = {
@@ -2395,7 +2637,56 @@ if (saveLead()) return { text: rep(lang, '✅ Prospect enregistré, ' + who + ' 
     var $=function(id){return document.getElementById(id)};
     function get(k,d){ try{ var v=localStorage.getItem(k); return v===null?d:v; }catch(e){ return d; } }
     function set(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+    var clockT=null;
+    function lumiVal(){ var v=parseInt(get('atlasLumi','100'),10); if(isNaN(v)) v=100; if(v<50) v=50; if(v>150) v=150; return v; }
+    function applyTheme(){
+        try{
+            var t=get('atlasTheme','light');
+            if(t==='dark') document.documentElement.classList.add('atlas-dark'); else document.documentElement.classList.remove('atlas-dark');
+            var b=$('setThemeBtn'); if(b) b.textContent=(t==='dark')?'🌙 Sombre':'☀️ Clair';
+        }catch(e){}
+    }
+    function applyCharte(){
+        try{
+            var c=get('atlasCharte','vert');
+            if(c==='bleu') document.documentElement.classList.add('atlas-blue'); else document.documentElement.classList.remove('atlas-blue');
+            var s=$('setCharte'); if(s) s.value=c;
+        }catch(e){}
+    }
+    function applyLumi(){
+        try{
+            var v=lumiVal();
+            var veil=document.getElementById('lumiVeil');
+            if(veil){
+                var o=(v<100)?(100-v)/100*0.92:(v>100)?(v-100)/100*0.9:0;
+                veil.style.background=(v<100)?'#000':'#fff';
+                veil.style.opacity=String(o);
+            }
+            var lp=$('lumiPct'); if(lp) lp.textContent=v+'%';
+        }catch(e){}
+    }
+    function updateClock(){
+        var c=$('setClock'); if(!c) return;
+        try{
+            var d=new Date(), pad=function(n){ return ('0'+n).slice(-2); };
+            c.textContent=d.toLocaleDateString('fr-FR')+' • '+pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds());
+        }catch(e){ c.textContent=new Date().toString(); }
+    }
+    function fillIot(){
+        var box=$('iotStatus'); if(!box) return;
+        try{
+            var t=Math.round(20+Math.random()*6);
+            var fan=((typeof volumeLevel!=='undefined'&&volumeLevel>0)?'Ventilation : Active':'Ventilation : Arrêtée');
+            box.innerHTML='🌡️ Température : <b>'+t+'°C</b> · 🌀 '+fan+'<br>🔦 LED : <b>Mode focus</b> · 👤 Présence : <b>RAS</b>';
+        }catch(e){}
+    }
     function render(){
+        applyTheme();
+        applyCharte();
+        applyLumi();
+        if(!clockT){ clockT=setInterval(updateClock,1000); }
+        updateClock();
+        fillIot();
         var hw=$('setHardware'); if(hw) hw.value=get('atlasHardware','esp32+pi');
         var md=$('setMode'); if(md) md.value=get('atlasMode','secure');
         var cb=$('setCabin'); if(cb) cb.value=get('atlasCabinId','');
@@ -2425,6 +2716,9 @@ if (saveLead()) return { text: rep(lang, '✅ Prospect enregistré, ' + who + ' 
             v.className='w-full rounded-xl px-2 py-2 text-xs font-extrabold text-white bg-'+(on?'rose-500':'[#2D5A27]');
         }
     }
+    window.toggleThemeS=function(){ var cur=get('atlasTheme','light'); set('atlasTheme',cur==='dark'?'light':'dark'); applyTheme(); };
+    window.setCharteS=function(v){ set('atlasCharte',v); applyCharte(); };
+    window.setLumiS=function(d){ var v=lumiVal()+(d||0); if(v<50) v=50; if(v>150) v=150; set('atlasLumi',String(v)); applyLumi(); };
     window.setHardwareS=function(v){ set('atlasHardware',v); try{ if(window.setHardware) setHardware(v); }catch(e){} };
     window.setModeS=function(m){ set('atlasMode',m); try{ if(window.applyModeUI) applyModeUI(); }catch(e){} };
     window.setCabinS=function(v){ set('atlasCabinId',String(v||'').trim()); try{ if(window.kioskLabel) kioskLabel('Libre'); }catch(e){} };
@@ -2485,10 +2779,20 @@ if (saveLead()) return { text: rep(lang, '✅ Prospect enregistré, ' + who + ' 
     };
     window.resetSettingsS=function(){
         if(!confirm('Réinitialiser les réglages du kiosque ?')) return;
-        ['atlasHardware','atlasMode','atlasCabinId','atlasHub','atlasPixelServer','atlasVoice','atlasKioskLang','atlasAssistantLang','atlasKbdLang','atlasOskFloat','atlasOskXY'].forEach(function(k){ try{ localStorage.removeItem(k); }catch(e){} });
+        ['atlasHardware','atlasMode','atlasCabinId','atlasHub','atlasPixelServer','atlasVoice','atlasKioskLang','atlasAssistantLang','atlasKbdLang','atlasOskFloat','atlasOskXY','atlasTheme','atlasCharte','atlasLumi'].forEach(function(k){ try{ localStorage.removeItem(k); }catch(e){} });
         try{ if(window.paStopVoice) paStopVoice(); }catch(e){}
+        applyTheme(); applyCharte(); applyLumi();
         render();
     };
+    window.addEventListener('storage',function(e){
+        try{
+            if(e.key==='atlasTheme') applyTheme();
+            else if(e.key==='atlasCharte') applyCharte();
+            else if(e.key==='atlasLumi'){ applyLumi(); }
+            else if(e.key==='atlasKioskLang'){ set('atlasAssistantLang', get('atlasKioskLang','auto')); }
+        }catch(err){}
+    });
+    window.addEventListener('beforeunload',function(){ if(clockT) clearInterval(clockT); });
     render();
     return { render: render };
 })();</script>
@@ -2533,6 +2837,28 @@ if (saveLead()) return { text: rep(lang, '✅ Prospect enregistré, ' + who + ' 
         'Ambiance relaxante': { en: 'Relaxing ambiance', ar: 'أجواء مريحة', tr: 'Rahatlatıcı atmosfer', darja: 'Ambiance relaxante', it: 'Atmosfera rilassante' },
         'Sélectionner': { en: 'Select', ar: 'اختر', tr: 'Seç', darja: 'Sélectionner', it: 'Seleziona' },
         'Sons binauraux focus': { en: 'Binaural focus sounds', ar: 'أصوات ثنائية للتركيز', tr: 'Binaural odak sesleri', darja: 'Sons binauraux focus', it: 'Suoni binaurali focus' },
+        '💿 Musique & USB': { en: '💿 Music & USB', ar: '💿 الموسيقى و USB', tr: '💿 Müzik ve USB', darja: '💿 Musique w USB', it: '💿 Musica e USB' },
+        '🔎 Détecter': { en: '🔎 Detect', ar: '🔎 كشف', tr: '🔎 Algıla', darja: '🔎 Detecti', it: '🔎 Rileva' },
+        'Aucune source détectée — branchez une clé USB ou choisissez un dossier.': { en: 'No source detected — plug in a USB key or pick a folder.', ar: 'لم يتم اكتشاف أي مصدر — اربط مفتاح USB أو اختر مجلدًا.', tr: 'Kaynak algılanmadı — bir USB takın veya klasör seçin.', darja: 'Machi mselecta source — connecti clé USB wala dossier.', it: 'Nessuna fonte rilevata — collega una chiavetta USB o scegli una cartella.' },
+        '📱 Téléphone → Écran principal': { en: '📱 Phone → Main Screen', ar: '📱 الهاتف → الشاشة الرئيسية', tr: '📱 Telefon → Ana Ekran', darja: '📱 Téléphone → Écran principal', it: '📱 Telefono → Schermo Principale' },
+        'Connectez le téléphone du visiteur pour diffuser sa musique ou sa vidéo sur cet écran — QR ou code.': { en: 'Connect the visitor\'s phone to stream their music or video on this screen — QR or code.', ar: 'اربط هاتف الزائر لعرض موسيقاه أو فيديوه على هذه الشاشة — رمز QR أو رقم.', tr: 'Ziyaretçinin telefonunu bağlayarak müziğini veya videosunu bu ekranda yayınlayın — QR veya kod.', darja: 'Connecti téléphone mta3 visiteur bach tdiffuser musique wala vidéo 3al écran hedha — QR wala code.', it: 'Collega il telefono del visitatore per diffondere musica o video su questo schermo — QR o codice.' },
+        '📡 Connecter un téléphone': { en: '📡 Connect a phone', ar: '📡 اربط هاتفًا', tr: '📡 Telefon Bağla', darja: '📡 Connecti téléphone', it: '📡 Collega un telefono' },
+        'Sur le téléphone : ouvrez le lien (QR) puis choisissez Musique ou Vidéo.': { en: 'On the phone: open the link (QR) then pick Music or Video.', ar: 'على الهاتف: افتح الرابط (QR) ثم اختر موسيقى أو فيديو.', tr: 'Telefonda: bağlantıyı (QR) açın, ardından Müzik veya Video seçin.', darja: '3al téléphone : ouvri lien (QR) w ba3d ékhseur Musique walla Vidéo.', it: 'Sul telefono: apri il link (QR) poi scegli Musica o Video.' },
+        '✖ Quitter la diffusion': { en: '✖ End the stream', ar: '✖ إيقاف البث', tr: '✖ Yayını Bitir', darja: '✖ Bekkes diffusion', it: '✖ Termina la diffusione' },
+        '🎨 Apparence': { en: 'Appearance', ar: 'المظهر', tr: 'Görünüm', darja: 'Apparence', it: 'Aspetto' },
+        '🌐 Langue': { en: 'Language', ar: 'اللغة', tr: 'Dil', darja: 'Langue', it: 'Lingua' },
+        '🤖 Pixel AI': { en: 'Pixel AI', ar: 'بكسل AI', tr: 'Pixel AI', darja: 'Pixel AI', it: 'Pixel AI' },
+        '📡 Connectivité': { en: 'Connectivity', ar: 'الاتصال', tr: 'Bağlantı', darja: 'Connectivité', it: 'Connettività' },
+        '🖥️ Système': { en: 'System', ar: 'النظام', tr: 'Sistem', darja: 'Système', it: 'Sistema' },
+        '🔌 IoT — Capteurs & Actionneurs': { en: 'IoT — Sensors & Actuators', ar: 'إنترنت الأشياء — الحساسات والمحركات', tr: 'IoT — Sensörler ve Aktüatörler', darja: 'IoT — Capteurs w Actionneurs', it: 'IoT — Sensori & Attuatori' },
+        '🗓️ Date & Heure': { en: 'Date & Time', ar: 'التاريخ والوقت', tr: 'Tarih & Saat', darja: 'Date w Sa3a', it: 'Data & Ora' },
+        '🛟 Assistance Atlas': { en: 'Atlas Assistance', ar: 'مساعدة أطلس', tr: 'Atlas Destek', darja: 'Assistance Atlas', it: 'Assistenza Atlas' },
+        '🌗 Thème': { en: 'Theme', ar: 'المظهر', tr: 'Tema', darja: 'Thème', it: 'Tema' },
+        '🎨 Charte graphique': { en: 'Color chart', ar: 'المخطط اللوني', tr: 'Renk şeması', darja: 'Charte graphique', it: 'Palette grafica' },
+        '🔆 Luminosité de l\'application': { en: 'App brightness', ar: 'سطوع التطبيق', tr: 'Uygulama parlaklığı', darja: 'Luminosité ta3 app', it: 'Luminosità dell\'app' },
+        '💬 Langue de l\'interface': { en: 'Interface language', ar: 'لغة الواجهة', tr: 'Arayüz dili', darja: 'Langue ta3 interface', it: 'Lingua dell\'interfaccia' },
+        'Fuseau : heure locale du dispositif.': { en: 'Timezone: device local time.', ar: 'المنطقة الزمنية: الوقت المحلي للجهاز.', tr: 'Saat dilimi: cihazın yerel saati.', darja: 'Fuseau : heure locale mta3 dispositif.', it: 'Fuso orario: ora locale del dispositivo.' },
+        '📞 Centre technique Atlas Working (S.A.V.) notifié automatiquement. En cas d\'urgence immédiate, utilisez le bouton 🚨 ou demandez « urgence » à PixelAssistante.': { en: 'Atlas Working technical center (After-Sales) is notified automatically. In an immediate emergency, use the 🚨 button or ask “emergency” to PixelAssistant.', ar: 'يتم إشعار المركز الفني أطلس ووركنغ تلقائيًا. في حالة الطوارئ الفورية استخدم زر 🚨 أو اطلب «طوارئ» من PixelAssistante.', tr: 'Atlas Working teknik merkezi otomatik bilgilendirilir. Acil durumda 🚨 düğmesini kullanın veya PixelAssistante‘a «acil» deyin.', darja: 'Centre technique Atlas Working y entier notification automatique. Ila kanet urgence ist3mel bouton 🚨 walla 9el « urgence » l PixelAssistante.', it: 'Il centro tecnico Atlas Working (S.A.V.) è notificato automaticamente. In caso di emergenza imminente, usa il pulsante 🚨 o chiedi “urgenza” a PixelAssistante.' },
         '🔊 Volume Haut-Parleur': { en: '🔊 Speaker Volume', ar: '🔊 مستوى الصوت', tr: '🔊 Hoparlör Sesi', darja: '🔊 Volume Haut-Parleur', it: '🔊 Volume Altoparlante' },
         '● Bluetooth Prêt': { en: '● Bluetooth Ready', ar: '● البلوتوث جاهز', tr: '● Bluetooth Hazır', darja: '● Bluetooth Prêt', it: '● Bluetooth Pronto' },
         'IA privée · PixelTranslate': { en: 'Private AI · PixelTranslate', ar: 'ذكاء خاص · PixelTranslate', tr: 'Özel YZ · PixelTranslate', darja: 'IA privée · PixelTranslate', it: 'IA privata · PixelTranslate' },
@@ -2684,7 +3010,29 @@ if (saveLead()) return { text: rep(lang, '✅ Prospect enregistré, ' + who + ' 
         'Commande vocale': { de: 'Sprachbefehl', ru: 'Голосовая команда', zh: '语音命令', ja: '音声コマンド', ko: '음성 명령' },
         'Tester la connexion': { de: 'Verbindung testen', ru: 'Проверить соединение', zh: '测试连接', ja: '接続をテスト', ko: '연결 테스트' },
         'Diminuer le volume': { de: 'Lautstärke verringern', ru: 'Уменьшить громкость', zh: '调低音量', ja: '音量を下げる', ko: '볼륨 낮추기' },
-        'Augmenter le volume': { de: 'Lautstärke erhöhen', ru: 'Увеличить громкость', zh: '调高音量', ja: '音量を上げる', ko: '볼륨 높이기' }
+        'Augmenter le volume': { de: 'Lautstärke erhöhen', ru: 'Увеличить громкость', zh: '调高音量', ja: '音量を上げる', ko: '볼륨 높이기' },
+        '💿 Musique & USB': { de: '💿 Musik & USB', ru: '💿 Музыка и USB', zh: '💿 音乐与 USB', ja: '💿 音楽とUSB', ko: '💿 음악 및 USB' },
+        '🔎 Détecter': { de: '🔎 Erkennen', ru: '🔎 Определить', zh: '🔎 检测', ja: '🔎 検出', ko: '🔎 감지' },
+        'Aucune source détectée — branchez une clé USB ou choisissez un dossier.': { de: 'Keine Quelle erkannt — USB-Stick anschließen oder Ordner wählen.', ru: 'Источник не обнаружен — подключите USB-накопитель или выберите папку.', zh: '未检测到来源 — 插入 U 盘或选择文件夹。', ja: 'ソースを検出できません — USB を差し込むかフォルダを選択してください。', ko: '소스를 감지하지 못했습니다 — USB를 연결하거나 폴더를 선택하세요.' },
+        '📱 Téléphone → Écran principal': { de: '📱 Telefon → Hauptbildschirm', ru: '📱 Телефон → Главный экран', zh: '📱 手机 → 主屏幕', ja: '📱 スマホ → メイン画面', ko: '📱 휴대폰 → 메인 화면' },
+        'Connectez le téléphone du visiteur pour diffuser sa musique ou sa vidéo sur cet écran — QR ou code.': { de: 'Verbinden Sie das Telefon des Gastes, um Musik oder Video auf diesem Bildschirm zu streamen — QR oder Code.', ru: 'Подключите телефон посетителя, чтобы транслировать музыку или видео на этот экран — QR или код.', zh: '连接访客的手机，将音乐或视频投放到此屏幕 — 二维码或代码。', ja: '訪問者のスマホを接続し、この画面で音楽や動画を再生 — QR またはコード。', ko: '방문자의 휴대폰을 연결해 이 화면에서 음악이나 동영상을 재생하세요 — QR 또는 코드.' },
+        '📡 Connecter un téléphone': { de: '📡 Telefon verbinden', ru: '📡 Подключить телефон', zh: '📡 连接手机', ja: '📡 スマホを接続', ko: '📡 휴대폰 연결' },
+        'Sur le téléphone : ouvrez le lien (QR) puis choisissez Musique ou Vidéo.': { de: 'Auf dem Telefon: Link (QR) öffnen, dann Musik oder Video wählen.', ru: 'На телефоне: откройте ссылку (QR), затем выберите музыку или видео.', zh: '在手机上：打开链接（二维码），然后选择音乐或视频。', ja: 'スマホで：リンク（QR）を開き、音楽または動画を選択。', ko: '휴대폰에서: 링크(QR)를 열고 음악 또는 동영상을 선택하세요.' },
+        '✖ Quitter la diffusion': { de: '✖ Streaming beenden', ru: '✖ Завершить трансляцию', zh: '✖ 结束投放', ja: '✖ 配信を終了', ko: '✖ 방송 종료' },
+        '🎨 Apparence': { de: 'Erscheinungsbild', ru: 'Внешний вид', zh: '外观', ja: '外観', ko: '모양' },
+        '🌐 Langue': { de: 'Sprache', ru: 'Язык', zh: '语言', ja: '言語', ko: '언어' },
+        '🤖 Pixel AI': { de: 'Pixel AI', ru: 'Pixel AI', zh: 'Pixel AI', ja: 'Pixel AI', ko: 'Pixel AI' },
+        '📡 Connectivité': { de: 'Konnektivität', ru: 'Связь', zh: '连接', ja: '接続', ko: '연결' },
+        '🖥️ Système': { de: 'System', ru: 'Система', zh: '系统', ja: 'システム', ko: '시스템' },
+        '🔌 IoT — Capteurs & Actionneurs': { de: 'IoT — Sensoren & Aktoren', ru: 'IoT — датчики и приводы', zh: 'IoT — 传感器与执行器', ja: 'IoT — センサーとアクチュエーター', ko: 'IoT — 센서 및 액추에이터' },
+        '🗓️ Date & Heure': { de: 'Datum & Uhrzeit', ru: 'Дата и время', zh: '日期与时间', ja: '日付と時刻', ko: '날짜 및 시간' },
+        '🛟 Assistance Atlas': { de: 'Atlas-Unterstützung', ru: 'Помощь Atlas', zh: 'Atlas 协助', ja: 'Atlas サポート', ko: 'Atlas 지원' },
+        '🌗 Thème': { de: 'Design', ru: 'Тема', zh: '主题', ja: 'テーマ', ko: '테마' },
+        '🎨 Charte graphique': { de: 'Farbschema', ru: 'Цветовая гамма', zh: '配色', ja: '配色', ko: '색상 계획' },
+        '🔆 Luminosité de l\'application': { de: 'App-Helligkeit', ru: 'Яркость приложения', zh: '应用亮度', ja: 'アプリの明るさ', ko: '앱 밝기' },
+        '💬 Langue de l\'interface': { de: 'Oberflächensprache', ru: 'Язык интерфейса', zh: '界面语言', ja: 'インターフェース言語', ko: '인터페이스 언어' },
+        'Fuseau : heure locale du dispositif.': { de: 'Zeitzone: lokale Gerätezeit.', ru: 'Часовой пояс: местное время устройства.', zh: '时区：设备本地时间。', ja: 'タイムゾーン：デバイスの現地時間。', ko: '시간대: 기기 로컬 시간.' },
+        '📞 Centre technique Atlas Working (S.A.V.) notifié automatiquement. En cas d\'urgence immédiate, utilisez le bouton 🚨 ou demandez « urgence » à PixelAssistante.': { de: 'Das technische Zentrum von Atlas Working (Kundendienst) wird automatisch benachrichtigt. Im Notfall den 🚨-Knopf nutzen oder PixelAssistant um „Notfall“ bitten.', ru: 'Технический центр Atlas Working (послепродажное обслуживание) уведомляется автоматически. В экстренной ситуации используйте кнопку 🚨 или скажите «экстренная ситуация» ассистенту.', zh: 'Atlas Working 技术中心（售后）会自动收到通知。紧急情况下使用 🚨 按钮或对 PixelAssistant 说「紧急」。', ja: 'Atlas Working 技術センター（アフターサービス）へ自動通知されます。緊急時は 🚨 ボタンか PixelAssistant に「緊急」と話しかけてください。', ko: 'Atlas Working 기술센터(After-Sales)에 자동으로 통보됩니다. 긴급 상황에서는 🚨 버튼을 사용하거나 PixelAssistant에게「긴급」을 요청하세요.' }
     };
     for (var _k in I18N_MORE) { if (I18N_UI_T[_k]) { var _m = I18N_MORE[_k]; for (var _l in _m) if (I18N_LANGS.indexOf(_l) >= 0) I18N_UI_T[_k][_l] = _m[_l]; } }
     function cur () { var L = get('atlasKioskLang', 'fr'); if (L === 'darja') return 'fr'; return I18N_LANGS.indexOf(L) >= 0 ? L : 'fr'; }
@@ -2903,7 +3251,8 @@ if (saveLead()) return { text: rep(lang, '✅ Prospect enregistré, ' + who + ' 
         if(open) render();
         try{ if(window.tabSettings&&window.tabSettings.render) window.tabSettings.render(); }catch(e){}
     };
-    window.osk.refresh=function(){ try{ pickLayout(); }catch(e){} applyFloat(); render(); }
+    function oskRefresh(){ try{ pickLayout(); }catch(e){} applyFloat(); render(); }
+    window.oskRefresh=oskRefresh;
     function fireInput(e){ var ev; try{ ev=new Event('input',{bubbles:true}); }catch(err){ ev=document.createEvent('Event'); ev.initEvent('input',true,true); } if(e) e.dispatchEvent(ev); }
     window.oskInsert=function(ch){
         var e=active(); if(!e) return;
@@ -2973,7 +3322,7 @@ if (saveLead()) return { text: rep(lang, '✅ Prospect enregistré, ' + who + ' 
         window.addEventListener('pointermove',mv); window.addEventListener('pointerup',up);
     });
     pickLayout(); applyFloat(); render();
-    return { open:window.oskOpen, close:window.oskClose, toggle:window.oskToggle, refresh:window.osk.refresh };
+    return { open:window.oskOpen, close:window.oskClose, toggle:window.oskToggle, refresh:oskRefresh };
 })();</script>
 
 <style>
@@ -2994,6 +3343,68 @@ if (saveLead()) return { text: rep(lang, '✅ Prospect enregistré, ' + who + ' 
 @media(max-width:640px){.osk-btn,.osk-enter{height:clamp(28px,6vw,36px);font-size:clamp(11px,2.6vw,14px)}#oskHead{padding-top:2px}}
 </style>
 
+<style id="atlasThemeCss">
+/* ====== MODE SOMBRE — visionneuse du kiosque entier ====== */
+html.atlas-dark{color-scheme:dark}
+html.atlas-dark body{background:#0a1322;color:#dce6f6}
+html.atlas-dark .glass{background:rgba(13,22,41,.88)!important;border-color:rgba(148,163,184,.16)!important;box-shadow:0 8px 32px rgba(0,0,0,.45)!important}
+html.atlas-dark .card-lift:hover{box-shadow:0 26px 50px-20px rgba(0,0,0,.6)}
+html.atlas-dark [class*="bg-white"]{background-color:#0f1b31!important}
+html.atlas-dark [class*="bg-\[#F4F6F0\]"]{background-color:#101f3a!important}
+html.atlas-dark [class*="hover:bg-\[#e4e9dc\]"]{background-color:#152643!important}
+html.atlas-dark [class*="hover:bg-\[#F4F6F0\]"]{background-color:#152642!important}
+html.atlas-dark [class*="text-\[#2D3748\]"]{color:#dce6f6!important}
+html.atlas-dark [class*="text-\[#2D5A27\]"]{color:#9ACD32!important}
+html.atlas-dark [class*="text-\[#9ACD32\]"]{color:#9ACD32!important}
+html.atlas-dark [class*="text-slate-400"]{color:#6d7f9e!important}
+html.atlas-dark [class*="text-slate-500"]{color:#90a3c0!important}
+html.atlas-dark [class*="text-slate-600"],html.atlas-dark [class*="text-slate-700"]{color:#b5c4dd!important}
+html.atlas-dark [class*="border-\[#2D5A27\]"]{border-color:rgba(154,205,50,.22)!important}
+html.atlas-dark [class*="bg-rose-50"]{background:#2a1517!important}
+html.atlas-dark [class*="text-rose-600"]{color:#fda4af!important}
+html.atlas-dark [class*="border-rose-200"]{border-color:#5b2630!important}
+html.atlas-dark input[type=text],html.atlas-dark input[type=password],html.atlas-dark input[type=email],html.atlas-dark select,html.atlas-dark input[type=number]{background-color:#0f1b31;color:#dce6f6;border-color:rgba(148,163,184,.28)}
+html.atlas-dark ::placeholder{color:#5a6d8c}
+html.atlas-dark .uxOrb1,html.atlas-dark .uxOrb2,html.atlas-dark .uxOrb3{opacity:.55}
+html.atlas-dark #osk{background:linear-gradient(180deg,#12203c,#0d1830);border-top-color:rgba(148,163,184,.2)}
+html.atlas-dark #oskHead{background:rgba(148,163,184,.08);color:#9ACD32}
+html.atlas-dark .osk-btn,html.atlas-dark .osk-enter{background:#132238;color:#dce6f6;border-color:rgba(148,163,184,.25)}
+html.atlas-dark .osk-btn:active{background:#1e3a5f;color:#fff}
+html.atlas-dark .osk-space span{color:rgba(180,200,235,.5)}
+html.atlas-dark #osk.osk-floating{box-shadow:0 18px 50px rgba(0,0,0,.55)}
+html.atlas-dark #paPanel{background:#0f1b31;border-color:rgba(148,163,184,.2)}
+html.atlas-dark .pa-msg{background:#131f38;color:#c8d5ea}
+
+/* ====== CHARTE GRAPHIQUE BLEUE (accent & surfaces claires) ====== */
+html.atlas-blue [class*="bg-\[#2D5A27\]"]{background-color:#1d4ed8!important}
+html.atlas-blue [class*="hover:bg-\[#23451e\]"]{background-color:#1e40af!important}
+html.atlas-blue [class*="bg-\[#9ACD32\]"]{background-color:#3b82f6!important;color:#eff6ff!important}
+html.atlas-blue [class*="text-\[#9ACD32\]"]{color:#60a5fa!important}
+html.atlas-blue [class*="hover:bg-\[#8bb82d\]"]{background-color:#2563eb!important}
+html.atlas-blue [class*="text-\[#2D5A27\]"]{color:#2563eb!important}
+html.atlas-blue [class*="hover:bg-\[#e4e9dc\]"]{background-color:#dbe8fd!important}
+html.atlas-blue [class*="border-\[#2D5A27\]"]{border-color:rgba(37,99,235,.28)!important}
+html.atlas-blue [class*="hover:bg-\[#F4F6F0\]"]{background-color:#eaf1fe!important}
+html.atlas-blue:not(.atlas-dark) [class*="bg-\[#F4F6F0\]"]{background-color:#eaf1fe!important}
+html.atlas-blue:not(.atlas-dark) [class*="bg-\[F4F6F0\]"]{background-color:#eaf1fe!important}
+html.atlas-blue:not(.atlas-dark) .glass{background:rgba(255,255,255,.8)!important;border-color:rgba(37,99,235,.16)!important;box-shadow:0 8px 32px rgba(37,99,235,.12)!important}
+html.atlas-blue .card-lift:hover{box-shadow:0 26px 50px-20px rgba(37,99,235,.42)}
+html.atlas-blue .glass{border-color:rgba(37,99,235,.18)!important}
+html.atlas-blue .uxOrb1{background:radial-gradient(circle,rgba(59,130,246,.5)0%,rgba(29,78,216,.3)100%)}
+html.atlas-blue .uxOrb2{background:radial-gradient(circle,rgba(59,130,246,.38)0%,transparent 70%)}
+html.atlas-blue .uxGrid{background-image:radial-gradient(rgba(37,99,235,.1)1px,transparent 1px)}
+html.atlas-blue #oskHead{background:rgba(37,99,235,.08);color:#1d4ed8}
+html.atlas-blue .osk-btn,.osk-enter{border-color:rgba(37,99,235,.25)}
+html.atlas-blue .osk-enter{background:linear-gradient(135deg,#1d4ed8,#1e3a8a)}
+html.atlas-blue #osk.osk-floating{box-shadow:0 18px 50px rgba(37,99,235,.28)}
+html.atlas-blue #osk.osk-floating,html.atlas-blue #osk{border-color:rgba(37,99,235,.22)}
+html.atlas-blue .osk-btn:active{background:#2563eb;color:#fff}
+
+/* ====== LUMINOSITÉ DE L'APPLICATION (voile) ====== */
+#lumiVeil{position:fixed;inset:0;z-index:9998;pointer-events:none;background:#000;opacity:0;transition:opacity .3s ease}
+</style>
+
+<div id="lumiVeil" aria-hidden="true"></div>
 
 </body>
 </html>

@@ -33,6 +33,68 @@ function readFile(name, fallback) {
 
 const leadsStore = { pending: () => readFile('leads.json', []), flush: (leads) => storeFile('leads.json', leads) };
 
+const CAST_DIR = path.join(__dirname, 'data', 'cast');
+const castRooms = {};
+function castPath(n) { return path.join(CAST_DIR, n); }
+if (!fs.existsSync(CAST_DIR)) fs.mkdirSync(CAST_DIR, { recursive: true });
+
+function castCleanup() {
+  const now = Date.now();
+  for (const r in castRooms) {
+    const c = castRooms[r];
+    if (now - c.created > 30 * 60 * 1000) {
+      try { fs.unlinkSync(castPath(c.file)); } catch (e) {}
+      delete castRooms[r];
+    }
+  }
+}
+
+setInterval(castCleanup, 60 * 1000).unref();
+
+app.post('/api/cast/room', (req, res) => {
+  const cabin = String((req.body && req.body.cabin) || 'Cabine N°01').slice(0, 40);
+  const room = String(Math.floor(100000 + Math.random() * 900000));
+  castRooms[room] = { cabin, created: Date.now(), ready: false, url: null, name: null, type: null, size: 0 };
+  res.json({ status: 'success', room, expiresIn: 1800 });
+});
+
+app.post('/api/cast/:room', express.raw({ type: () => true, limit: '600mb' }), (req, res) => {
+  const c = castRooms[req.params.room];
+  if (!c) return res.status(404).json({ status: 'error', message: 'Salle inconnue.' });
+  const name = String((req.query && req.query.name) || 'media').slice(0, 120).replace(/[^\w.\- ]+/g, '');
+  const type = String((req.query && req.query.type) || '').slice(0, 80);
+  const ext = path.extname(name) || (type.startsWith('video') ? '.mp4' : '.mp3');
+  const fname = req.params.room + '-c' + Math.floor(Date.now() / 1000) + ext;
+  fs.writeFileSync(castPath(fname), req.body);
+  c.file = fname;
+  c.ready = true;
+  c.url = '/cast/' + fname;
+  c.name = name;
+  c.type = type || 'audio';
+  c.size = req.body.length;
+  res.json({ status: 'success', room: req.params.room, url: c.url, size: c.size });
+});
+
+app.get('/api/cast/:room', (req, res) => {
+  const c = castRooms[req.params.room];
+  if (!c) return res.status(404).json({ status: 'error', message: 'Salle inconnue ou expirée.' });
+  res.json({ status: 'success', room: req.params.room, cabin: c.cabin, ready: c.ready, url: c.url, name: c.name, type: c.type, size: c.size });
+});
+
+app.delete('/api/cast/:room', (req, res) => {
+  const c = castRooms[req.params.room];
+  if (c) {
+    try { fs.unlinkSync(castPath(c.file)); } catch (e) {}
+    delete castRooms[req.params.room];
+  }
+  res.json({ status: 'success' });
+});
+
+app.use('/cast', express.static(CAST_DIR, { setHeaders: (res) => setImmediate(() => {
+  res.setHeader('Accept-Ranges', 'bytes');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+}) }));
+
 app.use(express.static(path.join(__dirname, 'public')));
 if (fs.existsSync(REPORTS)) app.use('/reports', express.static(REPORTS));
 
