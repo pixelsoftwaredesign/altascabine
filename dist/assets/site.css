@@ -1,0 +1,69 @@
+/* ============================================================
+   ATLAS CABINE — Système de thème partagé (site public)
+   Sombre + charte bleue + accessibilité + micro-polish.
+   Chargé sur toutes les pages après le CDN Tailwind.
+   ============================================================ */
+
+/* ---------- MODE SOMBRE ---------- */
+html.atlas-dark{color-scheme:dark}
+html.atlas-dark body{background:#0a1322;color:#dce6f6}
+html.atlas-dark .card{box-shadow:0 2px 8px rgba(0,0,0,.35)}
+html.atlas-dark .card:hover{transform:translateY(-4px);box-shadow:0 16px 42px -14px rgba(0,0,0,.6)}
+html.atlas-dark .glass{background:rgba(13,22,41,.88)!important;border-color:rgba(148,163,184,.16)!important;box-shadow:0 8px 32px rgba(0,0,0,.45)!important}
+html.atlas-dark [class*="bg-white"]{background-color:#0f1b31!important}
+html.atlas-dark [class*="bg-\[#F4F6F0\]"]{background-color:#101f3a!important}
+html.atlas-dark [class*="hover:bg-\[#F4F6F0\]"]{background-color:#152642!important}
+html.atlas-dark [class*="hover:bg-\[#e4e9dc\]"]{background-color:#152643!important}
+html.atlas-dark [class*="text-\[#2D3748\]"]{color:#dce6f6!important}
+html.atlas-dark [class*="text-\[#2D5A27\]"]{color:#9ACD32!important}
+html.atlas-dark [class*="text-\[#9ACD32\]"]{color:#9ACD32!important}
+html.atlas-dark [class*="text-slate-400"]{color:#6d7f9e!important}
+html.atlas-dark [class*="text-slate-500"]{color:#90a3c0!important}
+html.atlas-dark [class*="text-slate-600"],html.atlas-dark [class*="text-slate-700"]{color:#b5c4dd!important}
+html.atlas-dark [class*="border-\[#2D5A27\]"]{border-color:rgba(154,205,50,.22)!important}
+html.atlas-dark [class*="bg-rose-50"]{background:#2a1517!important}
+html.atlas-dark [class*="text-rose-600"]{color:#fda4af!important}
+html.atlas-dark [class*="border-rose-200"]{border-color:#5b2630!important}
+html.atlas-dark input,html.atlas-dark select,html.atlas-dark textarea{background-color:#0f1b31;color:#dce6f6;border-color:rgba(148,163,184,.28)}
+html.atlas-dark ::placeholder{color:#5a6d8c}
+html.atlas-dark .uxOrb1,html.atlas-dark .uxOrb2,html.atlas-dark .uxOrb3{opacity:.5}
+html.atlas-dark #lang-bar{background:rgba(13,22,41,.9)!important;border-color:rgba(148,163,184,.2)!important;box-shadow:0 6px 18px rgba(0,0,0,.4)!important}
+
+/* ---------- CHARTE GRAPHIQUE BLEUE ---------- */
+html.atlas-blue [class*="bg-\[#2D5A27\]"]{background-color:#1d4ed8!important}
+html.atlas-blue [class*="hover:bg-\[#23451e\]"]{background-color:#1e40af!important}
+html.atlas-blue [class*="bg-\[#9ACD32\]"]{background-color:#3b82f6!important;color:#eff6ff!important}
+html.atlas-blue [class*="text-\[#9ACD32\]"]{color:#60a5fa!important}
+html.atlas-blue [class*="hover:bg-\[#8bb82d\]"]{background-color:#2563eb!important}
+html.atlas-blue [class*="text-\[#2D5A27\]"]{color:#2563eb!important}
+html.atlas-blue [class*="bg-\[#9ACD32\]"]{color:#eff6ff!important}
+html.atlas-blue [class*="border-\[#2D5A27\]"]{border-color:rgba(37,99,235,.28)!important}
+html.atlas-blue:not(.atlas-dark) [class*="bg-\[#F4F6F0\]"]{background-color:#eaf1fe!important}
+html.atlas-blue:not(.atlas-dark) [class*="hover:bg-\[#F4F6F0\]"]{background-color:#eaf1fe!important}
+html.atlas-blue:not(.atlas-dark) [class*="hover:bg-\[#e4e9dc\]"]{background-color:#dbe8fd!important}
+html.atlas-blue .glass{background:rgba(255,255,255,.8)!important;border-color:rgba(37,99,235,.16)!important;box-shadow:0 8px 32px rgba(37,99,235,.12)!important}
+html.atlas-blue .card:hover{box-shadow:0 14px 36px -12px rgba(37,99,235,.35)}
+html.atlas-blue [class*="from-\[#2D5A27\]"]{--tw-gradient-from:#1d4ed8!important}
+html.atlas-blue [class*="to-\[#23451e\]"],html.atlas-blue [class*="to-\[#23451E\]"]{--tw-gradient-to:#1e3a8a!important}
+html.atlas-blue [class*="accent-\[#2D5A27\]"]{accent-color:#2563eb!important}
+html.atlas-blue #lang-bar{border-color:rgba(37,99,235,.25)!important}
+
+/* ---------- ACCESSIBILITÉ & MICRO-POLISH ---------- */
+html{scroll-behavior:smooth}
+*:focus-visible{outline:2px solid #3b82f6;outline-offset:2px;border-radius:8px}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+.no-scrollbar::-webkit-scrollbar{display:none}
+.no-scrollbar{scrollbar-width:none}
+
+/* ---------- DOCK THÈME (injecté par assets/site.js) ---------- */
+#theme-dock{position:fixed;left:12px;bottom:12px;z-index:999997;display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.85);backdrop-filter:blur(8px);border:1px solid rgba(45,90,39,.18);border-radius:999px;padding:6px;box-shadow:0 6px 18px rgba(0,0,0,.18);font-family:'Plus Jakarta Sans',sans-serif}
+#theme-dock button{border:none;cursor:pointer;font-family:inherit;font-size:12px;font-weight:800;padding:6px 10px;border-radius:999px;background:#2D5A27;color:#fff;transition:all .15s;line-height:1}
+#theme-dock button:hover{transform:scale(1.06)}
+#theme-dock button.act{background:#fff;color:#2D5A27;box-shadow:0 0 0 2px #2D5A27}
+html.atlas-dark #theme-dock{background:rgba(13,22,41,.9);border-color:rgba(148,163,184,.2);box-shadow:0 6px 18px rgba(0,0,0,.4)}
+html.atlas-dark #theme-dock button{background:#9ACD32;color:#0a1322}
+html.atlas-dark #theme-dock button.act{background:#0f1b31;color:#9ACD32;box-shadow:0 0 0 2px #9ACD32}
+html.atlas-blue #theme-dock{border-color:rgba(37,99,235,.3)}
+html.atlas-blue #theme-dock button{background:#2563eb;color:#fff}
+html.atlas-blue #theme-dock button.act{background:#eff6ff;color:#1d4ed8;box-shadow:0 0 0 2px #2563eb}
+@media (max-width:640px){#theme-dock{left:8px;bottom:8px;padding:5px}#theme-dock button{padding:6px 8px}}

@@ -22,7 +22,10 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Organization","name":"ATLAS CABINE","legalName":"PixelSoftware Design","foundingLocation":{"@type":"Place","name":"Tunisie"},"slogan":"L'espace de concentration","description":"Cabines acoustiques Atlas et leur écosystème numérique (kiosque, application, portails).","sameAs":[]}
 </script>
-<script src="/lang.js"></script></head>
+<script src="/lang.js"></script>
+    <script>(function(){try{var t=localStorage.getItem('atlasTheme'),c=localStorage.getItem('atlasCharte');var h=document.documentElement;if(t==='dark')h.classList.add('atlas-dark');if(c==='bleu')h.classList.add('atlas-blue');}catch(e){}})();</script>
+    <link rel="stylesheet" href="/assets/site.css">
+    <script src="/assets/site.js"></script></head>
 <body class="bg-[#F4F6F0] text-[#2D3748]">
 
     
@@ -66,7 +69,20 @@
 
         <!-- PRODUITS -->
         <section>
-            <h2 class="text-2xl font-bold text-[#2D5A27] mb-5">Nos cabines</h2>
+            <div class="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between mb-5">
+                <h2 class="text-2xl font-bold text-[#2D5A27]">Nos cabines</h2>
+                <div class="flex flex-wrap gap-2 items-center">
+                    <input id="prodSearch" type="search" oninput="renderProducts()" placeholder="🔎 Rechercher (Small, Medium, Large…)"
+                        class="w-full sm:w-56 px-4 py-2.5 rounded-xl bg-white border border-[#2D5A27]/20 focus:outline-none focus:border-[#2D5A27] text-xs font-bold" aria-label="Rechercher une cabine">
+                    <select id="prodSort" onchange="renderProducts()"
+                        class="px-3 py-2.5 rounded-xl bg-white border border-[#2D5A27]/20 text-xs font-bold focus:outline-none" aria-label="Trier les cabines">
+                        <option value="def">Tri par défaut</option>
+                        <option value="prix-asc">Prix croissant</option>
+                        <option value="prix-desc">Prix décroissant</option>
+                    </select>
+                </div>
+            </div>
+            <p id="prodCount" class="text-[11px] mono text-slate-400 mb-2"></p>
             <div id="prodGrid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
         </section>
 
@@ -186,7 +202,15 @@
 
         function renderProducts() {
             const acc = getAccStore();
-            document.getElementById('prodGrid').innerHTML = MODELS.map(m => {
+            const q = (document.getElementById('prodSearch').value || '').toLowerCase().trim();
+            const sort = document.getElementById('prodSort').value;
+            let list = MODELS.slice();
+            if (q) list = list.filter(m => (m.name + ' ' + m.id).toLowerCase().indexOf(q) >= 0);
+            if (sort === 'prix-asc') list.sort((a, b) => cur(a.id) - cur(b.id));
+            if (sort === 'prix-desc') list.sort((a, b) => cur(b.id) - cur(a.id));
+            const pc = document.getElementById('prodCount');
+            if (pc) pc.textContent = list.length === MODELS.length ? '' : list.length + ' / ' + MODELS.length + ' cabine(s)';
+            document.getElementById('prodGrid').innerHTML = list.map(m => {
                 const accs = acc.filter(a => a.cat === 'Mobilier & assises' || a.cat === 'Affichage & média').slice(0, 6);
                 return `
                 <div class="bg-white rounded-3xl border border-[#2D5A27]/15 shadow-sm overflow-hidden flex flex-col">

@@ -17,6 +17,21 @@
         fa: { low: ["ضصثقفغعهخحجد", "شسیبلاتنمکگ", "ظهرذدپو،."], up: ["1234567890", "»«؛،؟!…", "()«»ٔ‌"] }
     };
     var KBDLABELS = { azerty: "AZERTY", qwerty: "QWERTY", ru: "Русская", ar: "عربية", fa: "فارسی", tr: "Türkçe" };
+    var EXTRA = {
+        fr: { 'Interface Cabine': 'Interface Cabine', 'Passer la commande': 'Passer la commande', '📘 Fiche': '📘 Fiche', "Commande envoyée à l'usine !": "Commande envoyée à l'usine !", 'Votre panier est vide. Ajoutez une cabine ci-dessus.': 'Votre panier est vide. Ajoutez une cabine ci-dessus.', '→ Catalogue': '→ Catalogue' },
+        en: { 'Interface Cabine': 'Cabin Interface', 'Passer la commande': 'Place order', '📘 Fiche': '📘 Spec sheet', "Commande envoyée à l'usine !": 'Order sent to factory!', 'Votre panier est vide. Ajoutez une cabine ci-dessus.': 'Your cart is empty. Add a cabin above.', '→ Catalogue': '→ Catalogue' },
+        ar: { 'Interface Cabine': 'واجهة الكابينة', 'Passer la commande': 'أكمل الطلب', '📘 Fiche': '📘 بطاقة المواصفات', "Commande envoyée à l'usine !": 'تم إرسال الطلب إلى المصنع!', 'Votre panier est vide. Ajoutez une cabine ci-dessus.': 'سلة التسوق فارغة. أضف كابينة أعلاه.', '→ Catalogue': '→ الكتالوج' },
+        tr: { 'Interface Cabine': 'Kabin Arayüzü', 'Passer la commande': 'Siparişi tamamla', '📘 Fiche': '📘 Teknik dosya', "Commande envoyée à l'usine !": 'Sipariş fabrikaya gönderildi!', 'Votre panier est vide. Ajoutez une cabine ci-dessus.': 'Sepetiniz boş. Yukarıya bir kabin ekleyin.', '→ Catalogue': '→ Katalog' },
+        es: { 'Interface Cabine': 'Interfaz de la cabina', 'Passer la commande': 'Realizar pedido', '📘 Fiche': '📘 Ficha técnica', "Commande envoyée à l'usine !": '¡Pedido enviado a la fábrica!', 'Votre panier est vide. Ajoutez une cabine ci-dessus.': 'Tu carrito está vacío. Añade una cabina arriba.', '→ Catalogue': '→ Catálogo' },
+        it: { 'Interface Cabine': 'Interfaccia cabina', 'Passer la commande': 'Inoltra ordine', '📘 Fiche': '📘 Scheda tecnica', "Commande envoyée à l'usine !": 'Ordine inviato alla fabbrica!', 'Votre panier est vide. Ajoutez une cabine ci-dessus.': 'Il carrello è vuoto. Aggiungi una cabina sopra.', '→ Catalogue': '→ Catalogo' },
+        de: { 'Interface Cabine': 'Kabinenoberfläche', 'Passer la commande': 'Bestellung aufgeben', '📘 Fiche': '📘 Datenblatt', "Commande envoyée à l'usine !": 'Bestellung an die Fabrik gesendet!', 'Votre panier est vide. Ajoutez une cabine ci-dessus.': 'Ihr Warenkorb ist leer. Fügen Sie oben eine Kabine hinzu.', '→ Catalogue': '→ Katalog' },
+        zh: { 'Interface Cabine': '舱房界面', 'Passer la commande': '提交订单', '📘 Fiche': '📘 参数表', "Commande envoyée à l'usine !": '订单已发送至工厂！', 'Votre panier est vide. Ajoutez une cabine ci-dessus.': '购物车为空，请在上方添加舱房。', '→ Catalogue': '→ 目录' },
+        ko: { 'Interface Cabine': '부스 인터페이스', 'Passer la commande': '주문 완료', '📘 Fiche': '📘 상세사양', "Commande envoyée à l'usine !": '주문이 공장으로 전송되었습니다!', 'Votre panier est vide. Ajoutez une cabine ci-dessus.': '장바구니가 비어 있습니다. 위에서 부스를 추가하세요.', '→ Catalogue': '→ 카탈로그' },
+        ja: { 'Interface Cabine': 'ブースインターフェース', 'Passer la commande': '注文を確定', '📘 Fiche': '📘 スペック表', "Commande envoyée à l'usine !": '注文が工場に送信されました！', 'Votre panier est vide. Ajoutez une cabine ci-dessus.': 'カートは空です。上でブースを追加してください。', '→ Catalogue': '→ カタログ' },
+        ru: { 'Interface Cabine': 'Интерфейс кабины', 'Passer la commande': 'Оформить заказ', '📘 Fiche': '📘 Технический лист', "Commande envoyée à l'usine !": 'Заказ отправлен на завод!', 'Votre panier est vide. Ajoutez une cabine ci-dessus.': 'Корзина пуста. Добавьте кабину выше.', '→ Catalogue': '→ Каталог' },
+        fi: { 'Interface Cabine': 'Kopin käyttöliittymä', 'Passer la commande': 'Tilaa', '📘 Fiche': '📘 Tekniset tiedot', "Commande envoyée à l'usine !": 'Tilaus lähetetty tehtaalle!', 'Votre panier est vide. Ajoutez une cabine ci-dessus.': 'Ostoskorisi on tyhjä. Lisää koppi yllä.', '→ Catalogue': '→ Luettelo' },
+        fa: { 'Interface Cabine': 'رابطه‌ی کابین', 'Passer la commande': 'ثبت سفارش', '📘 Fiche': '📘 برگه مشخصات', "Commande envoyée à l'usine !": 'سفارش به کارخانه ارسال شد!', 'Votre panier est vide. Ajoutez une cabine ci-dessus.': 'سبد خرید شما خالی است. یک کابین اضافه کنید.', '→ Catalogue': '→ کاتالوگ' }
+    };
     var saved = new Map();
     var DICS = {};
     var cur = localStorage.getItem("atlasLang");
@@ -33,12 +48,12 @@
     function norm(s) { return s.replace(/\s+/g, " ").trim(); }
     function loadDict(lang) {
         if (DICS[lang]) return Promise.resolve();
-        if (window.__DIC && window.__DIC[lang]) { DICS[lang] = window.__DIC[lang]; return Promise.resolve(); }
+        if (window.__DIC && window.__DIC[lang]) { DICS[lang] = Object.assign({}, window.__DIC[lang], EXTRA[lang]); return Promise.resolve(); }
         return new Promise(function (res) {
             var s = document.createElement("script");
             s.src = "/lang-" + lang + ".js";
-            s.onload = function () { DICS[lang] = (window.__DIC && window.__DIC[lang]) || {}; res(); };
-            s.onerror = function () { DICS[lang] = {}; res(); };
+            s.onload = function () { DICS[lang] = Object.assign({}, (window.__DIC && window.__DIC[lang]) || {}, EXTRA[lang]); res(); };
+            s.onerror = function () { DICS[lang] = Object.assign({}, EXTRA[lang]); res(); };
             document.head.appendChild(s);
         });
     }
@@ -371,7 +386,9 @@
         }
     }, 900);
     if (window.MutationObserver) {
-        new MutationObserver(function (ms) {
+        function setupObserver() {
+            if (!document.body) { document.addEventListener("DOMContentLoaded", setupObserver); return; }
+            new MutationObserver(function (ms) {
             if (cur === "fr" || !DICS[cur]) return;
             for (var i = 0; i < ms.length; i++) {
                 var added = ms[i].addedNodes;
@@ -386,5 +403,7 @@
                 }
             }
         }).observe(document.body, { childList: true, subtree: true });
+        }
     }
+    setupObserver();
 })();
