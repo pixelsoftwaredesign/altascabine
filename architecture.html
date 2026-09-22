@@ -5,7 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Architecture numérique des cabines Atlas</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/tailwind-public.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>*{font-family:'Plus Jakarta Sans',sans-serif}.mono{font-family:'JetBrains Mono',monospace}.slide{display:none}.slide.on{display:block;animation:fade .35s ease}@keyframes fade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}.chip{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;padding:5px 10px;border-radius:10px}.uxSplineBg{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;perspective:1100px}.uxSplineFx{position:absolute;inset:0;width:100%;height:100%;transform-style:preserve-3d;transform-origin:center center;animation:spline3d var(--sd,28s) ease-in-out infinite}.splinePath{fill:none;stroke-linecap:round;stroke-linejoin:round}.uxDotHalo{transform-box:fill-box;transform-origin:center;animation:uxPulse 3.4s ease-in-out infinite}@keyframes spline3d{0%,100%{transform:rotateX(0deg)rotateY(0deg)translateZ(0)scale(1)}25%{transform:rotateX(var(--rx1,0deg))rotateY(var(--ry1,0deg))translateZ(var(--tz1,40px))scale(var(--s1,1.06))}50%{transform:rotateX(0deg)rotateY(0deg)translateZ(0)scale(1)}75%{transform:rotateX(var(--rx2,0deg))rotateY(var(--ry2,0deg))translateZ(var(--tz2,30px))scale(var(--s2,1.05))}}@keyframes uxPulse{0%,100%{opacity:.22;transform:scale(1)}50%{opacity:.6;transform:scale(1.65)}}</style>
 
@@ -14,17 +16,37 @@
 <meta property="og:site_name" content="ATLAS CABINE">
 <meta property="og:title" content="ATLAS CABINE">
 <meta property="og:description" content="Architecture numérique des cabines Atlas : couches, modèles et firmware (ESP32, Raspberry Pi cabin-hub, Arduino).">
-<meta property="og:url" content="https://atlascabine.pages.dev/">
+<meta property="og:url" content="https://atlascabine.pages.dev/architecture.html">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#2D5A27">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Organization","name":"ATLAS CABINE","legalName":"PixelSoftware Design","foundingLocation":{"@type":"Place","name":"Tunisie"},"slogan":"L'espace de concentration","description":"Cabines acoustiques Atlas et leur écosystème numérique (kiosque, application, portails).","sameAs":[]}
 </script>
-<script src="/lang.js"></script>
+<script src="/lang.js" defer></script>
     <script>(function(){try{var t=localStorage.getItem('atlasTheme'),c=localStorage.getItem('atlasCharte');var h=document.documentElement;if(t==='dark')h.classList.add('atlas-dark');if(c==='bleu')h.classList.add('atlas-blue');}catch(e){}})();</script>
     <link rel="stylesheet" href="/assets/site.css">
-    <script src="/assets/site.js"></script></head>
+    <script src="/assets/site.js" defer></script><meta property="og:image" content="https://atlascabine.pages.dev/assets/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:locale:alternate" content="en_US">
+<link rel="canonical" href="https://atlascabine.pages.dev/architecture.html">
+<link rel="alternate" hreflang="fr" href="https://atlascabine.pages.dev/architecture.html?lang=fr">
+<link rel="alternate" hreflang="en" href="https://atlascabine.pages.dev/architecture.html?lang=en">
+<link rel="alternate" hreflang="ar" href="https://atlascabine.pages.dev/architecture.html?lang=ar">
+<link rel="alternate" hreflang="tr" href="https://atlascabine.pages.dev/architecture.html?lang=tr">
+<link rel="alternate" hreflang="es" href="https://atlascabine.pages.dev/architecture.html?lang=es">
+<link rel="alternate" hreflang="it" href="https://atlascabine.pages.dev/architecture.html?lang=it">
+<link rel="alternate" hreflang="de" href="https://atlascabine.pages.dev/architecture.html?lang=de">
+<link rel="alternate" hreflang="zh" href="https://atlascabine.pages.dev/architecture.html?lang=zh">
+<link rel="alternate" hreflang="ko" href="https://atlascabine.pages.dev/architecture.html?lang=ko">
+<link rel="alternate" hreflang="ja" href="https://atlascabine.pages.dev/architecture.html?lang=ja">
+<link rel="alternate" hreflang="ru" href="https://atlascabine.pages.dev/architecture.html?lang=ru">
+<link rel="alternate" hreflang="fi" href="https://atlascabine.pages.dev/architecture.html?lang=fi">
+<link rel="alternate" hreflang="fa" href="https://atlascabine.pages.dev/architecture.html?lang=fa">
+<link rel="alternate" hreflang="x-default" href="https://atlascabine.pages.dev/architecture.html">
+</head>
 <body class="bg-[#F4F6F0] text-[#2D3748]">
 
     
