@@ -2510,7 +2510,7 @@ if (saveLead()) return { text: rep(lang, '✅ Prospect enregistré, ' + who + ' 
             " A " + r.toFixed(0) + " " + r.toFixed(0) + " 0 1 0 " + (o.cx - r).toFixed(0) + " " + o.cy;
     }
     var makers = [arcD, splineD, infiniD, ringD];
-    var F = ["rgba(45,90,39,", "rgba(154,205,50,"];
+    var F = ["rgba(var(--uxrgb1),", "rgba(var(--uxrgb2),"];
     var shapes = [];
     for (var i = 0; i < 3; i++) {
         var S = R(115, 300);
@@ -2531,7 +2531,7 @@ if (saveLead()) return { text: rep(lang, '✅ Prospect enregistré, ' + who + ' 
         var p = document.createElementNS(ns, "path");
         p.setAttribute("class", "splinePath");
         p.setAttribute("d", s.d);
-        p.setAttribute("stroke", s.stroke);
+        p.style.stroke = s.stroke;
         p.setAttribute("stroke-width", s.sw);
         svg.appendChild(p);
     });
@@ -2539,7 +2539,7 @@ if (saveLead()) return { text: rep(lang, '✅ Prospect enregistré, ' + who + ' 
         var c = document.createElementNS(ns, "circle");
         c.setAttribute("class", "uxDotHalo");
         c.setAttribute("r", "3");
-        c.setAttribute("fill", fill);
+        c.style.fill = fill;
         var am = document.createElementNS(ns, "animateMotion");
         am.setAttribute("dur", dur + "s");
         am.setAttribute("begin", begin + "s");
@@ -2551,9 +2551,9 @@ if (saveLead()) return { text: rep(lang, '✅ Prospect enregistré, ' + who + ' 
     var o0 = orbitPath({ cx: shapes[0].cx, cy: shapes[0].cy }, shapes[0].r + 8);
     var o1 = orbitPath({ cx: shapes[1].cx, cy: shapes[1].cy }, shapes[1].r + 8);
     var d0 = R(10, 18);
-    dot("#d9ff8c", d0, 0, o0);
-    dot("#9ACD32", d0, 0, o0);
-    dot("#d9ff8c", R(14, 23), R(2, 7), o1);
+    dot("var(--uxd1)", d0, 0, o0);
+    dot("var(--uxd2)", d0, 0, o0);
+    dot("var(--uxd1)", R(14, 23), R(2, 7), o1);
     var wrap = document.createElement("div");
     wrap.setAttribute("class", "uxSplineBg");
     wrap.appendChild(svg);
@@ -3344,8 +3344,11 @@ if (saveLead()) return { text: rep(lang, '✅ Prospect enregistré, ' + who + ' 
 </style>
 
 <style id="atlasThemeCss">
+/* ====== VARIABLES SPLINE ANIMÉ (respectent le thème) ====== */
+:root{--uxrgb1:45,90,39;--uxrgb2:154,205,50;--uxd1:#d9ff8c;--uxd2:#9ACD32}
 /* ====== MODE SOMBRE — visionneuse du kiosque entier ====== */
 html.atlas-dark{color-scheme:dark}
+html.atlas-dark{--uxrgb1:154,205,50;--uxrgb2:114,178,52;--uxd1:#e6ffb8;--uxd2:#9ACD32}
 html.atlas-dark body{background:#0a1322;color:#dce6f6}
 html.atlas-dark .glass{background:rgba(13,22,41,.88)!important;border-color:rgba(148,163,184,.16)!important;box-shadow:0 8px 32px rgba(0,0,0,.45)!important}
 html.atlas-dark .card-lift:hover{box-shadow:0 26px 50px-20px rgba(0,0,0,.6)}
@@ -3376,6 +3379,7 @@ html.atlas-dark #paPanel{background:#0f1b31;border-color:rgba(148,163,184,.2)}
 html.atlas-dark .pa-msg{background:#131f38;color:#c8d5ea}
 
 /* ====== CHARTE GRAPHIQUE BLEUE (accent & surfaces claires) ====== */
+html.atlas-blue{--uxrgb1:29,78,216;--uxrgb2:59,130,246;--uxd1:#dbeafe;--uxd2:#3b82f6}
 html.atlas-blue [class*="bg-\[#2D5A27\]"]{background-color:#1d4ed8!important}
 html.atlas-blue [class*="hover:bg-\[#23451e\]"]{background-color:#1e40af!important}
 html.atlas-blue [class*="bg-\[#9ACD32\]"]{background-color:#3b82f6!important;color:#eff6ff!important}
@@ -3399,6 +3403,22 @@ html.atlas-blue .osk-enter{background:linear-gradient(135deg,#1d4ed8,#1e3a8a)}
 html.atlas-blue #osk.osk-floating{box-shadow:0 18px 50px rgba(37,99,235,.28)}
 html.atlas-blue #osk.osk-floating,html.atlas-blue #osk{border-color:rgba(37,99,235,.22)}
 html.atlas-blue .osk-btn:active{background:#2563eb;color:#fff}
+
+/* ====== PIXELASSISTANTE — suit la charte ====== */
+html.atlas-blue [class*="from-\[#9ACD32\]"]{--tw-gradient-from:#3b82f6}
+html.atlas-blue [class*="to-\[#2D5A27\]"]{--tw-gradient-to:#2563eb}
+html.atlas-blue [class*="from-\[#2D5A27\]"]{--tw-gradient-from:#1d4ed8}
+html.atlas-blue [class*="to-\[#23451e\]"]{--tw-gradient-to:#1e3a8a}
+html.atlas-blue [class*="ring-\[#9ACD32\]"]{--tw-ring-color:#2563eb!important}
+html.atlas-blue [class*="text-emerald-100"]{color:#dbeafe!important}
+html.atlas-blue [class*="text-emerald-50"]{color:#eff6ff!important}
+html.atlas-blue #paPanel{border-color:rgba(37,99,235,.18)!important}
+html.atlas-blue #paBtn,.paMicBg{box-shadow:0 10px 30px rgba(37,99,235,.35)}
+html.atlas-blue #paHint{background:#1e3a8a}
+html.atlas-dark #paHint{background:#0f1b31;border:1px solid rgba(148,163,184,.2)}
+html.atlas-dark #paPanel .bg-white\/10{background:rgba(255,255,255,.12)}
+html.atlas-dark #paQ{background:#101f3a;color:#dce6f6}
+html.atlas-dark .splinePath{opacity:.85}
 
 /* ====== LUMINOSITÉ DE L'APPLICATION (voile) ====== */
 #lumiVeil{position:fixed;inset:0;z-index:9998;pointer-events:none;background:#000;opacity:0;transition:opacity .3s ease}
